@@ -1,0 +1,226 @@
+---
+title: "comparative_eda"
+output: html_document
+---
+
+# Install packages
+```{r}
+install.packages("farff")
+install.packages("tidyverse")
+install.packages("DataExplorer")
+install.packages("corrplot")
+```
+
+
+# Import libraries 
+```{r}
+library(readr)
+library(farff)
+library(tidyverse)
+library(DataExplorer)
+library(corrplot)
+```
+
+# Parkinsons Analysis 
+```{r}
+# Load datasets
+parkinson_telemonitoring <- read_csv("../data/raw/parkinsons/telemonitoring/parkinsons_updrs.data")
+parkinson <- read_csv("../data/raw/parkinsons/parkinsons.data")
+```
+```{r}
+# Dimensions
+dim(parkinson)
+dim(parkinson_telemonitoring)
+```
+
+```{r}
+# Variables names
+names(parkinson)
+print("------------")
+names(parkinson_telemonitoring)
+```
+```{r}
+summary(parkinson)
+```
+# Count by target class
+```{r}
+table(parkinson$status)
+```
+
+```{r}
+ggplot(parkinson, aes(x = factor(status))) + geom_bar() + labs( title = "Distribucion de clases", x = "Status", y = "Cantidad" )
+```
+
+```{r}
+colSums(is.na(parkinson))
+print("---------")
+colSums(is.na(parkinson_telemonitoring))
+```
+```{r}
+plot_histogram(parkinson)
+```
+
+```{r}
+# Make correlation matrix and boxplot
+numeric_data <- parkinson %>%
+  select(where(is.numeric))
+
+cor_matrix <- cor(
+  numeric_data,
+  use = "complete.obs"
+)
+
+corrplot(
+  cor_matrix,
+  method = "color",
+  type = "upper",
+  tl.cex = 0.6
+)
+```
+
+
+# Breast Cancer Analysis
+```{r}
+# Load dataset
+breast <- read_csv("../data/raw/breast+cancer+wisconsin+diagnostic/wdbc.data", col_names = FALSE)
+
+# Asing colnames based in the wdbc.names file
+colnames(breast) <- c(
+  "id",
+  "diagnosis",
+
+  "radius_mean",
+  "texture_mean",
+  "perimeter_mean",
+  "area_mean",
+  "smoothness_mean",
+  "compactness_mean",
+  "concavity_mean",
+  "concave_points_mean",
+  "symmetry_mean",
+  "fractal_dimension_mean",
+
+  "radius_se",
+  "texture_se",
+  "perimeter_se",
+  "area_se",
+  "smoothness_se",
+  "compactness_se",
+  "concavity_se",
+  "concave_points_se",
+  "symmetry_se",
+  "fractal_dimension_se",
+
+  "radius_worst",
+  "texture_worst",
+  "perimeter_worst",
+  "area_worst",
+  "smoothness_worst",
+  "compactness_worst",
+  "concavity_worst",
+  "concave_points_worst",
+  "symmetry_worst",
+  "fractal_dimension_worst"
+)
+```
+```{r}
+head(breast)
+```
+
+
+```{r}
+# Dimensions
+dim(breast)
+```
+
+```{r}
+names(breast)
+```
+
+
+
+```{r}
+summary(breast)
+```
+
+```{r}
+table(breast$diagnosis)
+ggplot(breast, aes(x = factor(diagnosis))) + geom_bar() + labs( title = "Distribucion de clases", x = "Diagnostico", y = "Cantidad" )
+```
+```{r}
+colSums(is.na(breast))
+```
+```{r}
+plot_histogram(breast)
+```
+```{r}
+# Make correlation matrix and boxplot
+numeric_data <- breast %>%
+  select(where(is.numeric))
+
+cor_matrix <- cor(
+  numeric_data,
+  use = "complete.obs"
+)
+
+corrplot(
+  cor_matrix,
+  method = "color",
+  type = "upper",
+  tl.cex = 0.6
+)
+```
+
+
+# Chronic Kidney Disease
+```{r}
+# Load dataset
+ckd <- readARFF("../data/raw/Chronic_Kidney_Disease/chronic_kidney_disease.arff")
+```
+
+```{r}
+glimpse(ckd)
+```
+```{r}
+# Dimensions
+dim(ckd)
+```
+```{r}
+summary(ckd)
+```
+```{r}
+table(ckd$class)
+ggplot(ckd, aes(x = factor(class))) + geom_bar() + labs( title = "Distribucion de clases", x = "Prediccion", y = "Cantidad" )
+```
+
+```{r}
+# Count null data
+colSums(is.na(ckd))
+
+print("Nullable columns (Percentage)")
+
+colMeans(is.na(ckd)) * 100
+```
+
+```{r}
+plot_histogram(ckd)
+```
+
+```{r}
+# Make correlation matrix and boxplot
+numeric_data <- ckd %>%
+  select(where(is.numeric))
+
+cor_matrix <- cor(
+  numeric_data,
+  use = "complete.obs"
+)
+
+corrplot(
+  cor_matrix,
+  method = "color",
+  type = "upper",
+  tl.cex = 0.6
+)
+```
+

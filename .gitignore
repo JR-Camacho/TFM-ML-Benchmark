@@ -1,0 +1,26 @@
+# R
+.Rhistory
+.RData
+.Ruserdata
+
+# RStudio
+.Rproj.user/
+
+# macOS
+.DS_Store
+
+# Salidas renderizadas
+*.html
+*.pdf
+*.docx
+
+# Cache de RMarkdown / Quarto
+_cache/
+*_cache/
+
+# Entornos virtuales / paquetes
+renv/library/
+renv/staging/
+
+# Datos pesados o sensibles
+data
