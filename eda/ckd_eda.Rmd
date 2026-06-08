@@ -1,5 +1,5 @@
 ---
-title: "breast_cancer_eda"
+title: "ckd_eda"
 output:
   pdf_document: default
   html_document: default
@@ -22,73 +22,123 @@ library(corrplot)
 ```
 
 
-# Breast Cancer Analysis
+# Chronic Kidney Disease
 ```{r}
 # Load dataset
-breast <- read_csv("../data/raw/breast+cancer+wisconsin+diagnostic/wdbc.data", col_names = FALSE)
+ckd <- readARFF("../data/raw/Chronic_Kidney_Disease/chronic_kidney_disease.arff")
+```
 
-# Asing colnames based in the wdbc.names file
-colnames(breast) <- c(
-  "id",
-  "diagnosis",
+# Data types and statistics
 
-  "radius_mean",
-  "texture_mean",
-  "perimeter_mean",
-  "area_mean",
-  "smoothness_mean",
-  "compactness_mean",
-  "concavity_mean",
-  "concave_points_mean",
-  "symmetry_mean",
-  "fractal_dimension_mean",
+```{r}
+str(ckd)
+```
+```{r}
+lapply(ckd %>% select(where(is.factor)), levels)
+```
 
-  "radius_se",
-  "texture_se",
-  "perimeter_se",
-  "area_se",
-  "smoothness_se",
-  "compactness_se",
-  "concavity_se",
-  "concave_points_se",
-  "symmetry_se",
-  "fractal_dimension_se",
 
-  "radius_worst",
-  "texture_worst",
-  "perimeter_worst",
-  "area_worst",
-  "smoothness_worst",
-  "compactness_worst",
-  "concavity_worst",
-  "concave_points_worst",
-  "symmetry_worst",
-  "fractal_dimension_worst"
+```{r}
+summary(ckd)
+```
+
+# Convert numeric values from factors
+
+```{r}
+# Binary variables
+
+ckd$class_num <- ifelse(
+  ckd$class == "ckd", 1,
+  ifelse(ckd$class == "notckd", 0, NA)
 )
-```
-```{r}
-str(breast)
+
+ckd$rbc_num <- ifelse(
+  ckd$rbc == "abnormal", 1,
+  ifelse(ckd$rbc == "normal", 0, NA)
+)
+
+ckd$pc_num <- ifelse(
+  ckd$pc == "abnormal", 1,
+  ifelse(ckd$pc == "normal", 0, NA)
+)
+
+ckd$pcc_num <- ifelse(
+  ckd$pcc == "present", 1,
+  ifelse(ckd$pcc == "notpresent", 0, NA)
+)
+
+ckd$ba_num <- ifelse(
+  ckd$ba == "present", 1,
+  ifelse(ckd$ba == "notpresent", 0, NA)
+)
+
+ckd$htn_num <- ifelse(
+  ckd$htn == "yes", 1,
+  ifelse(ckd$htn == "no", 0, NA)
+)
+
+ckd$dm_num <- ifelse(
+  ckd$dm == "yes", 1,
+  ifelse(ckd$dm == "no", 0, NA)
+)
+
+ckd$cad_num <- ifelse(
+  ckd$cad == "yes", 1,
+  ifelse(ckd$cad == "no", 0, NA)
+)
+
+ckd$appet_num <- ifelse(
+  ckd$appet == "poor", 1,
+  ifelse(ckd$appet == "good", 0, NA)
+)
+
+ckd$pe_num <- ifelse(
+  ckd$pe == "yes", 1,
+  ifelse(ckd$pe == "no", 0, NA)
+)
+
+ckd$ane_num <- ifelse(
+  ckd$ane == "yes", 1,
+  ifelse(ckd$ane == "no", 0, NA)
+)
+
+# Ordinary variables
+
+ckd$sg_num <- as.numeric(as.character(ckd$sg))
+ckd$al_num <- as.numeric(as.character(ckd$al))
+ckd$su_num <- as.numeric(as.character(ckd$su))
+
+str(ckd)
 ```
 
 ```{r}
-class(breast)
+numeric_vars <- ckd %>%
+  select(where(is.numeric))
+
+ncol(numeric_vars)
+names(numeric_vars)
+```
+```{r}
+sapply(numeric_vars, function(x) length(unique(x)))
 ```
 
 
+# Class distribution
+
 ```{r}
-summary(breast)
+table(ckd$class)
+ggplot(ckd, aes(x = factor(class))) + geom_bar() + labs( title = "Distribucion de clases", x = "Prediccion", y = "Cantidad" )
 ```
 
 ```{r}
-table(breast$diagnosis)
-ggplot(breast, aes(x = factor(diagnosis))) + geom_bar() + labs( title = "Distribucion de clases", x = "Diagnostico", y = "Cantidad" )
+plot_histogram(ckd)
 ```
-```{r}
-plot_histogram(breast)
-```
+
+# Correlation Analysis
+
 ```{r}
 # Make correlation matrix and boxplot
-numeric_data <- breast %>%
+numeric_data <- ckd %>%
   select(where(is.numeric))
 
 cor_matrix <- cor(
@@ -102,8 +152,7 @@ corrplot(
   type = "upper",
   tl.cex = 0.6
 )
-```
-```{r}
+
 # Convert matrix to table
 cor_table <- as.data.frame(as.table(cor_matrix))
 
@@ -123,33 +172,39 @@ cor_table <- cor_table %>%
 
 head(cor_table, 30)
 ```
+```{r}
+# Check unique values
+unique(ckd$class)
+```
 
 # Determine relevant variables
 
 ```{r}
-# Convert target variable to numeric
-# M = 1 (malignant), B = 0 (benign)
-breast$diagnosis_num <- ifelse(breast$diagnosis == "M", 1, 0)
 
 # Select only numeric variables
-numeric_vars <- breast %>%
+numeric_vars <- ckd %>%
   select(where(is.numeric))
 
-# Calculate correlation against target variable
-target_cor <- cor(numeric_vars, breast$diagnosis_num)
+# Remove target from predictors
+numeric_vars <- numeric_vars %>%
+  select(-class_num)
 
-# Convert correlation matrix to dataframe
-target_cor_df <- data.frame(
-  variable = rownames(target_cor),
-  correlation = target_cor[,1]
+# Calculate correlations one by one
+target_cor <- sapply(
+  numeric_vars,
+  function(x) cor(x, ckd$class_num,
+                  use = "complete.obs")
 )
 
-# Calculate absolute correlation values
-target_cor_df <- target_cor_df %>%
-  mutate(abs_correlation = abs(correlation))
+# Convert to dataframe
+target_cor_df <- data.frame(
+  variable = names(target_cor),
+  correlation = as.numeric(target_cor)
+)
 
-# Sort variables by importance
+# Absolute correlation
 target_cor_df <- target_cor_df %>%
+  mutate(abs_correlation = abs(correlation)) %>%
   arrange(desc(abs_correlation))
 
 head(target_cor_df, 20)
@@ -158,7 +213,7 @@ head(target_cor_df, 20)
 # Detect outliers 
 ```{r}
 # Convert data to long format
-numeric_long <- breast %>%
+numeric_long <- ckd %>%
   select(where(is.numeric)) %>%
   pivot_longer(
     cols = everything(),
@@ -213,6 +268,9 @@ outlier_summary <- outlier_summary %>%
 # Show results
 outlier_summary
 ```
+
+# Scales
+
 ```{r}
 # Watch the different scales
 data.frame(
@@ -222,4 +280,5 @@ data.frame(
   sd = sapply(numeric_vars, sd, na.rm = TRUE)
 )
 ```
+
 

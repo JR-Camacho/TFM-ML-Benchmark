@@ -24,3 +24,7 @@ renv/staging/
 
 # Datos pesados o sensibles
 data
+
+# PDFS AND HTMLS
+*.pdf
+*.html
