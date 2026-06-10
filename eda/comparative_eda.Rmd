@@ -1,14 +1,16 @@
 ---
 title: "comparative_eda"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Install packages
 ```{r}
-install.packages("farff")
-install.packages("tidyverse")
-install.packages("DataExplorer")
-install.packages("corrplot")
+# install.packages("farff")
+# install.packages("tidyverse")
+# install.packages("DataExplorer")
+# install.packages("corrplot")
 ```
 
 
