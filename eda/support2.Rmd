@@ -64,6 +64,130 @@ colSums(is.na(support2))
 print("Nullable values columns (Percentage)")
 colMeans(is.na(support2)) * 100
 ```
+```{r}
+plot_missing(support2, missing_only = TRUE)
+```
+```{r}
+# Calculate row-wise NAs in a temporary vector
+nas_per_row <- rowSums(is.na(support2))
+
+# Set up the visualization area
+par(mfrow = c(1, 2))
+
+# 1. Plot for hospdead
+boxplot(nas_per_row ~ support2$hospdead, 
+        main = "Nulos vs. Muerte Hospitalaria",
+        xlab = "hospdead (0=Vivo, 1=Muerto)", 
+        ylab = "Cantidad de valores faltantes",
+        col = c("skyblue", "indianred"))
+
+# 2. Plot for death
+boxplot(nas_per_row ~ support2$death, 
+        main = "Nulos vs. Muerte General",
+        xlab = "death (0=Vivo, 1=Muerto)", 
+        ylab = "Cantidad de valores faltantes",
+        col = c("skyblue", "indianred"))
+
+# Calculate averages
+cat("Average missing values by group (hospdead):\n")
+print(tapply(nas_per_row, support2$hospdead, mean, na.rm = TRUE))
+
+cat("\nAverage missing values by group (death):\n")
+print(tapply(nas_per_row, support2$death, mean, na.rm = TRUE))
+```
+```{r}
+prop.table(
+  table(is.na(support2$alb), support2$hospdead),
+  margin = 1
+)
+```
+```{r}
+# Variables con alto missing
+vars_to_check <- c(
+  "pafi", "alb", "bili",
+  "ph", "glucose", "bun", "urine"
+)
+
+# Loop
+for (var in vars_to_check) {
+
+  cat("\n========================\n")
+  cat("Variable:", var, "\n")
+  cat("========================\n")
+
+  # Crear indicador de missing
+  missing_var <- is.na(support2[[var]])
+
+  # Tabla de proporciones por dzgroup
+  result <- prop.table(
+    table(support2$dzgroup, missing_var),
+    margin = 1
+  )
+
+  print(round(result, 3))
+}
+```
+```{r}
+# Variables a comparar
+vars_to_check <- c(
+  "hospdead",
+  "scoma",
+  "dzgroup",
+  "age",
+  "dementia"
+)
+
+# Variables con muchos missing
+target_vars <- c("adlp", "adls")
+
+for (target in target_vars) {
+
+  cat("\n========================\n")
+  cat("Variable:", target, "\n")
+  cat("========================\n")
+
+  # Variable booleana de missing
+  support2$missing_var <- is.na(support2[[target]])
+
+  for (v in vars_to_check) {
+
+    cat("\n--- Comparando con:", v, "---\n")
+
+    # Si categórica
+    if (is.factor(support2[[v]]) || is.character(support2[[v]])) {
+
+      tbl <- prop.table(
+        table(support2[[v]], support2$missing_var),
+        margin = 1
+      )
+
+      print(round(tbl, 3))
+
+    } else {
+
+      # Convertir a numérico
+      temp_var <- as.numeric(support2[[v]])
+
+      summary_tbl <- data.frame(
+        missing_var = support2$missing_var,
+        temp_var = temp_var
+      ) %>%
+        group_by(missing_var) %>%
+        summarise(
+          mean = mean(temp_var, na.rm = TRUE),
+          median = median(temp_var, na.rm = TRUE),
+          sd = sd(temp_var, na.rm = TRUE),
+          n = n(),
+          .groups = "drop"
+        )
+
+      print(summary_tbl)
+    }
+  }
+}
+```
+
+
 
 # Distribution Analysis
 
