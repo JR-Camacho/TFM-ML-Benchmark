@@ -1,0 +1,18 @@
+---
+title: "support2_proc"
+output: html_document
+---
+
+```{r}
+library(readr)
+library(farff)
+library(tidyverse)
+library(DataExplorer)
+library(corrplot)
+library(Hmisc)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(gridExtra)
+```
+
