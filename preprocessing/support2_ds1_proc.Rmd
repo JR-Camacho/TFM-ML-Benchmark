@@ -1,0 +1,224 @@
+---
+title: "support2_ds1_proc"
+output: html_document
+---
+
+```{r}
+# install.packages("caret")
+```
+
+```{r}
+library(readr)
+library(farff)
+library(tidyverse)
+library(DataExplorer)
+library(corrplot)
+library(Hmisc)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(gridExtra)
+library(caret)
+```
+
+# Load dataset 
+```{r}
+# Load dataset
+getHdata("support2")
+
+support2_raw <- support2
+
+head(support2_raw)
+```
+
+```{r}
+index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
+
+train_bio <- support2_raw[index_train, ]
+test_bio  <- support2_raw[-index_train, ]
+
+train_bio
+test_bio
+```
+
+```{r}
+# 3. Función para limpiar tipos y columnas
+
+delete_vars <- function(df, vars_to_remove) {
+  # Convertir labelled a numeric para evitar errores
+  df <- df %>% 
+    mutate(across(everything(), ~ {
+      if (inherits(., "labelled")) as.numeric(.) else .
+    }))
+  
+  df <- df %>% select(-any_of(vars_to_remove))
+  
+  return(df)
+}
+```
+
+```{r}
+# Eliminar variables
+vars_to_remove <- c(
+  "urine", "dnrday", "prg2m", "prg6m", "surv2m", "surv6m", 
+  "totmcst", "totcst", "income", "sfdm2", "adlp", 
+  "death", "d.time", "dzclass", "adlsc", "sps", "avtisst", "glucose", "bun"
+)
+
+train_bio <- delete_vars(train_bio, vars_to_remove)
+test_bio  <- delete_vars(test_bio, vars_to_remove)
+
+train_bio
+test_bio
+
+names(train_bio)
+```
+```{r}
+# 4. Eliminar filas con nulos en variables clave
+clinical_key_vars <- c("meanbp", "hrt", "resp", "temp", "sod", "scoma", "aps", "crea")
+train_bio <- train_bio %>% drop_na(all_of(clinical_key_vars))
+test_bio  <- test_bio %>% drop_na(all_of(clinical_key_vars))
+
+train_bio
+test_bio
+```
+
+```{r}
+# 5. Imputación: Calcular en TRAIN, aplicar a AMBOS
+imputation_medians <- train_bio %>%
+  group_by(dzgroup) %>%
+  summarise(
+    ## bun_med = median(bun, na.rm = TRUE),
+    wblc_med = median(wblc, na.rm = TRUE),
+    bili_med = median(bili, na.rm = TRUE),
+    alb_med = median(alb, na.rm = TRUE),
+    ph_med = median(ph, na.rm = TRUE),
+    pafi_med = median(pafi, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+imputation_medians
+```
+```{r}
+# Función para aplicar la imputación a cualquier set
+apply_imputation <- function(df, medians) {
+  df %>%
+    left_join(medians, by = "dzgroup") %>%
+    mutate(
+      ## bun = ifelse(is.na(bun), bun_med, bun),
+      wblc = ifelse(is.na(wblc), wblc_med, wblc),
+      bili = ifelse(is.na(bili), bili_med, bili),
+      alb = ifelse(is.na(alb), alb_med, alb),
+      ph = ifelse(is.na(ph), ph_med, ph),
+      pafi = ifelse(is.na(pafi), pafi_med, pafi)
+    ) %>%
+    select(-ends_with("_med"))
+}
+
+# Aplicar a ambos datasets
+train_bio <- apply_imputation(train_bio, imputation_medians)
+test_bio  <- apply_imputation(test_bio, imputation_medians)
+
+# --- 6. Imputación global y limpieza de categóricas ---
+# Imputar glucosa con la mediana global del train
+# global_glucose <- median(train_bio$glucose, na.rm = TRUE)
+# train_bio <- train_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
+# test_bio  <- test_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
+
+# Imputar charges con la mediana global del train
+global_charges <- median(train_bio$charges, na.rm = TRUE)
+train_bio <- train_bio %>% mutate(charges = replace_na(charges, global_charges))
+test_bio  <- test_bio %>% mutate(charges = replace_na(charges, global_charges))
+
+
+# Aplicar la misma lógica de transformación que en tus gráficos
+transform_edu <- function(df) {
+  df %>%
+    mutate(
+      # Aseguramos que sea numérico primero por si acaso
+      edu_num = as.numeric(as.character(edu)),
+      edu_cat = case_when(
+        edu_num <= 8  ~ "Basica",
+        edu_num <= 12 ~ "Secundaria",
+        edu_num > 12  ~ "Superior",
+        TRUE          ~ "Unknown"
+      ),
+      # Convertimos a factor y definimos el orden lógico
+      edu = factor(edu_cat, levels = c("Basica", "Secundaria", "Superior", "Unknown"))
+    ) %>%
+    select(-edu_num, -edu_cat) # Limpiamos columnas temporales
+}
+
+# Aplicar a tus datasets ya limpios
+train_bio <- transform_edu(train_bio)
+test_bio  <- transform_edu(test_bio)
+
+# Convertir categóricas a caracteres, asignar "Unknown" y luego a factor
+cat_vars <- c("race", "dnr")
+train_bio <- train_bio %>% mutate(across(all_of(cat_vars), ~replace_na(as.character(.), "Unknown")))
+test_bio  <- test_bio %>% mutate(across(all_of(cat_vars), ~replace_na(as.character(.), "Unknown")))
+
+# Imputar adls (8 como categoría)
+train_bio <- train_bio %>% mutate(adls = replace_na(adls, 8))
+test_bio  <- test_bio %>% mutate(adls = replace_na(adls, 8))
+
+colSums(is.na(train_bio))
+colSums(is.na(test_bio))
+```
+
+```{r}
+train_bio
+test_bio
+```
+```{r}
+str(train_bio)
+```
+```{r}
+# 1. Asegurar el target
+train_bio$hospdead <- as.factor(train_bio$hospdead)
+test_bio$hospdead  <- as.factor(test_bio$hospdead)
+
+# 2. Convertir binarias categóricas que quedaron como 'num'
+cols_to_factor <- c("diabetes", "dementia", "race", "dnr")
+
+for(col in cols_to_factor) {
+  train_bio[[col]] <- as.factor(train_bio[[col]])
+  test_bio[[col]]  <- factor(test_bio[[col]], levels = levels(train_bio[[col]]))
+}
+
+
+# Verificación final
+str(train_bio)
+```
+
+```{r}
+# 2. Creamos los datasets escalados
+train_bio_scaled <- train_bio
+test_bio_scaled  <- test_bio
+
+# Identificar columnas numéricas (excluyendo factores)
+num_cols <- names(train_bio)[sapply(train_bio, is.numeric)]
+
+# Aplicar escalado usando las estadísticas del train para ambos
+for (col in num_cols) {
+  mu <- mean(train_bio[[col]], na.rm = TRUE)
+  sigma <- sd(train_bio[[col]], na.rm = TRUE)
+  
+  # Aplicamos la fórmula: (valor - media) / desviación_estándar
+  train_bio_scaled[[col]] <- (train_bio[[col]] - mu) / sigma
+  test_bio_scaled[[col]]  <- (test_bio_scaled[[col]] - mu) / sigma
+}
+
+train_bio_scaled
+test_bio_scaled
+```
+```{r}
+saveRDS(train_bio, "../data/processed/support2/df1/train_base.rds")
+saveRDS(test_bio,  "../data/processed/support2/df1/test_base.rds")
+
+saveRDS(train_bio_scaled, "../data/processed/support2/df1/train_scaled.rds")
+saveRDS(test_bio_scaled,  "../data/processed/support2/df1/test_scaled.rds")
+```
+
+
+

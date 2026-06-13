@@ -187,6 +187,141 @@ for (target in target_vars) {
 }
 ```
 
+```{r}
+results <- do.call(rbind, lapply(names(support2), function(v) {
+  group_0 <- sum(is.na(support2[[v]][support2$hospdead == 0]))
+  group_1 <- sum(is.na(support2[[v]][support2$hospdead == 1]))
+  total_0 <- sum(support2$hospdead == 0, na.rm = TRUE)
+  total_1 <- sum(support2$hospdead == 1, na.rm = TRUE)
+  
+  c(Nulos_Vivos = group_0, Nulos_Muertos = group_1, 
+    Porc_Vivos = round((group_0/total_0)*100, 2), 
+    Porc_Muertos = round((group_1/total_1)*100, 2),
+    Diff = round(abs((group_1/total_1) - (group_0/total_0)) * 100, 2))
+}))
+
+rownames(results) <- names(support2)
+results <- as.data.frame(results)
+
+results <- results[rowSums(results[, 1:2]) > 0, ]
+results <- results[order(results$Diff), ]
+
+print(results)
+```
+
+```{r}
+support2 %>%
+  mutate(
+    wblc_missing = is.na(wblc),
+    hospdead_num = as.numeric(hospdead),
+    slos_num = as.numeric(slos)
+  ) %>%
+  group_by(wblc_missing, hospdead_num) %>%
+  summarise(
+    n = n(),
+    mean_slos = mean(slos_num, na.rm = TRUE),
+    median_slos = median(slos_num, na.rm = TRUE),
+    min_slos = min(slos_num, na.rm = TRUE),
+    max_slos = max(slos_num, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+```{r}
+support2 %>%
+  mutate(
+    wblc_num = as.numeric(wblc)
+  ) %>%
+  group_by(dzgroup) %>%
+  summarise(
+    n = n(),
+    missing = sum(is.na(wblc_num)),
+    median_wblc = median(wblc_num, na.rm = TRUE),
+    mean_wblc = mean(wblc_num, na.rm = TRUE),
+    sd_wblc = sd(wblc_num, na.rm = TRUE),
+    min_wblc = min(wblc_num, na.rm = TRUE),
+    max_wblc = max(wblc_num, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(median_wblc))
+```
+```{r}
+# ========================
+# GLUCOSE
+# ========================
+
+support2 %>%
+  mutate(
+    glucose_missing = is.na(glucose),
+    hospdead_num = as.numeric(hospdead),
+    slos_num = as.numeric(slos)
+  ) %>%
+  group_by(glucose_missing, hospdead_num) %>%
+  summarise(
+    n = n(),
+    mean_slos = mean(slos_num, na.rm = TRUE),
+    median_slos = median(slos_num, na.rm = TRUE),
+    min_slos = min(slos_num, na.rm = TRUE),
+    max_slos = max(slos_num, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# ========================
+# BILI
+# ========================
+
+support2 %>%
+  mutate(
+    bili_missing = is.na(bili),
+    hospdead_num = as.numeric(hospdead),
+    slos_num = as.numeric(slos)
+  ) %>%
+  group_by(bili_missing, hospdead_num) %>%
+  summarise(
+    n = n(),
+    mean_slos = mean(slos_num, na.rm = TRUE),
+    median_slos = median(slos_num, na.rm = TRUE),
+    min_slos = min(slos_num, na.rm = TRUE),
+    max_slos = max(slos_num, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+```
+```{r}
+support2 %>%
+  group_by(hospdead) %>%
+  summarise(
+    mean_slos = mean(as.numeric(slos), na.rm = TRUE),
+    median_slos = median(as.numeric(slos), na.rm = TRUE),
+    sd_slos = sd(as.numeric(slos), na.rm = TRUE),
+    n = n()
+  )
+```
+```{r}
+support2 %>%
+  group_by(hospdead) %>%
+  summarise(
+    mean_dtime = mean(as.numeric(d.time), na.rm = TRUE),
+    median_dtime = median(as.numeric(d.time), na.rm = TRUE),
+    sd_dtime = sd(as.numeric(d.time), na.rm = TRUE),
+    n = n()
+  )
+```
+```{r}
+support2 %>%
+  mutate(
+    hday_num = as.numeric(hday),
+    hospdead_num = as.numeric(hospdead)
+  ) %>%
+  group_by(hospdead_num) %>%
+  summarise(
+    n = n(),
+    mean_hday = mean(hday_num, na.rm = TRUE),
+    median_hday = median(hday_num, na.rm = TRUE),
+    sd_hday = sd(hday_num, na.rm = TRUE),
+    min_hday = min(hday_num, na.rm = TRUE),
+    max_hday = max(hday_num, na.rm = TRUE)
+  )
+```
 
 
 # Distribution Analysis

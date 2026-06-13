@@ -1,0 +1,204 @@
+---
+title: "support2_ds2_proc"
+output: html_document
+---
+
+```{r}
+# install.packages("caret")
+```
+
+```{r}
+library(readr)
+library(farff)
+library(tidyverse)
+library(DataExplorer)
+library(corrplot)
+library(Hmisc)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(gridExtra)
+library(caret)
+```
+
+# Load dataset 
+```{r}
+# Load dataset
+getHdata("support2")
+
+support2_raw <- support2
+
+head(support2_raw)
+```
+
+```{r}
+index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
+
+train_tech <- support2_raw[index_train, ]
+test_tech  <- support2_raw[-index_train, ]
+
+train_tech
+test_tech
+```
+
+```{r}
+# 3. Función para limpiar tipos y columnas
+
+delete_vars <- function(df, vars_to_remove) {
+  # Convertir labelled a numeric para evitar errores
+  df <- df %>% 
+    mutate(across(everything(), ~ {
+      if (inherits(., "labelled")) as.numeric(.) else .
+    }))
+  
+  df <- df %>% select(-any_of(vars_to_remove))
+  
+  return(df)
+}
+```
+
+```{r}
+# Eliminar variables
+vars_to_remove <- c(
+  "urine", "dnrday", "surv2m", "surv6m", 
+  "totmcst", "adlp", 
+  "death", "d.time", "alb", "glucose", "bun"
+)
+
+train_tech <- delete_vars(train_tech, vars_to_remove)
+test_tech  <- delete_vars(test_tech, vars_to_remove)
+
+train_tech
+test_tech
+
+names(train_tech)
+```
+```{r}
+# 4. Eliminar filas con nulos en variables clave
+clinical_key_vars <- c("meanbp", "hrt", "resp", "temp", "sod", "scoma","sps","aps", "crea", "avtisst")
+train_tech <- train_tech %>% drop_na(all_of(clinical_key_vars))
+test_tech  <- test_tech %>% drop_na(all_of(clinical_key_vars))
+
+train_tech
+test_tech
+```
+
+```{r}
+# 1. Definir la función de la moda (necesaria para 'adls' y 'edu')
+get_mode <- function(x) {
+  ux <- unique(na.omit(x))
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+imputar_unknown <- function(df, col_name) {
+  # 1. Convertir a carácter para evitar errores, añadir el nivel y volver a factor
+  df[[col_name]] <- as.character(df[[col_name]])
+  df[[col_name]][is.na(df[[col_name]])] <- "Unknown"
+  df[[col_name]] <- as.factor(df[[col_name]])
+  return(df)
+}
+
+# Imputación por "Unknown" para categóricas
+train_tech <- imputar_unknown(train_tech, "race")
+train_tech <- imputar_unknown(train_tech, "dnr")
+test_tech  <- imputar_unknown(test_tech, "race")
+test_tech  <- imputar_unknown(test_tech, "dnr")
+
+# Imputación por Moda
+# 1. Calculamos las modas del entrenamiento una sola vez
+moda_adls   <- get_mode(train_tech$adls)
+moda_edu    <- get_mode(train_tech$edu)
+moda_sfdm2  <- get_mode(train_tech$sfdm2)
+moda_income <- get_mode(train_tech$income)
+
+# 2. Imputamos el train
+train_tech$adls[is.na(train_tech$adls)]   <- moda_adls
+train_tech$edu[is.na(train_tech$edu)]     <- moda_edu
+train_tech$sfdm2[is.na(train_tech$sfdm2)] <- moda_sfdm2
+train_tech$income[is.na(train_tech$income)] <- moda_income
+
+# 3. Imputamos el test usando los valores del train
+test_tech$adls[is.na(test_tech$adls)]     <- moda_adls
+test_tech$edu[is.na(test_tech$edu)]       <- moda_edu
+test_tech$sfdm2[is.na(test_tech$sfdm2)]   <- moda_sfdm2
+test_tech$income[is.na(test_tech$income)] <- moda_income
+
+
+# Imputación por Mediana Global (Lista de variables)
+vars_mediana <- c("charges", "wblc", "bili", "ph", "pafi", "prg2m", 
+                  "prg6m", "totcst")
+
+for (var in vars_mediana) {
+  if (var %in% names(train_tech)) {
+    # 1. Convertir a numérico a la fuerza (si hay texto, lo convertirá a NA, lo cual está bien)
+    train_tech[[var]] <- as.numeric(as.character(train_tech[[var]]))
+    test_tech[[var]]  <- as.numeric(as.character(test_tech[[var]]))
+    
+    # 2. Calcular mediana solo sobre los datos existentes
+    mediana_val <- median(train_tech[[var]], na.rm = TRUE)
+    
+    # 3. Imputar
+    train_tech[[var]][is.na(train_tech[[var]])] <- mediana_val
+    test_tech[[var]][is.na(test_tech[[var]])]   <- mediana_val
+  }
+}
+colSums(is.na(train_tech))
+colSums(is.na(test_tech))
+```
+
+```{r}
+train_tech
+test_tech
+```
+```{r}
+str(train_tech)
+```
+```{r}
+# 1. Asegurar el target
+train_tech$hospdead <- as.factor(train_tech$hospdead)
+test_tech$hospdead  <- as.factor(test_tech$hospdead)
+
+# 2. Convertir binarias categóricas que quedaron como 'num'
+cols_to_factor <- c("diabetes", "dementia")
+
+for(col in cols_to_factor) {
+  train_tech[[col]] <- as.factor(train_tech[[col]])
+  test_tech[[col]]  <- factor(test_tech[[col]], levels = levels(train_tech[[col]]))
+}
+
+
+# Verificación final
+str(train_tech)
+```
+
+```{r}
+# 2. Creamos los datasets escalados
+train_tech_scaled <- train_tech
+test_tech_scaled  <- test_tech
+
+# Identificar columnas numéricas (excluyendo factores)
+num_cols <- names(train_tech)[sapply(train_tech, is.numeric)]
+
+# Aplicar escalado usando las estadísticas del train para ambos
+for (col in num_cols) {
+  mu <- mean(train_tech[[col]], na.rm = TRUE)
+  sigma <- sd(train_tech[[col]], na.rm = TRUE)
+  
+  # Aplicamos la fórmula: (valor - media) / desviación_estándar
+  train_tech_scaled[[col]] <- (train_tech[[col]] - mu) / sigma
+  test_tech_scaled[[col]]  <- (test_tech_scaled[[col]] - mu) / sigma
+}
+
+train_tech_scaled
+test_tech_scaled
+```
+```{r}
+saveRDS(train_tech, "../data/processed/support2/df2/train_base.rds")
+saveRDS(test_tech,  "../data/processed/support2/df2/test_base.rds")
+
+saveRDS(train_tech_scaled, "../data/processed/support2/df2/train_scaled.rds")
+saveRDS(test_tech_scaled,  "../data/processed/support2/df2/test_scaled.rds")
+```
+
+
+
