@@ -1,6 +1,8 @@
 ---
 title: "support2_ds2_proc"
-output: html_document
+output: 
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -37,8 +39,8 @@ index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
 train_tech <- support2_raw[index_train, ]
 test_tech  <- support2_raw[-index_train, ]
 
-train_tech
-test_tech
+head(train_tech)
+head(test_tech)
 ```
 
 ```{r}
@@ -68,8 +70,8 @@ vars_to_remove <- c(
 train_tech <- delete_vars(train_tech, vars_to_remove)
 test_tech  <- delete_vars(test_tech, vars_to_remove)
 
-train_tech
-test_tech
+head(train_tech)
+head(test_tech)
 
 names(train_tech)
 ```
@@ -79,8 +81,8 @@ clinical_key_vars <- c("meanbp", "hrt", "resp", "temp", "sod", "scoma","sps","ap
 train_tech <- train_tech %>% drop_na(all_of(clinical_key_vars))
 test_tech  <- test_tech %>% drop_na(all_of(clinical_key_vars))
 
-train_tech
-test_tech
+head(train_tech)
+head(test_tech)
 ```
 
 ```{r}
@@ -147,16 +149,20 @@ colSums(is.na(test_tech))
 ```
 
 ```{r}
-train_tech
-test_tech
+head(train_tech)
+head(test_tech)
 ```
 ```{r}
 str(train_tech)
 ```
 ```{r}
 # 1. Asegurar el target
-train_tech$hospdead <- as.factor(train_tech$hospdead)
-test_tech$hospdead  <- as.factor(test_tech$hospdead)
+train_tech$hospdead <- factor(train_tech$hospdead, 
+                                 levels = c(0, 1), 
+                                 labels = c("No", "Yes"))
+test_tech$hospdead  <- factor(test_tech$hospdead, 
+                                 levels = c(0, 1), 
+                                 labels = c("No", "Yes"))
 
 # 2. Convertir binarias categóricas que quedaron como 'num'
 cols_to_factor <- c("diabetes", "dementia")
@@ -189,8 +195,8 @@ for (col in num_cols) {
   test_tech_scaled[[col]]  <- (test_tech_scaled[[col]] - mu) / sigma
 }
 
-train_tech_scaled
-test_tech_scaled
+head(train_tech_scaled)
+head(test_tech_scaled)
 ```
 ```{r}
 saveRDS(train_tech, "../data/processed/support2/df2/train_base.rds")

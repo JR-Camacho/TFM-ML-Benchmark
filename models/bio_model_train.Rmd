@@ -1,0 +1,105 @@
+---
+title: "bio_model_train"
+output: html_document
+---
+```{r}
+# Cargar librerías
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(knitr)
+library(kableExtra)
+```
+
+```{r}
+source("../scripts/modeling_utils.R")
+```
+
+```{r}
+# Cargamos los datasets procesados
+train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
+test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
+
+train_bio_scaled <- readRDS("../data/processed/support2/df1/train_scaled.rds")
+test_bio_scaled <- readRDS("../data/processed/support2/df1/test_scaled.rds")
+```
+
+```{r}
+colSums(is.na(test_bio))
+colSums(is.na(test_bio_scaled))
+```
+
+```{r}
+str(test_bio_scaled)
+# str(test_bio)
+```
+
+
+
+```{r}
+
+# --- 1. Ejecución con los datos BASE ---
+# Nota: La función aplicará escalado interno a KNN y SVM automáticamente.
+modelos_base <- entrenar_benchmark(
+  train_data = train_bio, 
+  nombre_dataset = "df1_Base"
+)
+
+resultados_base <- evaluar_benchmark(
+  modelos_lista = modelos_base, 
+  test_data = test_bio, 
+  nombre_dataset = "df1_Base",
+  clase_positiva = "Yes"
+)
+
+# --- 3. Consolidación de los Resultados ---
+# resultados_totales <- rbind(resultados_base, resultados_scaled)
+
+```
+```{r}
+# --- 2. Ejecución con los datos ESCALADOS ---
+# Aquí todos los modelos recibirán la data ya escalada desde tu RDS.
+modelos_scaled <- entrenar_benchmark(
+  train_data = train_bio_scaled, 
+  nombre_dataset = "df1_Scaled",
+  scaled_df = TRUE
+)
+
+```
+```{r}
+resultados_scaled <- evaluar_benchmark(
+  modelos_lista = modelos_scaled, 
+  test_data = test_bio_scaled, 
+  nombre_dataset = "df1_Scaled"
+  #clase_positiva = "Yes"
+)
+```
+
+```{r}
+resultados_base <- evaluar_benchmark(
+  modelos_lista = modelos_base, 
+  test_data = test_bio, 
+  nombre_dataset = "df1_Base",
+  clase_positiva = "Yes"
+)
+```
+
+
+
+```{r}
+resultados_totales <- rbind(resultados_base)
+
+resultados_totales %>%
+  kbl(digits = 3, align = "lcccc") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+
+# Genera todos los gráficos interactivos automáticamente
+generar_graficos_automaticos(resultados_totales)
+```
+
+
