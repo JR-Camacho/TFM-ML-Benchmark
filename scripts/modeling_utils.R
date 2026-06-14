@@ -26,16 +26,12 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE) {
     LogisticRegression = "glm",
     DecisionTree = "rpart",
     RandomForest = "rf",
-    GBM = "gbm"
+    GBM = "gbm",
+    C50 = "C5.0"
   )
   
   if (scaled_df == TRUE) {
-    cat("   [!] Parámetro scaled_df = TRUE. \n")
-    cat("   [!] Agregando KNN y SVM a la cola de entrenamiento...\n")
-    algoritmos$SVM <- "svmRadial"
     algoritmos$KNN <- "knn"
-  } else {
-    cat("   [!] Parámetro scaled_df = FALSE. Omitiendo KNN y SVM.\n")
   }
   
   modelos_entrenados <- list()
@@ -85,11 +81,22 @@ evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_po
   for (nombre in names(modelos_lista)) {
     modelo <- modelos_lista[[nombre]]
     
-    probs <- predict(modelo, test_data, type = "prob")[, clase_positiva] 
+    # 1. Obtener predicciones
+    # Usamos na.action = na.pass para intentar predecir incluso con valores extraños
+    probs_df <- predict(modelo, test_data, type = "prob")
     clases <- predict(modelo, test_data)
     
-    roc_obj <- roc(test_data$hospdead, probs, quiet = TRUE)
-    cm <- confusionMatrix(clases, test_data$hospdead, positive = clase_positiva)
+    # 2. Sincronización estricta:
+    # Solo tomamos las filas que realmente fueron predichas (en caso de que el modelo omita alguna)
+    filas_validas <- !is.na(clases) 
+    
+    y_test_valid <- test_data$hospdead[filas_validas]
+    probs_valid <- probs_df[filas_validas, clase_positiva]
+    clases_valid <- clases[filas_validas]
+    
+    # 3. Calcular métricas con los datos sincronizados
+    roc_obj <- roc(y_test_valid, probs_valid, quiet = TRUE)
+    cm <- confusionMatrix(clases_valid, y_test_valid, positive = clase_positiva)
     
     fila <- data.frame(
       Dataset = nombre_dataset,
@@ -162,4 +169,36 @@ generar_graficos_automaticos <- function(resultados) {
   
   # 3. Empaquetar todo para que RMarkdown lo renderice de golpe en el HTML final
   return(htmltools::browsable(htmltools::tagList(lista_graficos)))
+}
+
+plot_roc_comparativo <- function(modelos_lista, test_data, titulo = "Comparación de Curvas ROC") {
+  
+  lista_roc <- list()
+  
+  for (nombre in names(modelos_lista)) {
+    modelo <- modelos_lista[[nombre]]
+    
+    # Obtenemos predicciones
+    preds <- predict(modelo, test_data, type = "prob")
+    
+    # Filtramos filas para evitar errores por NAs (crítico para modelos escalados)
+    filas_validas <- !is.na(preds$Yes)
+    y_test_valid <- test_data$hospdead[filas_validas]
+    prob_valid <- preds$Yes[filas_validas]
+    
+    # Guardamos el objeto ROC
+    lista_roc[[nombre]] <- roc(y_test_valid, prob_valid, quiet = TRUE)
+  }
+  
+  # Generar la gráfica
+  grafica <- ggroc(lista_roc, legacy.axes = TRUE) +
+    theme_minimal() +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "grey") +
+    labs(title = titulo,
+         x = "Tasa de Falsos Positivos (1-Especificidad)",
+         y = "Tasa de Verdaderos Positivos (Sensibilidad)") +
+    theme(legend.title = element_blank(),
+          plot.title = element_text(face = "bold", size = 14))
+  
+  return(grafica)
 }
