@@ -1,0 +1,100 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bajwa et~al.(2021)Bajwa, Munir, Nori, and Williams]{bajwa2021}
+J.~Bajwa, U.~Munir, A.~Nori, and B.~Williams.
+\newblock Artificial intelligence in healthcare: transforming the practice of medicine.
+\newblock \emph{Future Healthcare Journal}, 8\penalty0 (2):\penalty0 e188--e194, July 2021.
+\newblock \doi{10.7861/fhj.2021-0095}.
+
+\bibitem[Davenport and Kalakota(2019)]{davenport2019}
+T.~Davenport and R.~Kalakota.
+\newblock The potential for artificial intelligence in healthcare.
+\newblock \emph{Future Healthcare Journal}, 6\penalty0 (2):\penalty0 94--98, June 2019.
+\newblock \doi{10.7861/futurehosp.6-2-94}.
+
+\bibitem[Shamout et~al.(2021)Shamout, Zhu, and Clifton]{shamout2021}
+F.~Shamout, T.~Zhu, and D.~A. Clifton.
+\newblock Machine learning for clinical outcome prediction.
+\newblock \emph{IEEE Reviews in Biomedical Engineering}, 14:\penalty0 116--126, 2021.
+\newblock \doi{10.1109/RBME.2020.3007816}.
+
+\bibitem[Delpino et~al.(2025)Delpino, Pimenta, Gonzalez, Victor, Fonseca~Araujo, De~Araujo-Moura, Miranda, Batista, Chiavegatto~Filho, and Nunes]{delpino2025}
+F.~M. Delpino, L.~P. Pimenta, D.~F. Gonzalez, A.~Victor, C.~Fonseca~Araujo, K.~De~Araujo-Moura, J.~J. Miranda, S.~R.~R. Batista, A.~D.~P. Chiavegatto~Filho, and B.~P. Nunes.
+\newblock Global performance of machine learning models to predict all-cause mortality: systematic review and meta-analysis.
+\newblock \emph{Scientific Reports}, 15\penalty0 (1):\penalty0 42707, November 2025.
+\newblock \doi{10.1038/s41598-025-26714-6}.
+
+\bibitem[James et~al.(2021)James, Witten, Hastie, and Tibshirani]{james2021}
+G.~James, D.~Witten, T.~Hastie, and R.~Tibshirani.
+\newblock \emph{An Introduction to Statistical Learning: with Applications in {R}}.
+\newblock Springer, New York, 2 edition, 2021.
+\newblock URL \url{https://www.statlearning.com/}.
+
+\bibitem[{scikit-learn developers}(2024)]{sklearn_supervised}
+{scikit-learn developers}.
+\newblock Supervised learning.
+\newblock scikit-learn documentation, 2024.
+\newblock URL \url{https://scikit-learn.org/stable/supervised_learning.html}.
+
+\bibitem[Moassefi et~al.(2023)Moassefi, Rouzrokh, Conte, Vahdati, Fu, Tahmasebi, Younis, Farahani, Gentili, Kline, Kitamura, Huo, Kuanar, Younis, Erickson, and Faghani]{moassefi2023}
+M.~Moassefi, P.~Rouzrokh, G.~M. Conte, S.~Vahdati, T.~Fu, A.~Tahmasebi, M.~Younis, K.~Farahani, A.~Gentili, T.~Kline, F.~C. Kitamura, Y.~Huo, S.~Kuanar, K.~Younis, B.~J. Erickson, and S.~Faghani.
+\newblock Reproducibility of deep learning algorithms developed for medical imaging analysis: a systematic review.
+\newblock \emph{Journal of Digital Imaging}, 36\penalty0 (5):\penalty0 2306--2312, October 2023.
+\newblock \doi{10.1007/s10278-023-00870-5}.
+
+\bibitem[Owusu-Adjei et~al.(2023)Owusu-Adjei, Ben Hayfron-Acquah, Frimpong, and Abdul-Salaam]{owusuadjei2023}
+M.~Owusu-Adjei, J.~Ben Hayfron-Acquah, T.~Frimpong, and G.~Abdul-Salaam.
+\newblock Imbalanced class distribution and performance evaluation metrics: a systematic review of prediction accuracy for determining model performance in healthcare systems.
+\newblock \emph{PLOS Digital Health}, 2\penalty0 (11):\penalty0 e0000290, November 2023.
+\newblock \doi{10.1371/journal.pdig.0000290}.
+
+\bibitem[Li(2026)]{li2026}
+H.~Li.
+\newblock Heart failure risk prediction based on machine learning and interpretability analysis.
+\newblock \emph{Frontiers in Medicine}, 13:\penalty0 1801693, May 2026.
+\newblock \doi{10.3389/fmed.2026.1801693}.
+
+\bibitem[Uddin et~al.(2026)Uddin, Njie, Jin, Ghose, Zahid, and Jamil]{uddin2026}
+K.~N. Uddin, E.~Njie, R.~Jin, P.~Ghose, A.~Zahid, and H.~M. Jamil.
+\newblock Robust and interpretable {AI} for acute appendicitis: a simulation-to-clinical validation pipeline.
+\newblock \emph{Computer Methods and Programs in Biomedicine}, 285:\penalty0 109467, May 2026.
+\newblock \doi{10.1016/j.cmpb.2026.109467}.
+
+\bibitem[Wei et~al.(2026)Wei, Li, Huang, Lu, Li, Huang, and Qin]{wei2026}
+K.~Wei, H.~Li, H.~Huang, M.~Lu, X.~Li, X.~Huang, and M.~Qin.
+\newblock Association between lactate-to-albumin ratio and 28-day all-cause mortality in {ICU}-admitted acute pancreatitis patients: development and validation of a machine learning-based predictive model integrating albumin-corrected indices.
+\newblock \emph{International Journal of Medical Informatics}, 218:\penalty0 106529, June 2026.
+\newblock \doi{10.1016/j.ijmedinf.2026.106529}.
+
+\bibitem[Wolberg et~al.(1993)Wolberg, Mangasarian, Street, and Street]{wolberg1993}
+W.~Wolberg, O.~Mangasarian, N.~Street, and W.~Street.
+\newblock Breast cancer wisconsin (diagnostic) [dataset].
+\newblock UCI Machine Learning Repository, 1993.
+
+\bibitem[Little(2007)]{little2007}
+M.~A. Little.
+\newblock Parkinsons [dataset].
+\newblock UCI Machine Learning Repository, 2007.
+
+\bibitem[Rubini et~al.(2015)Rubini, Soundarapandian, and Eswaran]{rubini2015}
+L.~Rubini, P.~Soundarapandian, and P.~Eswaran.
+\newblock Chronic kidney disease [dataset].
+\newblock UCI Machine Learning Repository, 2015.
+
+\bibitem[Knaus and Lynn(2020)]{knaus_support2}
+W.~A. Knaus and J.~Lynn.
+\newblock Study to understand prognoses and preferences for outcomes and risks of treatment ({SUPPORT}) and hospitalized elderly longitudinal project ({HELP}), 1989--1997 [dataset].
+\newblock Inter-university Consortium for Political and Social Research (ICPSR) [distributor], February 2020.
+
+\bibitem[Kuhn(2024)]{kuhn_caret}
+M.~Kuhn.
+\newblock caret: Classification and regression training.
+\newblock R package version 6.0-94, 2024.
+\newblock URL \url{https://cran.r-project.org/package=caret}.
+
+\end{thebibliography}

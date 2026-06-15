@@ -1,0 +1,798 @@
+\section{Metodología}\label{sec:metodologia}
+
+\subsection{Enfoque metodológico}
+
+El diseño metodológico del presente trabajo es de carácter cuantitativo, experimental y comparativo. Se basa en la construcción de un benchmarking sistemático para determinar cómo las decisiones en la etapa de preparación de datos condicionan el rendimiento de modelos de aprendizaje supervisado en el dominio clínico.
+
+\subsection{Evaluación y selección de datasets}
+
+\textbf{Objetivo de la evaluación inicial}
+
+La fase inicial de selección de datos constituyó una etapa crítica en la
+configuración metodológica. El objetivo primordial no fue simplemente adquirir un conjunto de datos biomédicos, sino identificar un entorno de información que presentara una complejidad intrínseca y desafíos en el preprocesamiento, adecuados para validar la hipótesis central
+del estudio (Sección~\ref{sec:hipotesis}). Para ello, se requería un dataset que reflejara la heterogeneidad y los desafíos de los datos reales en salud, incluyendo valores faltantes, informativos, multicolinealidad fisiológica y el potencial de data leakage
+temporal o estructural.
+
+\textbf{Datasets evaluados y desestimados}
+
+Breast Cancer Wisconsin (Diagnostic)~\citep{wolberg1993}
+
+\begin{itemize}
+  \item Descripción breve: Este dataset, ampliamente utilizado en la comunidad de
+    Machine Learning, se centra en la clasificación de tumores mamarios como
+    benignos o malignos. Contiene 569 observaciones y 32 variables, la mayoría
+    de las cuales son medidas biomédicas numéricas continuas (e.g., radius\_mean,
+    texture\_mean, perimeter\_mean) derivadas de imágenes digitalizadas de masas
+    celulares. La variable objetivo es el diagnóstico clínico (M para maligno, B
+    para benigno).
+  \item Ventajas observadas: Es un dataset excepcionalmente "limpio", con una
+    documentación exhaustiva y es un referente estándar para el benchmarking de
+    algoritmos de clasificación. La ausencia de valores nulos significativos
+    simplifica su uso.
+  \item Limitaciones observadas: A pesar de sus ventajas, su baja complejidad
+    clínica y estructural lo hizo inadecuado para los objetivos de este
+    estudio. La escasez de valores faltantes (no se observaron valores nulos en
+    ninguna de las 569 observaciones) limita drásticamente la oportunidad de
+    explorar estrategias avanzadas de imputación basadas en conocimiento
+    clínico. Además, al consistir principalmente en variables numéricas ya
+    procesadas, ofrece un espacio reducido para el análisis profundo de la
+    heterogeneidad de variables categóricas, económicas o de gestión
+    hospitalaria, desviándose de la intención de demostrar la robustez del
+    preprocesamiento en escenarios más realistas.
+\end{itemize}
+
+Parkinsons~\citep{little2007}
+
+\begin{itemize}
+  \item Descripción breve: Se evaluó el dataset parkinsons.data, el cual contiene
+    195 observaciones y 24 variables biomédicas derivadas de señales de voz,
+    destinadas a clasificar la presencia de la enfermedad de Parkinson. La
+    variable objetivo es status (0 para sanos, 1 para pacientes).
+  \item Ventajas observadas: Representa un problema clínico relevante y utiliza
+    señales biomédicas reales.
+  \item Limitaciones observadas: Su principal limitación para este estudio fue su
+    tamaño extremadamente reducido. Con tan solo 195 registros, la capacidad de
+    generalización y la robustez de los modelos entrenados se verían
+    comprometidas, especialmente en un contexto de benchmarking con múltiples
+    estrategias. Además, presenta una menor heterogeneidad de variables en
+    comparación con un entorno hospitalario complejo, lo que reduce el alcance
+    para explorar estrategias avanzadas de imputación o selección de variables
+    que trasciendan lo puramente estadístico. La relativa "perfección" de sus
+    datos y la menor riqueza clínica y hospitalaria también lo desvían del
+    propósito de este TFM.
+\end{itemize}
+
+Chronic Kidney Disease (CKD)~\citep{rubini2015}
+
+\begin{itemize}
+  \item Descripción breve: Este dataset busca clasificar la presencia de enfermedad
+    renal crónica (ckd o notckd) en pacientes, a partir de 400 observaciones
+    y 25 variables clínicas y biomédicas, que incluyen parámetros fisiológicos,
+    análisis sanguíneos y condiciones clínicas del paciente.
+  \item Ventajas observadas: Representa un problema clínico relevante y exhibe una
+    mezcla de variables numéricas y categóricas, junto con una cantidad
+    considerable de valores faltantes en múltiples variables (ej., rbc, rbcc,
+    wbcc, pot).
+  \item Limitaciones observadas: A pesar de ser más prometedor en términos de
+    presencia de NAs y diversidad de variables, su tamaño limitado (400
+    observaciones) y su menor diversidad clínica en comparación con escenarios
+    hospitalarios de cuidados críticos lo hicieron menos adecuado. La escala del
+    dataset no permitía una exploración tan exhaustiva de la interacción entre
+    variables complejas o la validación de estrategias de preprocesamiento
+    avanzadas con la solidez requerida para un estudio de benchmarking integral.
+\end{itemize}
+
+\textbf{Criterios de evaluación y razones de la desestimación}
+
+Los datasets evaluados, si bien válidos para propósitos académicos específicos,
+fueron finalmente descartados por presentar limitaciones críticas para los
+objetivos de este trabajo. Los criterios de evaluación considerados fueron:
+
+\begin{itemize}
+  \item Complejidad Clínica y Estructural: La capacidad del dataset para reflejar la
+    interconexión de múltiples factores clínicos, demográficos y
+    administrativos.
+  \item Diversidad de Variables: La presencia de una mezcla amplia de variables
+    continuas, categóricas, demográficas y administrativas.
+  \item Patrones de Missing Values: La existencia de valores faltantes no aleatorios
+    (Missing Not At Random, MNAR) que requieren imputación basada en
+    conocimiento clínico.
+  \item Tamaño del Dataset: Un número suficiente de registros para asegurar la
+    robustez estadística de los modelos y la estabilidad de las particiones.
+\end{itemize}
+
+En resumen, los datasets desestimados, aunque adecuados para tareas académicas
+controladas o interesantes por sus dominios, se desviaban del propósito de este trabajo al ofrecer
+una baja complejidad estructural, menor riqueza clínica y escasos patrones de
+valores faltantes informativos. Esto reduciría la capacidad de demostrar el
+impacto diferencial de un preprocesamiento avanzado y la comprensión de las
+decisiones tomadas bajo un razonamiento clínico-estadístico.
+
+\subsection{Selección del dataset SUPPORT2}
+
+\textbf{Justificación de selección y variable objetivo}
+
+El dataset SUPPORT2 (Study to Understand Prognoses and Preferences for Outcomes
+and Risks of Treatments)~\citep{knaus_support2} fue seleccionado como el eje central de este estudio
+por su excepcional complejidad, riqueza de información y su fiel representación
+de los desafíos inherentes a los datos hospitalarios del mundo real. Este
+dataset no solo ofrece una alta dimensionalidad con 9,105 registros y 47
+variables, sino que también presenta patrones de datos faltantes significativos
+y una profunda interconexión de variables que demandan un análisis exploratorio
+y un preprocesamiento rigurosos.
+
+\textbf{Justificación de la Variable Objetivo: hospdead}
+
+La variable hospdead (mortalidad hospitalaria) fue elegida como la variable
+objetivo principal para el problema de clasificación binaria. Esta decisión se
+fundamenta en un análisis multidimensional que considera la naturaleza del
+dataset, su contexto clínico original y las observaciones clave del EDA:
+
+\begin{enumerate}
+  \item Coherencia con el Diseño del Dataset: La documentación original de SUPPORT2
+    y su propósito principal se centran en la predicción del pronóstico y los
+    outcomes en pacientes críticos. hospdead representa un desenlace directo y
+    central a esta misión, caracterizando un evento bien definido dentro del
+    período de hospitalización.
+  \item Relevancia Clínica y Metodológica: La mortalidad intrahospitalaria es una
+    métrica de alto interés biomédico y educativo, fundamental para la
+    estratificación de riesgo, la toma de decisiones clínicas y la evaluación de
+    la severidad del paciente. Al integrar múltiples variables
+    fisiológicas, funcionales y clínicas agudas, está especialmente diseñado
+    para modelar la evolución del paciente durante la hospitalización, haciendo
+    de hospdead un outcome natural y congruente.
+  \item Estabilidad frente a Alternativas:
+    \begin{itemize}
+      \item death (mortalidad general): Aunque también representa mortalidad, death
+        abarca un horizonte temporal más amplio (hasta seis meses post-ingreso,
+        incluyendo eventos fuera del hospital) y puede incorporar mayor pérdida
+        de seguimiento y factores externos. hospdead ofrece una variable
+        objetivo más controlada y estable para un problema de clasificación
+        supervisada.
+      \item Variables Diagnósticas (dzgroup, dzclass): Transformar estas variables
+        categóricas complejas en un problema binario (ej., "cáncer vs. no
+        cáncer") implicaría agrupar condiciones clínicas dispares bajo una
+        clase negativa, lo que reduciría la coherencia biológica y la
+        discriminación inherente al dataset.
+      \item Condiciones Crónicas (diabetes, dementia): Estas variables, si bien
+        importantes, se relacionan más con características preexistentes del
+        paciente que con la evolución clínica aguda en el hospital, que es el
+        foco principal de SUPPORT2 y de muchas de sus variables fisiológicas.
+    \end{itemize}
+\end{enumerate}
+
+Durante el EDA, se observaron patrones de relación intrigantes entre hospdead y
+una amplia gama de predictores (histogramas, boxplots, correlaciones). Estos
+patrones sugirieron que hospdead es una variable rica en información, capaz de
+revelar cómo las interacciones complejas de factores clínicos y administrativos
+influyen en el pronóstico, lo que la convierte en una elección óptima para
+construir un modelo predictivo robusto.
+
+\textbf{Descripción general del dataset}
+
+El dataset SUPPORT2 es el resultado de un estudio multicéntrico observacional
+que recopiló información clínica detallada de 9,105 pacientes adultos ingresados
+en cinco hospitales de Estados Unidos entre 1989 y 1994. Estos pacientes
+padecían enfermedades graves en fase avanzada, incluyendo insuficiencia
+respiratoria aguda, EPOC, insuficiencia cardíaca congestiva, cirrosis, cáncer,
+coma y fallo multiorgánico. El objetivo principal del estudio fue analizar el
+pronóstico, la evolución clínica y los outcomes hospitalarios, especialmente la
+mortalidad y las preferencias de atención al final de la vida. La magnitud y
+profundidad de los datos recopilados lo establecen como un recurso de referencia
+en la investigación de outcomes en pacientes críticos.
+
+\textbf{Tipos de variables presentes}
+
+La riqueza del dataset radica en su diversidad de 47 variables, que abarcan
+múltiples dominios:
+
+\begin{itemize}
+  \item Variables Demográficas: Edad (age), sexo (sex), etnia (race), nivel de
+    ingresos (income) y nivel educativo (edu).
+  \item Variables Fisiológicas y Analíticas: Constantes vitales como la presión
+    arterial media (meanbp), frecuencia cardíaca (hrt), frecuencia respiratoria
+    (resp) y temperatura (temp). También incluye marcadores de laboratorio como
+    la albúmina sérica (alb), bilirrubina (bili), creatinina (crea), glucosa
+    (glucose) y pH sanguíneo (ph).
+  \item Scores Clínicos Validados: Índices de severidad como el APACHE III (aps), el
+    TISS (avtisst), la puntuación de coma basada en la escala de Glasgow
+    (scoma), y la puntuación de fisiología SUPPORT (sps).
+  \item Variables de Gestión y Económicas: Días de estancia hospitalaria (slos),
+    cargos facturados por el hospital (charges) y costos totales calculados
+    (totcst, totmcst).
+  \item Variables Funcionales: Índices de Actividades de la Vida Diaria (ADL)
+    reportados por el paciente (adlp) y por un familiar (adls).
+  \item Variables Derivadas y de Pronóstico: Estimaciones de probabilidad de
+    supervivencia a 2 (surv2m, prg2m) y 6 meses (surv6m, prg6m).
+\end{itemize}
+
+\subsection{Análisis Exploratorio de Datos (EDA)}
+
+El análisis exploratorio reveló una imagen detallada de la estructura y
+características del dataset, identificando patrones cruciales para las
+etapas posteriores.
+
+\textbf{Análisis de valores faltantes (Missing Values)}
+
+La integridad de los datos en SUPPORT2 es un aspecto central, con una
+distribución de valores nulos que varía desde el 0\% hasta un
+considerable 61.9\%. Este patrón de missingness no es aleatorio, sino que es
+altamente informativo:
+
+\begin{itemize}
+  \item Variables con Alta Ausencia de Datos (Missingness > 40\%):
+    \begin{itemize}
+      \item adlp (Actividades de la vida diaria previas): 61.95\% de valores
+        faltantes (5,641 registros). Crucialmente, los pacientes fallecidos en
+        el hospital presentaron un 92\% de nulos en esta variable, frente al 52\%
+        de los supervivientes. Esto subraya que la ausencia del dato está
+        directamente vinculada con la gravedad extrema del paciente (coma,
+        sedación, imposibilidad de responder), y es una señal clínica relevante.
+      \item urine (Producción urinaria): 53.40\% de valores faltantes (4,862
+        registros).
+      \item glucose (Glucosa sérica): 49.42\% de valores faltantes (4,500 registros).
+      \item bun (Nitrógeno ureico en sangre): 47.80\% de valores faltantes (4,352
+        registros).
+    \end{itemize}
+  \item Variables con Moderada Ausencia de Datos (Missingness 5\% - 40\%):
+    \begin{itemize}
+      \item alb (Albúmina sérica): 37.03\% (3,372 registros).
+      \item bili (Bilirrubina sérica): 28.57\% (2,600 registros).
+      \item pafi (Índice de oxigenación Kirby): 25.54\% (2,325 registros). Se observó
+        una menor ausencia en pacientes con patologías respiratorias (ej.,
+        un 13.7\% en COPD), sugiriendo una recolección condicionada al protocolo
+        clínico.
+      \item ph (pH sanguíneo): 25.09\% (2,284 registros). Similar a pafi, con menor
+        ausencia en pacientes críticos/respiratorios.
+      \item income (Nivel de ingresos): 32.75\%.
+      \item adls (Actividades de la vida diaria al seguimiento): 31.49\%. A
+        diferencia de adlp, sus patrones de missingness son menos influenciados
+        por la gravedad extrema.
+    \end{itemize}
+  \item Variables con Mínima Ausencia de Datos (Missingness < 5\%):
+    \begin{itemize}
+      \item Variables vitales como sod (0.01\%), temp (0.01\%), resp (0.01\%), hrt
+        (0.01\%), meanbp (0.01\%), surv6m (0.01\%), surv2m (0.01\%), aps (0.01\%),
+        sps (0.01\%), scoma (0.01\%). Estas variables, con datos casi completos,
+        constituyen el bloque más fiable del dataset.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Estadísticas descriptivas y distribuciones de variables}
+
+El análisis de las distribuciones y estadísticas descriptivas reveló una
+heterogeneidad considerable:
+
+\begin{itemize}
+  \item Sesgo Positivo Severo: Una gran mayoría de variables continuas, incluyendo
+    crea, bun, bili, wblc, charges, totcst, totmcst, slos (estancia
+    hospitalaria) y hday (día de ingreso), muestran una fuerte asimetría
+    positiva. Esto se manifiesta con una acumulación de registros en los valores
+    bajos y una cola muy larga hacia la derecha. Por ejemplo, slos tiene una
+    mediana de 11 días pero un máximo de 343 días, y charges oscila desde una
+    mediana de 25,024 hasta un máximo de 1,435,423. Esto refleja una
+    población con un estado relativamente estable, pero con un subgrupo de
+    casos extremos que disparan los costos y la duración de la estancia.
+  \item Comportamientos Bimodales: Variables como la frecuencia cardíaca (hrt),
+    presión arterial media (meanbp) y temperatura (temp) exhiben dos picos
+    distintos. Esto indica la presencia de dos subpoblaciones claras: pacientes
+    con valores dentro de rangos fisiológicos normales y pacientes
+    descompensados (ej., taquicardia/bradicardia, hipotensión/hipertensión,
+    fiebre/hipotermia).
+  \item Comportamientos Multimodales: Las variables de estimación subjetiva del
+    pronóstico (prg2m, prg6m) muestran picos espaciados uniformemente
+    (25\%, 50\%, 75\%). Este patrón sugiere un sesgo de redondeo por parte de los
+    médicos al asignar probabilidades, lo que difiere de una variable biológica
+    continua.
+  \item Distribución Simétrica/Normal: Variables como la edad (age), el score de
+    fisiología SUPPORT (sps), el pH sanguíneo (ph) y la concentración de sodio
+    (sod) tienden a una distribución más simétrica o aproximadamente normal.
+  \item Variable Objetivo (hospdead): Se observó un desbalance moderado, con 6,745
+    pacientes (74.1\%) que sobrevivieron y 2,360 (25.9\%) que fallecieron durante
+    la hospitalización.
+\end{itemize}
+
+\textbf{Análisis de correlación y detección de Data Leakage}
+
+La matriz de correlación reveló importantes relaciones lineales y potenciales
+fuentes de data leakage:
+
+\begin{itemize}
+  \item Redundancia Alta: Se identificó una correlación perfecta (r = 1.0) entre
+    adlsc y adls, indicando que representan la misma información o
+    transformaciones idénticas. Similarmente, charges, totcst y totmcst muestran
+    correlaciones muy elevadas (superiores a 0.86), apuntando a una fuerte
+    redundancia en la información económica.
+  \item Leakage Temporal: El tiempo total de seguimiento del paciente (d.time)
+    exhibe una marcada correlación inversa de -0.79 con death. Esta fuerte
+    relación se debe a que el d.time se trunca abruptamente cuando ocurre el
+    fallecimiento, lo que lo convierte en una variable que incorpora información
+    del futuro respecto a una predicción al ingreso.
+  \item Relación de Variables Derivadas: Las probabilidades estimadas de
+    supervivencia a corto y mediano plazo (surv2m, surv6m) se encuentran
+    fuertemente vinculadas de manera negativa con el score de severidad
+    fisiológica (sps), alcanzando correlaciones de hasta -0.72. Esto sugiere
+    que estas variables son, en parte, el resultado de modelos predictivos y no
+    mediciones directas.
+  \item Consistencia Fisiológica: Biomarcadores de función renal como el nitrógeno
+    ureico (bun) y la creatinina (crea) exhiben una correlación positiva
+    moderada-alta de 0.66, confirmando una progresión conjunta ante el deterioro
+    del sistema urinario.
+\end{itemize}
+
+\subsection{Construcción de estrategias de preprocessing}
+
+Esta sección detalla las dos aproximaciones metodológicas diseñadas para el
+preprocesamiento del dataset SUPPORT2. La comparación de estas estrategias
+constituye el núcleo del experimento, permitiendo evaluar si la integración del
+conocimiento de dominio mejora la capacidad predictiva y la robustez de los
+modelos de Machine Learning frente a un enfoque puramente algorítmico.
+
+\subsubsection{Estrategia clínico-estadística (V1)}
+
+\textbf{Filosofía y Razonamiento de Dominio}
+
+La estrategia V1 se diseñó bajo un enfoque de supervisión experta en el proceso
+de preprocesamiento. El razonamiento central es que, en un entorno hospitalario,
+la ausencia de una medición o la correlación entre variables puede responder a
+una lógica clínica, administrativa o temporal. Por lo tanto, la preparación de
+los datos debe respetar la coherencia biológica. En lugar de aplicar reglas de
+corte genéricas, como eliminar variables por un porcentaje fijo de nulos, se
+analizó el origen de cada variable y el motivo de su ausencia para decidir su
+permanencia o su forma de imputación.
+
+\textbf{Gestión de la Integridad y Calidad del Dato}
+
+Una premisa clave de esta estrategia es priorizar un conjunto de predictores
+clínicamente consistente frente a la retención indiscriminada de variables con
+alta incertidumbre o riesgo metodológico.
+
+\begin{itemize}
+  \item Eliminación de registros por inconsistencia basal: Se decidió eliminar las
+    observaciones incompletas en variables como crea, meanbp, hrt, resp, temp,
+    sod, scoma, aps y crea. Al presentar un porcentaje de nulos mínimo (<1.2\%),
+    su eliminación supone una pérdida insignificante de registros pero garantiza
+    que el modelo solo aprenda de pacientes con un perfil clínico basal
+    completo. Además, se comprobó que estos nulos se concentraban en la clase
+    mayoritaria, por lo que no se afectó el desbalance del dataset.
+  \item Exclusión de variables por baja fiabilidad: Variables como bun y glucose
+    fueron eliminadas debido a que sus altísimos niveles de nulos (cercanos
+    al 50\%) obligarían a realizar imputaciones masivas que homogeneizarían
+    artificialmente la muestra, destruyendo el sentido biológico del dato.
+\end{itemize}
+
+\textbf{Prevención de Data Leakage}
+
+\begin{itemize}
+  \item Leakage de Modelos Previos: Las variables surv2m y surv6m fueron eliminadas
+    por ser estimaciones generadas por otros modelos predictivos, lo que
+    inflaría la precisión de forma artificial. Asimismo, basándose en el
+    protocolo original de SUPPORT (JAMA, 1995), se identificó que prg2m y prg6m
+    formaron parte de una intervención clínica posterior, lo que las inhabilita
+    como predictores de línea base.
+  \item Leakage Temporal: Se eliminó d.time (tiempo de seguimiento) por su
+    separación matemática perfecta con el desenlace hospdead, y se descartaron
+    sps y avtisst por representar métricas procesadas que pueden verse alteradas
+    por decisiones terapéuticas posteriores al ingreso.
+\end{itemize}
+
+\textbf{Imputación Basada en Contexto y Estratificación}
+
+En lugar de una mediana global, se aplicó una imputación estratificada por
+diagnóstico (dzgroup), bajo la lógica de que los valores normales varían según
+la patología:
+
+\begin{itemize}
+  \item Variables Fisiológicas Condicionadas: Para bili, alb, ph, pafi y wblc, se
+    utilizó la mediana del grupo diagnóstico. Es fisiológicamente coherente que
+    un paciente con cirrosis tenga una mediana de bilirrubina distinta a uno con
+    insuficiencia cardíaca.
+  \item Análisis del Blanco Analítico: En el caso de wblc (glóbulos blancos), se
+    validó que su ausencia no dependía de estancias cortas (la mediana de
+    estancia para estos nulos fue de 9 días), lo que justifica una imputación
+    por contexto en lugar de una eliminación.
+  \item Incertidumbre Administrativa: Para race, dnr, dnrday y edu, se imputó la
+    categoría "Unknown". Se asume que la falta de registro en estas variables
+    puede reflejar aspectos administrativos o del proceso de recolección que
+    tienen valor predictivo latente.
+\end{itemize}
+
+\textbf{Interpretación de la Ausencia Informativa (ADL)}
+
+Uno de los puntos más críticos fue el tratamiento de las escalas funcionales:
+
+\begin{itemize}
+  \item Información Oculta en Nulos: En la variable adls, se sustituyeron los nulos
+    por la categoría 8 ("No completado"). Se interpreta que el hecho de no poder
+    completar el formulario está relacionado con la gravedad o el estado de
+    conciencia del paciente.
+  \item Exclusión de adlp por Sesgo de Recolección: Se observó que el 92\% de los
+    fallecidos no tenían datos en adlp frente al 52\% de los vivos. Aunque tenía
+    un alto poder predictivo, se determinó que este poder era un "artefacto" del
+    proceso de recolección (los pacientes más graves no podían responder) y no
+    una característica fisiológica. Para priorizar la interpretabilidad clínica,
+    se decidió eliminarla.
+\end{itemize}
+
+\textbf{Refinamiento Estructural}
+
+\begin{itemize}
+  \item Eliminación por Redundancia y Control Metodológico: Se eliminó dzclass por
+    ser una agrupación redundante de dzgroup, y adlsc por ser una versión ya
+    imputada previamente en el estudio original sobre la cual se perdió el
+    control metodológico.
+  \item Simplificación Económica: Se conservó únicamente charges (con solo un 2\% de
+    nulos) y se eliminaron totcst, totmcst e income por su alta correlación y
+    baja relevancia clínica directa frente a la mortalidad aguda.
+\end{itemize}
+
+Este conjunto de decisiones asegura que el Dataset 1 no solo sea
+estadísticamente apto, sino clínicamente veraz, sentando las bases para un
+benchmark donde el conocimiento de dominio sea el factor diferencial.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}p{0.23\textwidth}p{0.17\textwidth}p{0.21\textwidth}p{0.31\textwidth}@{}}
+\caption[Preprocesamiento V1]{Preprocesamiento clínico-estadístico (V1)}\label{tab:preproc-v1}\\
+\toprule
+\textbf{Variable} & \textbf{Acción} & \textbf{Estrategia aplicada} & \textbf{Observación / Justificación} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\tablename\ \thetable\ — V1 (continuación)} \\
+\toprule
+\textbf{Variable} & \textbf{Acción} & \textbf{Estrategia aplicada} & \textbf{Observación / Justificación} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+meanbp, hrt, resp, temp, sod, scoma, aps, crea & Eliminar observaciones & Eliminación puntual & Nulos mínimos en variables basales; se priorizó conservar registros clínicamente completos. \\
+race, dnr, edu & Imputar & Categoría ``Unknown'' & La ausencia se trató como información administrativa potencialmente útil. \\
+charges & Imputar & Mediana global & Baja proporción de nulos y utilidad como variable de contexto hospitalario. \\
+wblc, bili, alb, ph, pafi & Imputar & Mediana por dzgroup & Imputación condicionada por diagnóstico para preservar coherencia fisiológica. \\
+adls & Imputar & Valor 8 & Se codificó como ``No completado'', interpretando la ausencia como señal clínica. \\
+urine, bun, glucose & Eliminar variable & Missing elevado & La imputación masiva podía homogeneizar artificialmente variables clínicas relevantes. \\
+prg2m, prg6m, surv2m, surv6m & Eliminar variable & Riesgo de leakage & Variables pronósticas o derivadas de modelos previos, no adecuadas como predictores basales. \\
+death, d.time & Eliminar variable & Leakage directo y temporal & Incorporan información del desenlace o del seguimiento posterior. \\
+totcst, totmcst, income, sfdm2 & Eliminar variable & Missing/redundancia & Baja utilidad clínica directa o alta proporción de ausencia. \\
+dnrday, dzclass, adlsc & Eliminar variable & Redundancia y derivación & Información duplicada o ya procesada en variables relacionadas. \\
+adlp & Eliminar variable & Sesgo de recolección & Alto poder predictivo asociado al patrón de ausencia, no a una medición fisiológica estable. \\
+sps, avtisst & Eliminar variable & Score derivado y leakage & Métricas procesadas o influenciadas por decisiones clínicas posteriores. \\
+\end{longtable}
+\endgroup
+
+\subsubsection{Estrategia técnico-estadística (V2)}
+
+\textbf{Filosofía y Reglas Automáticas}
+
+Esta aproximación sigue un enfoque agnóstico al dominio, basado en la eficiencia
+computacional y en estándares de la ciencia de datos aplicada. En esta
+estrategia, el preprocesamiento es guiado por reglas automáticas y umbrales cuantitativos
+(thresholds), minimizando la intervención subjetiva y buscando la máxima
+reproducibilidad algorítmica.
+
+\textbf{Criterios de Selección y Thresholds}
+
+\begin{itemize}
+  \item Regla del 35\% de Ausencia: Bajo este enfoque, se establece un umbral técnico
+    estricto: cualquier variable con más de un 35\% de valores faltantes es
+    eliminada automáticamente del estudio (alb, bun, glucose, urine, adlp,
+    totmcst). Se asume que el ruido introducido por la imputación masiva
+    superaría el valor informativo de la variable.
+  \item Eliminación por Redundancia Estadística: Se eliminan variables como dnrday
+    basándose únicamente en su solapamiento matemático con otras variables, sin
+    considerar su significado clínico.
+  \item Prevención de Leakage Estándar: Al igual que en la V1, se eliminan las
+    variables obvias de fuga de datos como death y d.time, pero se mantienen
+    otras más procesadas como surv2m o surv6m bajo la premisa de que son
+    predictores numéricos útiles, independientemente de su origen.
+\end{itemize}
+
+\textbf{Imputación Global (Agnóstica)}
+
+En lugar de considerar el diagnóstico o el contexto del paciente, se aplican
+técnicas de imputación masiva centralizada:
+
+\begin{itemize}
+  \item Mediana Global: Para todas las variables numéricas (wblc, bili, ph, pafi,
+    charges, prg2m, etc.), se utiliza la mediana de toda la población. Este
+    enfoque asume que la distribución general es suficiente para llenar los
+    huecos de información, simplificando la computación del modelo.
+  \item Imputación por Moda: Para las variables categóricas o de niveles (adls, edu,
+    sfdm2, income), se utiliza la moda (el valor más frecuente). A diferencia de
+    la V1, no se crea una categoría "Unknown", sino que se asigna al registro
+    faltante la característica mayoritaria, bajo el supuesto estadístico de la
+    probabilidad de mayor frecuencia.
+\end{itemize}
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}p{0.23\textwidth}p{0.17\textwidth}p{0.21\textwidth}p{0.31\textwidth}@{}}
+\caption[Preprocesamiento V2]{Preprocesamiento técnico-estadístico (V2)}\label{tab:preproc-v2}\\
+\toprule
+\textbf{Variable} & \textbf{Acción} & \textbf{Estrategia aplicada} & \textbf{Observación / Justificación} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\tablename\ \thetable\ — V2 (continuación)} \\
+\toprule
+\textbf{Variable} & \textbf{Acción} & \textbf{Estrategia aplicada} & \textbf{Observación / Justificación} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+meanbp, hrt, resp, temp, sod, scoma, sps, aps, crea, avtisst & Eliminar observaciones & Eliminación puntual & Variables casi completas; se eliminaron registros aislados con nulos. \\
+race, dnr & Imputar & Categoría ``Unknown'' & Tratamiento categórico simple para ausencia administrativa. \\
+charges, wblc, bili, ph, pafi, prg2m, prg6m, totcst & Imputar & Mediana global & Regla uniforme, independiente del diagnóstico. \\
+adls, edu, sfdm2, income & Imputar & Moda & Sustitución por la categoría más frecuente. \\
+alb, totmcst, bun, glucose, urine, adlp & Eliminar variable & Missing >35\% & Exclusión automática por umbral técnico de valores faltantes. \\
+dnrday & Eliminar variable & Redundancia & Solapamiento directo con dnr. \\
+surv2m, surv6m & Eliminar variable & Leakage potencial & Variables relacionadas con supervivencia futura. \\
+death, d.time & Eliminar variable & Leakage directo y temporal & Información ligada al desenlace o seguimiento posterior. \\
+\end{longtable}
+\endgroup
+
+\textbf{Diferencias Clave en el Tratamiento de Datos}
+
+Mientras la estrategia clínico-estadística (V1) asume que la ausencia de datos
+es informativa y dependiente del estado del paciente, la estrategia
+técnico-estadística (V2) trata la ausencia como un error o vacío de información
+que debe ser normalizado hacia el centro de la distribución global para no
+distorsionar el aprendizaje del algoritmo.
+
+\subsection{Preparación experimental}
+
+Este apartado describe el protocolo técnico y la metodología aplicados para la
+construcción de los entornos experimentales. El diseño se fundamenta en la
+creación de dos flujos de procesamiento diferenciados, cuya comparación
+permitirá evaluar la eficiencia de la curación de datos basada en conocimiento
+de dominio frente a métodos automatizados.
+
+\subsubsection{Protocolo de partición y estratificación de la muestra}
+
+Como etapa preliminar a cualquier intervención sobre los datos, se procedió a la
+división del dataset original mediante un esquema de validación externa:
+
+\begin{itemize}
+  \item Proporción de la muestra: Se determinó una división del 80\% para el conjunto
+    de entrenamiento y un 20\% para el conjunto de prueba independiente.
+  \item Mecanismo de estratificación: Se implementó la función createDataPartition
+    sobre la variable objetivo hospdead. Esta decisión estratégica asegura que
+    la prevalencia de la mortalidad hospitalaria sea equivalente en ambas
+    particiones, mitigando sesgos de selección y garantizando que el modelo se
+    entrene y evalúe sobre distribuciones de clase representativas del fenómeno
+    clínico.
+\end{itemize}
+
+\subsubsection{Estrategia V1: procesamiento clínico-estadístico}
+
+Este flujo se diseñó bajo la premisa de preservar la coherencia biológica y el
+rigor fisiológico. Las decisiones tomadas en este entorno se detallan a
+continuación:
+
+\paragraph{Prevención de Data Leakage y depuración de variables}
+
+Se ejecutó una limpieza profunda orientada a eliminar variables que introdujeran
+información posterior al ingreso o directamente ligada al desenlace. Se
+eliminaron columnas como death, d.time, surv2m y totcst. La razón fundamental es
+evitar la fuga de datos (Data Leakage); la inclusión de información "futura"
+generaría modelos con una precisión artificialmente elevada pero carentes de
+utilidad en un escenario predictivo en tiempo real al ingreso del paciente.
+
+\paragraph{Tratamiento avanzado de valores faltantes (NAs)}
+
+Se aplicaron criterios diferenciados según la relevancia de la variable:
+
+\begin{itemize}
+  \item Criterio de exclusión por filas: Se eliminaron los registros con NAs en
+    constantes vitales basales y biomarcadores críticos (meanbp, hrt, resp,
+    temp, sod, scoma, aps, crea). Se asume que la ausencia de estos datos clave
+    invalida la fiabilidad clínica del registro.
+  \item Imputación por Mediana Agrupada: Para variables como wblc, bili y alb, se
+    calculó la mediana estratificada por grupo de diagnóstico (dzgroup). Esta
+    decisión avanzada responde a la lógica de que los valores basales difieren
+    según la patología (ej. la bilirrubina esperada en un paciente con Cirrosis
+    difiere de uno con Cáncer de Pulmón), preservando así la naturaleza clínica
+    de los datos.
+\end{itemize}
+
+\paragraph{Ingeniería de características y categorización informativa}
+
+\begin{itemize}
+  \item Codificación de la educación: Se transformó la variable edu de numérica a
+    categórica, definiendo niveles: "Básica" ($\leq$8 años), "Secundaria" ($\leq$12 años)
+    y "Superior" (>12 años).
+  \item Gestión de la incertidumbre: Variables como race y dnr con valores nulos se
+    recodificaron como "Unknown". Esto permite que el algoritmo de aprendizaje
+    identifique si la ausencia de registro en estas variables posee un valor
+    predictivo latente.
+\end{itemize}
+
+\subsubsection{Estrategia V2: procesamiento técnico-estadístico}
+
+Este flujo representa una aproximación agnóstica al dominio clínico, optimizada
+mediante heurísticas técnicas y reglas de tendencia central global.
+
+\paragraph{Criterios de limpieza y exclusión agresiva}
+
+A diferencia de la V1, se aplicó una decisión de exclusión más agresiva
+basada en la integridad técnica. Se eliminaron directamente variables con altos
+volúmenes de nulidad, como alb, glucose y bun, bajo la premisa de que un exceso
+de datos faltantes compromete la capacidad de recuperación fiable del predictor,
+optando por un modelo con menos variables pero con mayor densidad de datos
+reales.
+
+\paragraph{Tratamiento de nulos mediante estrategia de imputación global}
+
+En este escenario, el preprocesamiento se desvincula del contexto diagnóstico:
+
+\begin{itemize}
+  \item Imputación por Moda: Se desarrolló la función get\_mode para completar
+    variables categóricas como edu, adls, income y sfdm2, asumiendo que el
+    paciente posee el valor más frecuente de la muestra general.
+  \item Imputación por Mediana Global: Para las variables numéricas restantes
+    (charges, wblc, bili, ph, pafi), se utilizó la mediana de todo el conjunto
+    de entrenamiento de forma centralizada, simplificando la estructura del
+    modelo al eliminar la dependencia de la variable dzgroup.
+  \item Consistencia de tipos: Se realizó una conversión explícita a factores para
+    variables binarias leídas originalmente como numéricas (diabetes, dementia),
+    asegurando que el target hospdead sea tratado como un factor con niveles "0"
+    y "1".
+\end{itemize}
+
+\subsubsection{Estandarización y normalización de variables}
+
+Para ambos entornos experimentales, se aplicó un protocolo de escalado Z-score
+sobre todas las variables numéricas:
+
+\begin{itemize}
+  \item Aislamiento de parámetros: Las estadísticas de normalización (media y
+    desviación estándar) se calcularon exclusivamente con los datos de
+    entrenamiento.
+  \item Prevención de contaminación: Dichos parámetros se aplicaron posteriormente
+    al conjunto de prueba. Esta decisión estratégica es fundamental en ciencia
+    de datos para evitar la contaminación del modelo con información del
+    conjunto de evaluación, garantizando la integridad de la validación cruzada.
+\end{itemize}
+
+\subsection{Marco Experimental y Selección de Algoritmos}
+
+El diseño experimental de esta investigación se fundamenta en un enfoque de
+benchmarking multinivel. El objetivo no es solo identificar el modelo con mayor
+capacidad predictiva, sino evaluar cómo la calidad intrínseca del dato
+(Estrategia Biológica vs. Técnica) y su tratamiento métrico (Escalamiento)
+impactan en dicha predicción.
+
+\subsubsection{Selección de Modelos Supervisados}
+
+Se han seleccionado algoritmos que representan diferentes familias de
+aprendizaje automático para garantizar una comparativa exhaustiva:
+
+\begin{itemize}
+  \item Modelos Paramétricos:
+    \begin{itemize}
+      \item Regresión Logística (GLM): Utilizada como línea base (baseline) por su
+        interpretabilidad y eficiencia en problemas de clasificación binaria.
+    \end{itemize}
+  \item Modelos Basados en Árboles y Reglas:
+    \begin{itemize}
+      \item Decision Tree (rpart): Para capturar relaciones no lineales simples y
+        estructuras de decisión.
+      \item C5.0: Algoritmo avanzado de reglas y árboles que optimiza la ganancia de
+        información.
+    \end{itemize}
+  \item Modelos de Ensamble (Ensemble Learning):
+    \begin{itemize}
+      \item Random Forest (rf): Para reducir la varianza mediante bagging y mejorar
+        la robustez frente a outliers.
+      \item Stochastic Gradient Boosting (GBM): Para optimizar la precisión mediante
+        boosting secuencial.
+    \end{itemize}
+  \item Modelos Basados en Distancia:
+    \begin{itemize}
+      \item K-Nearest Neighbors (KNN): Integrado exclusivamente en los escenarios de
+        datos escalados (z-score), debido a su sensibilidad a la magnitud de las
+        variables.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Estrategias de Validación y Automatización}
+
+La experimentación se ha modularizado mediante el desarrollo de una librería de
+utilidades propia (modeling\_utils.R), lo que permite una ejecución sistemática y
+reduce el error humano. Se definieron dos metodologías de validación:
+
+\begin{enumerate}
+  \item Validación Cruzada (5-fold Cross-Validation): Empleada para la estimación
+    del error de generalización. Al dividir el conjunto de entrenamiento en 5
+    pliegues, se asegura que cada observación sea utilizada tanto para
+    entrenamiento como para validación interna, mitigando el riesgo de
+    sobreajuste (overfitting).
+  \item Entrenamiento Simple (Hold-out): Utilizado para evaluar el rendimiento
+    puro sobre un conjunto de prueba independiente (test\_bio o test\_tech).
+    Esta estrategia permite observar el comportamiento de los modelos en su
+    estado base y comparar la eficiencia computacional frente a la validación
+    cruzada.
+\end{enumerate}
+
+\subsubsection{Organización computacional del proyecto}
+
+El flujo experimental se implementó en el ecosistema R mediante archivos
+RMarkdown, separando las etapas de análisis exploratorio, preprocesamiento,
+entrenamiento, evaluación y generación del manuscrito. Esta organización permitió
+mantener trazabilidad entre los datos originales, las transformaciones aplicadas,
+los modelos entrenados y las figuras reportadas.
+
+\begin{lstlisting}[basicstyle=\small\ttfamily]
+TFM-ML-Benchmark/
+|-- data/
+|   |-- raw/
+|   `-- processed/support2/
+|       |-- df1/  # estrategia clinico-estadistica
+|       `-- df2/  # estrategia tecnico-estadistica
+|-- eda/
+|-- preprocessing/
+|-- models/
+|-- scripts/modeling_utils.R
+|-- figures/
+`-- manuscript/
+\end{lstlisting}
+
+Las principales librerías utilizadas incluyeron tidyverse, dplyr, ggplot2,
+caret, pROC, DataExplorer, corrplot, Hmisc, knitr, kableExtra, plotly y
+htmltools. La reproducibilidad se apoyó en particiones de entrenamiento y prueba
+persistidas, versiones base y escaladas de los datos procesados, semillas de
+aleatorización y funciones centralizadas en modeling\_utils.R para entrenar,
+evaluar y comparar los modelos bajo criterios homogéneos.
+
+\subsubsection{Arquitectura del Flujo de Trabajo (V1 vs. V2)}
+
+El sistema se organiza en cuatro ejes experimentales representados por archivos
+RMarkdown (.Rmd) independientes, lo que permite una trazabilidad total:
+
+\begin{itemize}
+  \item Escenario Biológico (V1 - Bio Data): Datos preprocesados bajo un criterio de
+    sentido clínico, donde la imputación y selección de variables respetan la
+    naturaleza médica del dataset SUPPORT2.
+  \item Escenario Técnico (V2 - Tech Data): Datos procesados mediante técnicas
+    automatizadas y criterios puramente estadísticos (ej. eliminación por umbral
+    de valores faltantes).
+\end{itemize}
+
+En cada archivo, se ejecutan de forma paralela dos sub-escenarios: Base (datos
+originales con su escala nativa) y Scaled (datos estandarizados mediante
+z-score), garantizando una comparación metodológicamente equivalente entre
+escenarios.
+
+\subsubsection{Configuración de Hiperparámetros y Control}
+
+Independientemente del modelo, se ha unificado el entrenamiento mediante la
+función trainControl de la librería caret~\citep{kuhn_caret}, configurada con:
+
+\begin{itemize}
+  \item classProbs = TRUE: Para la generación de curvas ROC.
+  \item summaryFunction = twoClassSummary: Para priorizar métricas probabilísticas.
+  \item verboseIter = TRUE: Para el seguimiento en tiempo real de la convergencia
+    del algoritmo durante la ejecución experimental.
+\end{itemize}
+
+\subsection{Métricas de Evaluación de Rendimiento}
+
+Dado que las métricas de clasificación se describen conceptualmente en la
+Sección~\ref{sec:metricas-clasificacion}, este apartado delimita únicamente su
+uso dentro del protocolo experimental. Para cada modelo y escenario se
+reportaron AUC-ROC, sensibilidad, especificidad y accuracy mediante la función
+evaluar\_benchmark.
+
+El AUC-ROC se utilizó como métrica principal para comparar la capacidad
+discriminativa global entre algoritmos y estrategias de preprocesamiento. La
+sensibilidad y la especificidad se emplearon para interpretar el balance entre
+la detección de pacientes fallecidos y supervivientes, respectivamente. Accuracy
+se mantuvo como métrica complementaria, interpretada con cautela debido al
+desbalance moderado de la variable hospdead.
+
+Además de las métricas tabulares, se generaron curvas ROC comparativas para cada
+escenario experimental. Estas curvas se presentan en las
+Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v2-scaled-nocv} y permiten contrastar
+visualmente el comportamiento relativo de los modelos en el espacio de
+sensibilidad frente a 1-especificidad.

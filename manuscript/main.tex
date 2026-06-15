@@ -1,0 +1,196 @@
+% =============================================================================
+%  TFM: Trabajo Fin de Máster
+%  MU Bioinformática · Universidad Nebrija
+%  Compilación (sin citas aún):  pdflatex main.tex && pdflatex main.tex
+%  Compilación (con \cite{...}):  pdflatex → bibtex → pdflatex → pdflatex
+%  Nota: bibtex falla con "no \citation commands" hasta que haya citas en el texto.
+%  En Overleaf:  seleccionar pdfLaTeX como compilador (menú → Settings).
+% =============================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+% --- Codificación y tipografía -----------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+% \usepackage[spanish]{babel} % Opcional: activar si el idioma esta instalado en TinyTeX.
+
+% --- Página ------------------------------------------------------------------
+\usepackage{geometry}
+\geometry{left=25mm, right=25mm, top=30mm, bottom=30mm}
+\usepackage{setspace}\onehalfspacing
+% \usepackage[left]{lineno}\linenumbers   % Descomentar para revisión (doble numeración)
+
+% --- Matemáticas -------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\sisetup{group-separator={,}}
+
+% --- Figuras y subfiguras ----------------------------------------------------
+\usepackage{graphicx}\graphicspath{{../figures/}}
+\usepackage[font=small,labelfont=bf,labelsep=period]{caption}
+\usepackage{subcaption}
+
+% --- Tablas ------------------------------------------------------------------
+\usepackage{booktabs,array,multirow,longtable}
+\usepackage{float}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+% --- Listas ------------------------------------------------------------------
+\usepackage{enumitem}\setlist{nosep}
+
+% --- Código fuente -----------------------------------------------------------
+\usepackage{listings}
+\lstset{
+  basicstyle       = \small\ttfamily,
+  keywordstyle     = \bfseries\color{blue!70!black},
+  commentstyle     = \itshape\color{gray},
+  stringstyle      = \color{red!60!black},
+  numberstyle      = \tiny\color{gray},
+  numbers          = left,
+  numbersep        = 6pt,
+  frame            = single,
+  framerule        = 0.4pt,
+  rulecolor        = \color{black!30},
+  backgroundcolor  = \color{black!3},
+  breaklines       = true,
+  showstringspaces = false,
+  tabsize          = 4,
+  captionpos       = b,
+  aboveskip        = 10pt,
+  belowskip        = 6pt,
+}
+\lstdefinestyle{python}{language=Python,
+  morekeywords={as,with,True,False,None}}
+\lstdefinestyle{R}{language=R,
+  morekeywords={library,function,if,else,for,in,TRUE,FALSE,NULL}}
+\lstdefinestyle{bash}{language=bash,
+  morekeywords={snakemake,conda,pip}}
+
+% --- Cajas destacadas (tipo Box de Nature Reviews) ---------------------------
+\usepackage{tcolorbox}
+\newtcolorbox{infobox}[1][]{
+  colback=blue!3, colframe=blue!40!black,
+  fonttitle=\bfseries, coltitle=white, colbacktitle=blue!40!black,
+  boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, title={#1}}
+\newtcolorbox{keypoint}[1][]{
+  colback=yellow!5, colframe=orange!60!black,
+  fonttitle=\bfseries,
+  boxrule=0.4pt, arc=2pt, left=6pt, right=6pt, title={#1}}
+
+% --- TikZ (diagramas) -------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,calc}
+
+% --- Hipervínculos -----------------------------------------------------------
+\usepackage[colorlinks,
+            linkcolor=black,
+            citecolor=blue!60!black,
+            urlcolor=blue!60!black]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+% --- Bibliografía: BibTeX clásico con natbib ---------------------------------
+\usepackage[numbers,sort&compress]{natbib}
+\bibliographystyle{unsrtnat}
+\renewcommand{\bibsection}{\section{Bibliografía}}
+
+% --- Comandos personalizados -------------------------------------------------
+\newcommand{\gene}[1]{\textit{#1}}
+\newcommand{\tool}[1]{\textsc{\lowercase{#1}}}
+\newcommand{\pvalue}{\ensuremath{p}}
+\newcommand{\padj}{\ensuremath{p_{\text{adj}}}}
+\newcommand{\foldchange}{\ensuremath{\log_2\text{FC}}}
+\renewcommand{\abstractname}{Resumen}
+\renewcommand{\contentsname}{Índice}
+\renewcommand{\listfigurename}{Índice de figuras}
+\renewcommand{\listtablename}{Índice de tablas}
+
+% --- Metadatos ---------------------------------------------------------------
+\title{Benchmarking de modelos de ML supervisado para predicción de
+variables clínicas binarias en R/tidymodels}
+\author{Jose Rafael Camacho Custodio%
+  \thanks{Máster en Bioinformática, Universidad Nebrija.}}
+\date{14 Junio 2026}
+
+% =============================================================================
+\begin{document}
+\maketitle
+
+% --- Resumen -----------------------------------------------------------------
+\begin{abstract}\noindent
+La aplicación de modelos de Machine Learning supervisado en medicina predictiva
+depende no solo de la capacidad de los algoritmos, sino también de la calidad
+metodológica con la que se preparan los datos clínicos. En este trabajo se
+desarrolla un benchmarking comparativo para evaluar el impacto de dos
+estrategias de preprocesamiento sobre la predicción de mortalidad hospitalaria
+(\textit{hospdead}) en el dataset SUPPORT2, una cohorte multicéntrica de
+pacientes críticos con alta heterogeneidad clínica, valores faltantes
+informativos y riesgo potencial de \textit{Data Leakage}. La primera estrategia
+(V1) incorpora razonamiento clínico-estadístico mediante imputación
+estratificada por diagnóstico, exclusión de variables derivadas o temporales y
+tratamiento contextual de la ausencia de datos. La segunda estrategia (V2)
+representa un enfoque técnico-estadístico basado en reglas automáticas,
+umbrales de valores faltantes e imputación global por mediana o moda.
+
+Sobre ambas versiones del dataset se entrenaron y evaluaron modelos de
+clasificación binaria, incluyendo Logistic Regression, Decision Tree, Random
+Forest, Gradient Boosting Machine, C5.0 y K-Nearest Neighbors, bajo escenarios
+con y sin escalado, así como con validación cruzada y partición hold-out. Los
+resultados muestran que los modelos de ensamble, especialmente Random Forest y
+GBM, alcanzaron el mejor rendimiento global. Desde una perspectiva puramente
+métrica, la estrategia técnico-estadística obtuvo los valores más altos de
+AUC-ROC, cercanos a 0.972, frente a valores alrededor de 0.933 en la estrategia
+clínico-estadística. Sin embargo, esta diferencia revela una tensión
+metodológica central: el mayor rendimiento numérico puede estar influido por la
+retención de variables con menor validez clínica o con riesgo de introducir
+información no disponible en un escenario predictivo real. En conjunto, los
+hallazgos indican que la hipótesis inicial se confirma de forma parcial: el
+preprocesamiento informado por conocimiento clínico no maximiza necesariamente
+el AUC bruto, pero sí contribuye a construir modelos más interpretables,
+metodológicamente prudentes y coherentes con la lógica biomédica.
+\medskip\noindent
+\textbf{Palabras clave:} Machine Learning supervisado, medicina predictiva,
+SUPPORT2, mortalidad hospitalaria, preprocesamiento clínico, benchmarking,
+Data Leakage, R
+\end{abstract}
+
+% --- Índice ------------------------------------------------------------------
+\newpage
+\tableofcontents
+
+% --- Índice de tablas y figuras ----------------------------------------------
+\newpage
+\listoffigures
+\newpage
+\listoftables
+
+% --- Secciones principales ---------------------------------------------------
+\newpage
+\input{sections/01_introduccion}
+\input{sections/02_estado_del_arte}
+\input{sections/03_metodologia}
+\input{sections/04_resultados}
+\input{sections/05_discusion}
+\input{sections/06_conclusiones}
+
+% --- Declaración de uso de IA -----------------------------------------------
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{Declaración de uso de inteligencia artificial}
+\noindent\textbf{Declaración de uso de inteligencia artificial}
+
+Durante la elaboración de este Trabajo Fin de Máster se emplearon herramientas
+de inteligencia artificial generativa como apoyo en la redacción, la
+organización del proceso documentado y la búsqueda y síntesis preliminar de
+información, incluyendo Codex, Cursor, Gemini, ChatGPT y Google AI Studio. Su
+uso fue complementario y no sustituyó el criterio del autor. Todas las
+decisiones metodológicas fueron tomadas por el autor en coordinación con las
+orientaciones del asesor.
+
+% --- Bibliografía ------------------------------------------------------------
+\newpage
+\bibliography{references}
+
+\end{document}

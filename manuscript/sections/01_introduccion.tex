@@ -1,0 +1,68 @@
+\section{Introducción}\label{sec:intro}
+
+\subsection{Contexto}
+
+En el ámbito de la medicina predictiva, la efectividad de los modelos de Machine Learning (ML) supervisados no reside únicamente en la sofisticación de sus arquitecturas algorítmicas, sino en la integridad y el tratamiento metodológico de los datos que los alimentan.
+
+Los datasets clínicos y biomédicos presentan desafíos intrínsecos que los
+diferencian de otros dominios: altos volúmenes de valores faltantes (missing
+values), distribuciones asimétricas, multicolinealidad entre biomarcadores y,
+fundamentalmente, el riesgo de Data Leakage. En medicina, un
+dato faltante rara vez es un error de registro aleatorio; a menudo, es una señal
+clínica o un protocolo hospitalario específico.
+Por tanto, el preprocesamiento se convierte en la etapa más
+crítica del ciclo de vida del dato, pues una decisión puramente técnica puede
+destruir la coherencia biológica necesaria para que un modelo sea útil en un
+entorno clínico real.
+
+En la construcción de flujos de trabajo (pipelines) de ciencia de datos, es habitual el empleo de estrategias de preprocesamiento de naturaleza técnica, tales como la imputación basada en tendencias centrales globales (medias o medianas), la eliminación de variables según umbrales estadísticos de nulidad o la selección de características mediante algoritmos de aprendizaje. Si bien estos métodos aseguran la eficiencia computacional, plantean un escenario de interés para la investigación: evaluar el impacto diferencial que aporta la integración del razonamiento clínico-estadístico en la preparación de los datos.
+
+Por lo tanto, esta investigación se centra en la necesidad de establecer un marco comparativo robusto o benchmarking. El objetivo es cuantificar y analizar cómo influye un enfoque de preprocesamiento informado por la lógica médica y el análisis contextual del dataset en el rendimiento, la estabilidad y la fiabilidad de los modelos de aprendizaje automático. De este modo, el estudio busca determinar si esta personalización del pipeline genera diferencias significativas en la capacidad de discriminación diagnóstica frente a las estrategias técnicas estandarizadas aplicadas a variables clínicas binarias.
+
+\subsection{Hipótesis}\label{sec:hipotesis}
+
+Sobre la base del problema expuesto, se plantea la siguiente hipótesis de
+investigación:
+
+Las estrategias de preprocesamiento diseñadas mediante el uso de razonamiento
+clínico-estadístico y un análisis contextual profundo del dataset generan
+resultados predictivos superiores y modelos más robustos en comparación con las
+estrategias puramente técnicas o automáticas aplicadas sobre datasets biomédicos
+complejos.
+
+Se asume que la integración del conocimiento experto permite identificar
+variables informativas ocultas en el ruido y mitigar sesgos metodológicos que
+las reglas estadísticas estándar no son capaces de detectar.
+
+\subsection{Objetivos}
+
+\textbf{Objetivo general}
+
+Comparar el impacto de diferentes estrategias de preprocesamiento de datos sobre
+el rendimiento de modelos de aprendizaje supervisado aplicados a la predicción
+de variables clínicas binarias en un entorno de cuidados críticos.
+
+\textbf{Objetivos específicos}
+
+\begin{itemize}
+  \item Diseñar una estrategia clínico-estadística (V1): Construir un flujo de
+    procesamiento fundamentado en la lógica médica, utilizando imputaciones
+    estratificadas por diagnóstico y una depuración selectiva de variables
+    basada en la prevención de Data Leakage y la coherencia biológica.
+  \item Diseñar una estrategia técnico-estadística (V2): Desarrollar un flujo de
+    procesamiento basado en heurísticas técnicas convencionales y criterios de
+    tendencia central global, actuando como grupo de control agnóstico al
+    dominio médico.
+  \item Construir e implementar un sistema de benchmarking: Desarrollar una
+    infraestructura automatizada en R/tidymodels que permita el entrenamiento y
+    evaluación sistemática de diversos algoritmos (Random Forest, GBM, Logistic
+    Regression, entre otros) sobre las distintas versiones del dataset.
+  \item Comparar y evaluar el rendimiento de los modelos: Analizar la capacidad de
+    discriminación de los modelos mediante métricas de área bajo la curva
+    (AUC-ROC), sensibilidad y especificidad en cada escenario de
+    preprocesamiento.
+  \item Analizar el impacto del preprocesamiento: Determinar cuantitativa y
+    cualitativamente en qué medida el razonamiento clínico influye en la
+    estabilidad y precisión de las predicciones frente a las estrategias
+    automáticas.
+\end{itemize}

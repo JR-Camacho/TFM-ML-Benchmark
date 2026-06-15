@@ -1,0 +1,36 @@
+Bajwa J, Munir U, Nori A, Williams B. Artificial intelligence in healthcare: transforming the practice of medicine. Future Healthc J. 2021 Jul;8(2):e188-e194. doi:10.7861/fhj.2021-0095. PMID:34286183. Available from: https://doi.org/10.7861/fhj.2021-0095
+
+
+Davenport T, Kalakota R. The potential for artificial intelligence in healthcare. Future Healthc J. 2019 Jun;6(2):94-98. doi:10.7861/futurehosp.6-2-94. PMID:31363513; PMCID:PMC6616181. Available from: https://doi.org/10.7861/futurehosp.6-2-94
+
+Shamout F, Zhu T, Clifton DA. Machine learning for clinical outcome prediction. IEEE Rev Biomed Eng. 2021;14:116-126. doi:10.1109/RBME.2020.3007816. Epub 2021 Jan 22. PMID:32746368. Available from: https://doi.org/10.1109/RBME.2020.3007816
+
+
+Delpino FM, Pimenta LP, Gonzalez DF, Victor A, Fonseca Araujo C, De Araujo-Moura K, Miranda JJ, Batista SRR, Chiavegatto Filho ADP, Nunes BP. Global performance of machine learning models to predict all-cause mortality: systematic review and meta-analysis. Sci Rep. 2025 Nov 27;15(1):42707. doi:10.1038/s41598-025-26714-6. PMID:41309844; PMCID:PMC12663293. Available from: https://doi.org/10.1038/s41598-025-26714-6
+
+
+James G, Witten D, Hastie T, Tibshirani R. An Introduction to Statistical Learning: with Applications in R. 2nd ed. New York: Springer; 2021. Available from: https://www.statlearning.com/
+
+Scikit-learn developers. Supervised learning. scikit-learn documentation. Available from: https://scikit-learn.org/stable/supervised_learning.html
+
+Kuhn M. caret: Classification and Regression Training. R package version 6.0-94. Available from: https://cran.r-project.org/package=caret
+
+Owusu-Adjei M, Ben Hayfron-Acquah J, Frimpong T, Abdul-Salaam G. Imbalanced class distribution and performance evaluation metrics: a systematic review of prediction accuracy for determining model performance in healthcare systems. PLOS Digit Health. 2023 Nov 30;2(11):e0000290. doi:10.1371/journal.pdig.0000290. PMID:38032863; PMCID:PMC10688675. Available from: https://doi.org/10.1371/journal.pdig.0000290
+
+
+Moassefi M, Rouzrokh P, Conte GM, Vahdati S, Fu T, Tahmasebi A, Younis M, Farahani K, Gentili A, Kline T, Kitamura FC, Huo Y, Kuanar S, Younis K, Erickson BJ, Faghani S. Reproducibility of deep learning algorithms developed for medical imaging analysis: a systematic review. J Digit Imaging. 2023 Oct;36(5):2306-2312. doi:10.1007/s10278-023-00870-5. Epub 2023 Jul 5. PMID:37407841; PMCID:PMC10501962. Available from: https://doi.org/10.1007/s10278-023-00870-5
+
+
+Li H. Heart failure risk prediction based on machine learning and interpretability analysis. Front Med (Lausanne). 2026 May 20;13:1801693. doi:10.3389/fmed.2026.1801693. PMID:42245940; PMCID:PMC13229728. Available from: https://doi.org/10.3389/fmed.2026.1801693
+
+Uddin KN, Njie E, Jin R, Ghose P, Zahid A, Jamil HM. Robust and interpretable AI for acute appendicitis: a simulation-to-clinical validation pipeline. Comput Methods Programs Biomed. 2026 May 30;285:109467. doi:10.1016/j.cmpb.2026.109467. Epub ahead of print. PMID:42242041. Available from: https://doi.org/10.1016/j.cmpb.2026.109467
+
+Wei K, Li H, Huang H, Lu M, Li X, Huang X, Qin M. Association between lactate-to-albumin ratio and 28-day all-cause mortality in ICU-admitted acute pancreatitis patients: development and validation of a machine learning-based predictive model integrating albumin-corrected indices. Int J Med Inform. 2026 Jun 4;218:106529. doi:10.1016/j.ijmedinf.2026.106529. Epub ahead of print. PMID:42259120. Available from: https://doi.org/10.1016/j.ijmedinf.2026.106529
+
+Wolberg W, Mangasarian O, Street N, Street W. Breast Cancer Wisconsin (Diagnostic) [dataset]. 1993. UCI Machine Learning Repository. Available from: https://doi.org/10.24432/C5DW2B 
+
+Little MA. Parkinsons [dataset]. UCI Machine Learning Repository. 2007. doi:10.24432/C59C74. Available from: https://doi.org/10.24432/C59C74
+
+Rubini L, Soundarapandian P, Eswaran P. Chronic Kidney Disease [dataset]. 2015. UCI Machine Learning Repository. Available from: https://doi.org/10.24432/C5G020
+
+Knaus WA, Lynn J. Study to Understand Prognoses and Preferences for Outcomes and Risks of Treatment (SUPPORT) and Hospitalized Elderly Longitudinal Project (HELP), 1989–1997 [dataset]. Inter-university Consortium for Political and Social Research (ICPSR) [distributor]; 2020 Feb 20. doi:10.3886/ICPSR02957.v2. Available from: https://doi.org/10.3886/ICPSR02957.v2 

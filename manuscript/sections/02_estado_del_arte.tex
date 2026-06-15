@@ -1,0 +1,70 @@
+\section{Estado del arte y marco teórico}\label{sec:estado-arte}
+
+\subsection{Machine Learning supervisado en salud}
+
+El Machine Learning (ML) ha adquirido una gran relevancia dentro del sector sanitario debido al crecimiento en la disponibilidad de datos clínicos digitales y registros hospitalarios electrónicos~\citep{bajwa2021,davenport2019}. Estas técnicas permiten identificar patrones complejos dentro de grandes volúmenes de información médica, facilitando tareas relacionadas con clasificación, predicción y apoyo a decisiones clínicas.
+Dentro de este contexto, el aprendizaje supervisado representa uno de los enfoques más utilizados en aplicaciones médicas~\citep{shamout2021,delpino2025}. Su uso ha permitido desarrollar modelos capaces de predecir distintos outcomes clínicos a partir de variables fisiológicas, demográficas y hospitalarias. Diversas investigaciones reportan aplicaciones exitosas del ML supervisado en áreas como detección temprana de enfermedades, análisis de imágenes médicas, predicción de riesgo clínico y evaluación de supervivencia de pacientes.
+
+\subsubsection{Modelos supervisados para clasificación binaria}
+
+Los modelos supervisados de clasificación binaria representan una de las técnicas más utilizadas dentro del Machine Learning aplicado a problemas médicos y clínicos. Este enfoque consiste en entrenar algoritmos utilizando datos previamente etiquetados con el objetivo de predecir una variable objetivo compuesta por dos posibles clases, como presencia o ausencia de enfermedad, supervivencia o fallecimiento, entre otros escenarios clínicos.
+En el ámbito sanitario, los modelos supervisados permiten identificar relaciones entre variables clínicas y outcomes médicos específicos, facilitando tareas relacionadas con diagnóstico, estratificación de riesgo y apoyo a decisiones clínicas. Debido a esto, múltiples investigaciones han utilizado algoritmos tradicionales de clasificación para evaluar el comportamiento predictivo sobre datasets médicos estructurados~\citep{james2021,sklearn_supervised}.
+
+\subsubsection{Modelos tradicionales de clasificación}
+
+Dentro de los modelos supervisados más utilizados en tareas de clasificación binaria se encuentran Logistic Regression, Decision Trees, Random Forest, Support Vector Machines, K-Nearest Neighbors y Naive Bayes.
+Logistic Regression es uno de los algoritmos más utilizados en problemas clínicos debido a su simplicidad, interpretabilidad y capacidad para modelar probabilidades asociadas a eventos binarios. Por otro lado, Decision Trees permiten representar decisiones mediante estructuras jerárquicas fácilmente interpretables.
+Random Forest corresponde a un método de ensamblaje basado en múltiples árboles de decisión, permitiendo mejorar estabilidad y capacidad predictiva respecto a modelos individuales. Support Vector Machines (SVM) buscan encontrar hiperplanos óptimos capaces de separar clases dentro del espacio de características, siendo útiles en problemas de alta dimensionalidad.
+K-Nearest Neighbors (KNN) clasifica observaciones considerando la cercanía entre instancias dentro del espacio de variables, mientras que Naive Bayes utiliza principios probabilísticos basados en el teorema de Bayes asumiendo independencia condicional entre variables predictoras.
+Estos modelos continúan siendo ampliamente utilizados dentro de investigaciones clínicas y benchmarking de Machine Learning debido a su capacidad de clasificación, facilidad de implementación y adaptabilidad a distintos tipos de datasets médicos~\citep{james2021}.
+
+\subsection{Evaluación experimental y benchmarking}
+
+La evaluación experimental constituye una etapa fundamental dentro del desarrollo de modelos de Machine Learning, especialmente en aplicaciones clínicas donde la confiabilidad y capacidad de generalización de los modelos resultan críticas. En este contexto, el benchmarking permite comparar distintos algoritmos supervisados bajo condiciones experimentales controladas, utilizando métricas estandarizadas y estrategias consistentes de validación.
+El benchmarking tiene como objetivo analizar el comportamiento relativo de múltiples modelos frente a un mismo problema, permitiendo identificar diferencias en rendimiento, estabilidad y capacidad predictiva~\citep{delpino2025}. Dentro del ámbito sanitario, este enfoque resulta particularmente relevante debido a la complejidad de los datasets clínicos y a la necesidad de obtener resultados reproducibles y clínicamente confiables.
+
+\subsubsection{Benchmarking de modelos supervisados}
+
+El benchmarking de modelos supervisados consiste en la comparación sistemática de distintos algoritmos de clasificación utilizando un mismo conjunto de datos y condiciones experimentales similares. Este enfoque permite evaluar fortalezas y limitaciones de cada modelo respecto a un problema específico.
+Diversas investigaciones destacan la importancia de mantener estrategias consistentes de partición de datos, preprocessing y validación experimental durante el benchmarking, ya que pequeñas variaciones metodológicas pueden afectar considerablemente los resultados obtenidos~\citep{delpino2025,moassefi2023}. En aplicaciones médicas, esto adquiere especial relevancia debido a la sensibilidad de los datos clínicos y al impacto potencial de los modelos sobre decisiones sanitarias.
+
+\subsubsection{Métricas de clasificación}\label{sec:metricas-clasificacion}
+
+La evaluación de modelos supervisados requiere métricas capaces de medir diferentes aspectos del desempeño predictivo. Entre las métricas más utilizadas se encuentran Accuracy, Precision, Recall, F1-score y ROC-AUC.
+Accuracy representa la proporción total de predicciones correctas realizadas por el modelo respecto al total de observaciones evaluadas. Precision mide la proporción de predicciones positivas correctas respecto al total de positivos predichos por el modelo.
+Recall, también conocido como sensibilidad, evalúa la capacidad del modelo para identificar correctamente los casos positivos reales. Por su parte, el F1-score corresponde a la media armónica entre Precision y Recall, permitiendo obtener una medida balanceada del desempeño del modelo.
+Finalmente, ROC-AUC mide la capacidad discriminativa del modelo considerando diferentes umbrales de clasificación, siendo ampliamente utilizada en investigaciones médicas debido a su capacidad para evaluar el comportamiento global de modelos binarios~\citep{owusuadjei2023}.
+
+En problemas clínicos de clasificación binaria, la selección de métricas debe
+considerar tanto la discriminación global como los errores específicos de cada
+clase. Por ello, ROC-AUC resulta útil para comparar la capacidad discriminativa
+general de los modelos, mientras que sensibilidad y especificidad permiten
+evaluar de forma separada la identificación de pacientes fallecidos y
+supervivientes. Accuracy puede utilizarse como métrica complementaria, aunque su
+interpretación debe realizarse con cautela cuando existe desbalance de clases.
+
+\subsubsection{Validación experimental y reproducibilidad}
+
+La validación experimental busca garantizar que el rendimiento observado durante el entrenamiento pueda mantenerse sobre datos no utilizados previamente. Para ello, es común dividir los datos en conjuntos de entrenamiento y validación, permitiendo evaluar la capacidad de generalización de los modelos.
+La reproducibilidad constituye además un aspecto fundamental dentro de investigaciones basadas en Machine Learning aplicado a la salud. La literatura científica señala que múltiples estudios presentan dificultades de reproducibilidad debido a configuraciones experimentales insuficientemente documentadas, diferencias en preprocessing o falta de acceso a datos y código fuente~\citep{moassefi2023}.
+
+\subsection{Trabajos relacionados}
+
+\subsubsection{Predicción de riesgo de insuficiencia cardíaca mediante benchmarking supervisado}
+
+Un estudio reciente orientado a la predicción de riesgo de insuficiencia cardíaca desarrolló un benchmarking sistemático de diez algoritmos supervisados utilizando un dataset compuesto por 2,169 pacientes y 15 variables clínicas~\citep{li2026}. Los autores evaluaron modelos tradicionales como Logistic Regression, Decision Trees, Support Vector Machines, K-Nearest Neighbors y Naive Bayes, además de modelos ensemble como Random Forest, XGBoost, LightGBM y CatBoost.
+El experimento fue realizado bajo condiciones metodológicas controladas, utilizando el mismo preprocessing, partición estratificada de entrenamiento/prueba y métricas estandarizadas de evaluación como ROC-AUC, Accuracy, Precision, Recall y F1-score. Los resultados mostraron que Logistic Regression obtuvo el mejor desempeño global, alcanzando un ROC-AUC de 0.9451 y superando modelos más complejos basados en ensembles.
+El estudio concluye que modelos tradicionales e interpretables pueden mantener un alto rendimiento predictivo sobre datasets clínicos moderados, resaltando además la importancia del benchmarking bajo condiciones reproducibles y consistentes para realizar comparaciones válidas entre algoritmos supervisados.
+
+\subsubsection{Framework RISA para clasificación clínica e interpretabilidad}
+
+Otro trabajo relevante propuso el framework RISA (Robust and Interpretable Simulation-Analysis), orientado a evaluar robustez, interpretabilidad y capacidad de generalización de modelos supervisados aplicados al diagnóstico de apendicitis aguda~\citep{uddin2026}.
+El estudio evaluó seis algoritmos supervisados mediante 24 escenarios factoriales que incorporaban factores como desbalance de clases, dimensionalidad, heterogeneidad y fronteras de decisión no lineales. Posteriormente, los modelos fueron validados utilizando dos datasets clínicos independientes relacionados con pacientes adultos y pediátricos.
+Los resultados mostraron diferencias significativas en el comportamiento de los modelos dependiendo de la complejidad estructural del dataset y las características estadísticas presentes en cada escenario experimental. Además, el estudio incorporó técnicas de interpretabilidad mediante SHAP y LIME para validar la relevancia clínica de las variables utilizadas por los modelos.
+Los autores destacan que estrategias reproducibles y transparentes de benchmarking permiten construir modelos clínicos más robustos y confiables para aplicaciones reales en salud.
+
+\subsubsection{Predicción de mortalidad en UCI mediante Machine Learning}
+
+En otra investigación reciente, se desarrolló un modelo predictivo para mortalidad a 28 días en pacientes con pancreatitis aguda ingresados en unidades de cuidados intensivos~\citep{wei2026}. El estudio utilizó datos clínicos obtenidos de las bases MIMIC-IV y eICU-CRD, incorporando biomarcadores derivados como LAR, BAR y RAR junto con variables clínicas tradicionales.
+Los autores aplicaron técnicas de selección de variables utilizando el algoritmo Boruta y desarrollaron siete modelos supervisados de Machine Learning para comparar rendimiento predictivo. El benchmarking fue complementado mediante validación cruzada interna y validación externa sobre un segundo dataset independiente.
+Dentro de los modelos evaluados, ExtraTrees obtuvo el mejor desempeño general, alcanzando un AUC de 0.8546 durante entrenamiento y 0.82 en validación externa. El estudio resalta además la importancia de combinar selección de variables, benchmarking supervisado y validación externa para mejorar la capacidad de generalización de modelos clínicos.
