@@ -1,5 +1,5 @@
 ---
-title: "tech_model_train"
+title: "tech_model_train_no_cv"
 output: 
   pdf_document: default
   html_document: default
@@ -41,7 +41,8 @@ head(train)
 # --- 1. Ejecución con los datos BASE ---
 modelos_base <- entrenar_benchmark(
   train_data = train, 
-  nombre_dataset = "df2_Base"
+  nombre_dataset = "df2_Base",
+  usar_cv = FALSE
 )
 
 resultados_base <- evaluar_benchmark(
@@ -58,6 +59,7 @@ resultados_base <- evaluar_benchmark(
 modelos_scaled <- entrenar_benchmark(
   train_data = train_scaled, 
   nombre_dataset = "df2_Scaled",
+  usar_cv = FALSE,
   scaled_df = TRUE
 )
 

@@ -6,7 +6,7 @@ library(dplyr)
 library(plotly)
 library(htmltools)
 
-entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE) {
+entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE, usar_cv = TRUE) {
   cat("\n======================================================\n")
   cat("--- Iniciando Entrenamiento para:", nombre_dataset, "---\n")
   cat("======================================================\n")
@@ -14,13 +14,24 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE) {
   t_inicio_total <- Sys.time()
   tiempos_modelos <- list()
   
-  ctrl <- trainControl(
-    method = "cv", 
-    number = 5, 
-    classProbs = TRUE, 
-    summaryFunction = twoClassSummary,
-    verboseIter = TRUE 
-  )
+  # Ajuste dinámico del control según el flag usar_cv
+  if (usar_cv == TRUE) {
+    cat("  [!] Configuración: Usando Cross-Validation (5-fold)\n")
+    ctrl <- trainControl(
+      method = "cv", 
+      number = 5, 
+      classProbs = TRUE, 
+      summaryFunction = twoClassSummary,
+      verboseIter = TRUE 
+    )
+  } else {
+    cat("  [!] Configuración: Usando Entrenamiento Simple (Sin CV)\n")
+    ctrl <- trainControl(
+      method = "none", 
+      classProbs = TRUE, 
+      summaryFunction = twoClassSummary
+    )
+  }
   
   algoritmos <- list(
     LogisticRegression = "glm",
@@ -43,12 +54,18 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE) {
     
     t_inicio_mod <- Sys.time()
     
+    grid_params <- NULL
+    if (usar_cv == FALSE && algoritmos[[nombre]] == "C5.0") {
+      grid_params <- expand.grid(model = "tree", trials = 1, winnow = FALSE)
+    }
+    
     modelos_entrenados[[nombre]] <- train(
       hospdead ~ ., 
       data = train_data, 
       method = algoritmos[[nombre]], 
       metric = "ROC", 
-      trControl = ctrl
+      trControl = ctrl,
+      tuneGrid = grid_params
     )
     
     t_fin_mod <- Sys.time()
@@ -71,7 +88,6 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE) {
   
   return(modelos_entrenados)
 }
-
 
 evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_positiva = "Yes") {
   cat("\n--- Evaluando:", nombre_dataset, "en el set de TEST ---\n")

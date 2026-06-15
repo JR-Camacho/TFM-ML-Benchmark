@@ -1,7 +1,15 @@
 ---
 title: "bio_model_train"
-output: html_document
+output: 
+  pdf_document: default
+  #html_document: default
 ---
+
+```{r}
+set.seed(123)
+```
+
+
 ```{r}
 # Cargar librerías
 library(ggplot2)

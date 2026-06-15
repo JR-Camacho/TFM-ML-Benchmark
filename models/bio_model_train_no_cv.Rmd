@@ -1,5 +1,5 @@
 ---
-title: "tech_model_train"
+title: "bio_model_train_no_cv"
 output: 
   pdf_document: default
   html_document: default
@@ -25,46 +25,42 @@ source("../scripts/modeling_utils.R")
 
 ```{r}
 # Cargamos los datasets procesados
-train <- readRDS("../data/processed/support2/df2/train_base.rds")
-test <- readRDS("../data/processed/support2/df2/test_base.rds")
+train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
+test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
 
-train_scaled <- readRDS("../data/processed/support2/df2/train_scaled.rds")
-test_scaled <- readRDS("../data/processed/support2/df2/test_scaled.rds")
+train_bio_scaled <- readRDS("../data/processed/support2/df1/train_scaled.rds")
+test_bio_scaled <- readRDS("../data/processed/support2/df1/test_scaled.rds")
 ```
 
 ```{r}
-head(train)
-```
 
-
-```{r}
 # --- 1. Ejecución con los datos BASE ---
 modelos_base <- entrenar_benchmark(
-  train_data = train, 
-  nombre_dataset = "df2_Base"
+  train_data = train_bio, 
+  nombre_dataset = "df1_Base",
+  usar_cv = FALSE
 )
 
 resultados_base <- evaluar_benchmark(
   modelos_lista = modelos_base, 
-  test_data = test, 
-  nombre_dataset = "df2_Base",
+  test_data = test_bio, 
+  nombre_dataset = "df1_Base",
   clase_positiva = "Yes"
 )
 ```
-
-
 ```{r}
 # --- 2. Ejecución con los datos ESCALADOS ---
 modelos_scaled <- entrenar_benchmark(
-  train_data = train_scaled, 
-  nombre_dataset = "df2_Scaled",
+  train_data = train_bio_scaled, 
+  nombre_dataset = "df1_Scaled",
+  usar_cv = FALSE,
   scaled_df = TRUE
 )
 
 resultados_scaled <- evaluar_benchmark(
   modelos_lista = modelos_scaled, 
-  test_data = test_scaled, 
-  nombre_dataset = "df2_Scaled",
+  test_data = test_bio_scaled, 
+  nombre_dataset = "df1_Scaled",
   clase_positiva = "Yes"
 )
 ```
@@ -99,9 +95,9 @@ generar_graficos_automaticos(resultados_scaled)
 
 ```{r}
 # Para el dataset Base
-plot_roc_comparativo(modelos_base, test, "ROC: Modelos en Dataset Base")
+plot_roc_comparativo(modelos_base, test_bio, "ROC: Modelos en Dataset Base")
 
 # Para el dataset Scaled
-plot_roc_comparativo(modelos_scaled, test_scaled, "ROC: Modelos en Dataset Scaled")
+plot_roc_comparativo(modelos_scaled, test_bio_scaled, "ROC: Modelos en Dataset Scaled")
 ```
 
