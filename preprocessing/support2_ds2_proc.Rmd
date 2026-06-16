@@ -34,14 +34,28 @@ head(support2_raw)
 ```
 
 ```{r}
-index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
+set.seed(123)
+index_train <- createDataPartition(support2_raw$hospdead, p = 0.7, list = FALSE)
 
 train_tech <- support2_raw[index_train, ]
-test_tech  <- support2_raw[-index_train, ]
+resto_tech <- support2_raw[-index_train, ]
+
+index_valid <- createDataPartition(resto_tech$hospdead, p = 0.5, list = FALSE)
+
+valid_tech <- resto_tech[index_valid, ]
+test_tech  <- resto_tech[-index_valid, ]
 
 head(train_tech)
+head(valid_tech)
 head(test_tech)
 ```
+
+```{r}
+dim(train_tech)
+dim(valid_tech)
+dim(test_tech)
+```
+
 
 ```{r}
 # 3. Función para limpiar tipos y columnas
@@ -68,6 +82,7 @@ vars_to_remove <- c(
 )
 
 train_tech <- delete_vars(train_tech, vars_to_remove)
+valid_tech <- delete_vars(valid_tech, vars_to_remove)
 test_tech  <- delete_vars(test_tech, vars_to_remove)
 
 head(train_tech)
@@ -79,6 +94,7 @@ names(train_tech)
 # 4. Eliminar filas con nulos en variables clave
 clinical_key_vars <- c("meanbp", "hrt", "resp", "temp", "sod", "scoma","sps","aps", "crea", "avtisst")
 train_tech <- train_tech %>% drop_na(all_of(clinical_key_vars))
+valid_tech <- valid_tech %>% drop_na(all_of(clinical_key_vars))
 test_tech  <- test_tech %>% drop_na(all_of(clinical_key_vars))
 
 head(train_tech)
@@ -103,6 +119,8 @@ imputar_unknown <- function(df, col_name) {
 # Imputación por "Unknown" para categóricas
 train_tech <- imputar_unknown(train_tech, "race")
 train_tech <- imputar_unknown(train_tech, "dnr")
+valid_tech <- imputar_unknown(valid_tech, "race")
+valid_tech <- imputar_unknown(valid_tech, "dnr")
 test_tech  <- imputar_unknown(test_tech, "race")
 test_tech  <- imputar_unknown(test_tech, "dnr")
 
@@ -118,6 +136,10 @@ train_tech$adls[is.na(train_tech$adls)]   <- moda_adls
 train_tech$edu[is.na(train_tech$edu)]     <- moda_edu
 train_tech$sfdm2[is.na(train_tech$sfdm2)] <- moda_sfdm2
 train_tech$income[is.na(train_tech$income)] <- moda_income
+valid_tech$adls[is.na(valid_tech$adls)]   <- moda_adls
+valid_tech$edu[is.na(valid_tech$edu)]     <- moda_edu
+valid_tech$sfdm2[is.na(valid_tech$sfdm2)] <- moda_sfdm2
+valid_tech$income[is.na(valid_tech$income)] <- moda_income
 
 # 3. Imputamos el test usando los valores del train
 test_tech$adls[is.na(test_tech$adls)]     <- moda_adls
@@ -134,6 +156,7 @@ for (var in vars_mediana) {
   if (var %in% names(train_tech)) {
     # 1. Convertir a numérico a la fuerza (si hay texto, lo convertirá a NA, lo cual está bien)
     train_tech[[var]] <- as.numeric(as.character(train_tech[[var]]))
+    valid_tech[[var]]  <- as.numeric(as.character(valid_tech[[var]]))
     test_tech[[var]]  <- as.numeric(as.character(test_tech[[var]]))
     
     # 2. Calcular mediana solo sobre los datos existentes
@@ -141,6 +164,7 @@ for (var in vars_mediana) {
     
     # 3. Imputar
     train_tech[[var]][is.na(train_tech[[var]])] <- mediana_val
+    valid_tech[[var]][is.na(valid_tech[[var]])] <- mediana_val
     test_tech[[var]][is.na(test_tech[[var]])]   <- mediana_val
   }
 }
@@ -160,6 +184,9 @@ str(train_tech)
 train_tech$hospdead <- factor(train_tech$hospdead, 
                                  levels = c(0, 1), 
                                  labels = c("No", "Yes"))
+valid_tech$hospdead <- factor(valid_tech$hospdead,
+                                 levels = c(0, 1),
+                                 labels = c("No", "Yes"))
 test_tech$hospdead  <- factor(test_tech$hospdead, 
                                  levels = c(0, 1), 
                                  labels = c("No", "Yes"))
@@ -169,6 +196,7 @@ cols_to_factor <- c("diabetes", "dementia")
 
 for(col in cols_to_factor) {
   train_tech[[col]] <- as.factor(train_tech[[col]])
+  valid_tech[[col]] <- factor(valid_tech[[col]], levels = levels(train_tech[[col]]))
   test_tech[[col]]  <- factor(test_tech[[col]], levels = levels(train_tech[[col]]))
 }
 
@@ -180,6 +208,7 @@ str(train_tech)
 ```{r}
 # 2. Creamos los datasets escalados
 train_tech_scaled <- train_tech
+valid_tech_scaled <- valid_tech
 test_tech_scaled  <- test_tech
 
 # Identificar columnas numéricas (excluyendo factores)
@@ -192,19 +221,26 @@ for (col in num_cols) {
   
   # Aplicamos la fórmula: (valor - media) / desviación_estándar
   train_tech_scaled[[col]] <- (train_tech[[col]] - mu) / sigma
+  valid_tech_scaled[[col]]  <- (valid_tech[[col]] - mu) / sigma
   test_tech_scaled[[col]]  <- (test_tech_scaled[[col]] - mu) / sigma
 }
 
 head(train_tech_scaled)
 head(test_tech_scaled)
 ```
+
+```{r}
+dim(train_tech)
+dim(valid_tech)
+dim(test_tech)
+```
+
 ```{r}
 saveRDS(train_tech, "../data/processed/support2/df2/train_base.rds")
+saveRDS(valid_tech, "../data/processed/support2/df2/valid_base.rds")
 saveRDS(test_tech,  "../data/processed/support2/df2/test_base.rds")
 
 saveRDS(train_tech_scaled, "../data/processed/support2/df2/train_scaled.rds")
+saveRDS(valid_tech_scaled, "../data/processed/support2/df2/valid_scaled.rds")
 saveRDS(test_tech_scaled,  "../data/processed/support2/df2/test_scaled.rds")
 ```
-
-
-

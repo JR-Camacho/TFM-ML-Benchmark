@@ -20,15 +20,18 @@ library(kableExtra)
 ```
 
 ```{r}
-source("../scripts/modeling_utils.R")
+#source("../scripts/modeling_utils.R")
+source("../scripts/modeling_utils_tidymodels.R")
 ```
 
 ```{r}
 # Cargamos los datasets procesados
 train <- readRDS("../data/processed/support2/df2/train_base.rds")
+valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
 test <- readRDS("../data/processed/support2/df2/test_base.rds")
 
 train_scaled <- readRDS("../data/processed/support2/df2/train_scaled.rds")
+valid_scaled <- readRDS("../data/processed/support2/df2/valid_scaled.rds")
 test_scaled <- readRDS("../data/processed/support2/df2/test_scaled.rds")
 ```
 
@@ -45,12 +48,15 @@ modelos_base <- entrenar_benchmark(
   usar_cv = FALSE
 )
 
-resultados_base <- evaluar_benchmark(
+resultados_base_split <- evaluar_benchmark_valid_test(
   modelos_lista = modelos_base, 
+  valid_data = valid,
   test_data = test, 
   nombre_dataset = "df2_Base",
   clase_positiva = "Yes"
 )
+resultados_base <- resultados_base_split$validation
+resultados_base_test <- resultados_base_split$test
 ```
 
 
@@ -63,12 +69,15 @@ modelos_scaled <- entrenar_benchmark(
   scaled_df = TRUE
 )
 
-resultados_scaled <- evaluar_benchmark(
+resultados_scaled_split <- evaluar_benchmark_valid_test(
   modelos_lista = modelos_scaled, 
+  valid_data = valid_scaled,
   test_data = test_scaled, 
   nombre_dataset = "df2_Scaled",
   clase_positiva = "Yes"
 )
+resultados_scaled <- resultados_scaled_split$validation
+resultados_scaled_test <- resultados_scaled_split$test
 ```
 
 ```{r}
@@ -106,4 +115,3 @@ plot_roc_comparativo(modelos_base, test, "ROC: Modelos en Dataset Base")
 # Para el dataset Scaled
 plot_roc_comparativo(modelos_scaled, test_scaled, "ROC: Modelos en Dataset Scaled")
 ```
-
