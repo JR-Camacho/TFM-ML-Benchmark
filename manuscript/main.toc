@@ -27,16 +27,16 @@
 \contentsline {subsubsection}{\numberline {3.6.2}Estrategia V1: procesamiento clínico-estadístico}{24}{subsubsection.3.6.2}%
 \contentsline {paragraph}{Prevención de Data Leakage y depuración de variables}{24}{section*.4}%
 \contentsline {paragraph}{Tratamiento avanzado de valores faltantes (NAs)}{24}{section*.5}%
-\contentsline {paragraph}{Ingeniería de características y categorización informativa}{24}{section*.6}%
+\contentsline {paragraph}{Ingeniería de características y categorización informativa}{25}{section*.6}%
 \contentsline {subsubsection}{\numberline {3.6.3}Estrategia V2: procesamiento técnico-estadístico}{25}{subsubsection.3.6.3}%
 \contentsline {paragraph}{Criterios de limpieza y exclusión agresiva}{25}{section*.7}%
 \contentsline {paragraph}{Tratamiento de nulos mediante estrategia de imputación global}{25}{section*.8}%
 \contentsline {subsubsection}{\numberline {3.6.4}Estandarización y normalización de variables}{25}{subsubsection.3.6.4}%
 \contentsline {subsection}{\numberline {3.7}Marco Experimental y Selección de Algoritmos}{26}{subsection.3.7}%
 \contentsline {subsubsection}{\numberline {3.7.1}Selección de Modelos Supervisados}{26}{subsubsection.3.7.1}%
-\contentsline {subsubsection}{\numberline {3.7.2}Estrategias de Validación y Automatización}{26}{subsubsection.3.7.2}%
+\contentsline {subsubsection}{\numberline {3.7.2}Estrategias de Validación y Automatización}{27}{subsubsection.3.7.2}%
 \contentsline {subsubsection}{\numberline {3.7.3}Organización computacional del proyecto}{27}{subsubsection.3.7.3}%
-\contentsline {subsubsection}{\numberline {3.7.4}Arquitectura del Flujo de Trabajo (V1 vs. V2)}{27}{subsubsection.3.7.4}%
+\contentsline {subsubsection}{\numberline {3.7.4}Arquitectura del Flujo de Trabajo (V1 vs. V2)}{28}{subsubsection.3.7.4}%
 \contentsline {subsubsection}{\numberline {3.7.5}Configuración de Hiperparámetros y Control}{28}{subsubsection.3.7.5}%
 \contentsline {subsection}{\numberline {3.8}Métricas de Evaluación de Rendimiento}{28}{subsection.3.8}%
 \contentsline {section}{\numberline {4}Resultados}{29}{section.4}%
@@ -49,22 +49,14 @@
 \contentsline {subsubsection}{\numberline {4.1.4}Matriz de correlación}{32}{subsubsection.4.1.4}%
 \contentsline {subsection}{\numberline {4.2}Resultados de modelos supervisados}{32}{subsection.4.2}%
 \contentsline {subsubsection}{\numberline {4.2.1}V1 -- Bio Data con validación cruzada}{32}{subsubsection.4.2.1}%
-\contentsline {paragraph}{Datos sin escalado (df1\_Base)}{32}{section*.16}%
-\contentsline {paragraph}{Datos escalados (df1\_Scaled)}{33}{section*.19}%
-\contentsline {subsubsection}{\numberline {4.2.2}V1 -- Bio Data sin validación cruzada (hold-out)}{34}{subsubsection.4.2.2}%
-\contentsline {paragraph}{Datos sin escalado (df1\_Base)}{34}{section*.22}%
-\contentsline {paragraph}{Datos escalados (df1\_Scaled)}{35}{section*.25}%
-\contentsline {subsubsection}{\numberline {4.2.3}V2 -- Tech Data con validación cruzada}{36}{subsubsection.4.2.3}%
-\contentsline {paragraph}{Datos sin escalado (df2\_Base)}{36}{section*.28}%
-\contentsline {paragraph}{Datos escalados (df2\_Scaled)}{37}{section*.31}%
-\contentsline {subsubsection}{\numberline {4.2.4}V2 -- Tech Data sin validación cruzada (hold-out)}{38}{subsubsection.4.2.4}%
-\contentsline {paragraph}{Datos sin escalado (df2\_Base)}{38}{section*.34}%
-\contentsline {paragraph}{Datos escalados (df2\_Scaled)}{39}{section*.37}%
-\contentsline {section}{\numberline {5}Discusión}{40}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Comparación entre estrategias de preprocesamiento}{40}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Contraste de la hipótesis}{41}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Impacto del conocimiento clínico}{41}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Comportamiento de los modelos}{41}{subsection.5.4}%
-\contentsline {section}{\numberline {6}Conclusiones}{42}{section.6}%
-\contentsline {section}{Declaración de uso de inteligencia artificial}{44}{section*.40}%
-\contentsline {section}{\numberline {7}Bibliografía}{45}{section.7}%
+\contentsline {subsubsection}{\numberline {4.2.2}V1 -- Bio Data sin validación cruzada}{34}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}V2 -- Tech Data con validación cruzada}{35}{subsubsection.4.2.3}%
+\contentsline {subsubsection}{\numberline {4.2.4}V2 -- Tech Data sin validación cruzada}{36}{subsubsection.4.2.4}%
+\contentsline {section}{\numberline {5}Discusión}{37}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Comparación entre estrategias de preprocesamiento}{37}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Contraste de la hipótesis}{38}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Impacto del conocimiento clínico}{38}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Comportamiento de los modelos}{39}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Conclusiones}{39}{section.6}%
+\contentsline {section}{Declaración de uso de inteligencia artificial}{41}{section*.28}%
+\contentsline {section}{\numberline {7}Bibliografía}{42}{section.7}%

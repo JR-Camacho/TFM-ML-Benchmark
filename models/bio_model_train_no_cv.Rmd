@@ -1,6 +1,6 @@
 ---
 title: "bio_model_train_no_cv"
-output: 
+output:
   pdf_document: default
   html_document: default
 ---
@@ -9,9 +9,7 @@ output:
 set.seed(123)
 ```
 
-
 ```{r}
-# Cargar librerías
 library(ggplot2)
 library(dplyr)
 library(plotly)
@@ -20,63 +18,34 @@ library(kableExtra)
 ```
 
 ```{r}
-# source("../scripts/modeling_utils.R")
-source("../scripts/modeling_utils_tidymodels.R")
+source("../scripts/modeling_utils_tidymodels_clean.R")
 ```
 
 ```{r}
-# Cargamos los datasets procesados
 train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
 valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
 test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
-
-train_bio_scaled <- readRDS("../data/processed/support2/df1/train_scaled.rds")
-valid_bio_scaled <- readRDS("../data/processed/support2/df1/valid_scaled.rds")
-test_bio_scaled <- readRDS("../data/processed/support2/df1/test_scaled.rds")
 ```
 
 ```{r}
-
-# --- 1. Ejecución con los datos BASE ---
-modelos_base <- entrenar_benchmark(
-  train_data = train_bio, 
-  nombre_dataset = "df1_Base",
-  usar_cv = FALSE
-)
-
-resultados_base_split <- evaluar_benchmark_valid_test(
-  modelos_lista = modelos_base, 
+resultado_bio <- entrenar_benchmark(
+  train_data = train_bio,
   valid_data = valid_bio,
-  test_data = test_bio, 
-  nombre_dataset = "df1_Base",
-  clase_positiva = "Yes"
-)
-resultados_base <- resultados_base_split$validation
-resultados_base_test <- resultados_base_split$test
-```
-```{r}
-# --- 2. Ejecución con los datos ESCALADOS ---
-modelos_scaled <- entrenar_benchmark(
-  train_data = train_bio_scaled, 
-  nombre_dataset = "df1_Scaled",
+  test_data = test_bio,
+  nombre_dataset = "df1_Bio",
   usar_cv = FALSE,
-  scaled_df = TRUE
-)
-
-resultados_scaled_split <- evaluar_benchmark_valid_test(
-  modelos_lista = modelos_scaled, 
-  valid_data = valid_bio_scaled,
-  test_data = test_bio_scaled, 
-  nombre_dataset = "df1_Scaled",
+  grid_size = 10,
   clase_positiva = "Yes"
 )
-resultados_scaled <- resultados_scaled_split$validation
-resultados_scaled_test <- resultados_scaled_split$test
+
+resultados_validacion <- resultado_bio$validation
+resultados_test <- resultado_bio$test
+mejor_configuracion <- resultado_bio$best_params
 ```
 
 ```{r}
-resultados_base %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+resultados_validacion %>%
+  kbl(digits = 3) %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -84,28 +53,31 @@ resultados_base %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_base)
+generar_graficos_automaticos(resultados_validacion)
 ```
 
 ```{r}
-resultados_scaled %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+mejor_configuracion %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  )
+```
+
+```{r}
+resultados_test %>%
+  kbl(digits = 3) %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
-
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_scaled)
 ```
 
 ```{r}
-# Para el dataset Base
-plot_roc_comparativo(modelos_base, test_bio, "ROC: Modelos en Dataset Base")
-
-# Para el dataset Scaled
-plot_roc_comparativo(modelos_scaled, test_bio_scaled, "ROC: Modelos en Dataset Scaled")
+plot_roc_comparativo(resultado_bio$validation_fits, valid_bio, "ROC: Validacion - df1_Bio")
+plot_roc_comparativo(list(Best = resultado_bio$best_fit), test_bio, "ROC: Test Final - df1_Bio")
 ```

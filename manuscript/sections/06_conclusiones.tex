@@ -5,18 +5,19 @@ predictivo en salud depende tanto de la capacidad de los algoritmos como de la
 calidad metodológica del flujo de preprocesamiento. Mediante un esquema modular
 y reproducible, se observó que los modelos de ensamble, específicamente Random
 Forest y Gradient Boosting Machine (GBM), lideraron la capacidad de
-discriminación con valores de AUC de 0.933 en el escenario clínico-estadístico
-y de hasta 0.972 en el escenario técnico-estadístico. Estos resultados indican
+discriminación con valores de AUC de hasta 0.949 en validación y 0.942 en prueba
+en el escenario clínico-estadístico, y de hasta 0.978 en validación y 0.975 en
+prueba en el escenario técnico-estadístico. Estos resultados indican
 que, ante variables fisiológicas con alta variabilidad, multicolinealidad y
 relaciones no lineales, los algoritmos basados en árboles presentan ventajas
-frente a aproximaciones lineales o basadas en distancia como KNN. La regresión
-logística también mostró un rendimiento relevante, con un AUC de 0.918 en el
-escenario biológico, lo que sugiere que parte de los predictores seleccionados
-mantienen una relación discriminativa estable con la mortalidad hospitalaria.
-Por el contrario, la inestabilidad del árbol de decisión simple (rpart) en los
-escenarios sin validación cruzada subraya la necesidad de emplear metodologías
-de remuestreo y evaluación probabilística para mejorar la estabilidad de las
-predicciones en entornos biomédicos.
+frente a aproximaciones lineales, de margen o basadas en distancia como SVM y
+KNN. La regresión logística también mostró un rendimiento relevante, con AUC
+superiores a 0.93 en el escenario biológico, lo que sugiere que parte de los
+predictores seleccionados mantienen una relación discriminativa estable con la
+mortalidad hospitalaria. La evaluación final sobre el conjunto de prueba,
+reservada únicamente para el mejor modelo de cada escenario, permitió confirmar
+la tendencia observada en validación sin utilizar el test como criterio de
+selección.
 
 El aporte principal de este trabajo reside en mostrar que el preprocesamiento
 informado por conocimiento clínico no debe evaluarse únicamente por la

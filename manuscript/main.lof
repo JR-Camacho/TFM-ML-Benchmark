@@ -2,11 +2,7 @@
 \contentsline {figure}{\numberline {2}{\ignorespaces Distribución de variables continuas en SUPPORT2.}}{31}{figure.caption.12}%
 \contentsline {figure}{\numberline {3}{\ignorespaces Distribución de variables categóricas en SUPPORT2.}}{31}{figure.caption.14}%
 \contentsline {figure}{\numberline {4}{\ignorespaces Matriz de correlación de variables en SUPPORT2.}}{32}{figure.caption.15}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Curvas ROC comparativas --- V1, validación cruzada, datos sin escalado.}}{33}{figure.caption.18}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Curvas ROC comparativas --- V1, validación cruzada, datos escalados.}}{34}{figure.caption.21}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Curvas ROC comparativas --- V1, hold-out, datos sin escalado.}}{35}{figure.caption.24}%
-\contentsline {figure}{\numberline {8}{\ignorespaces Curvas ROC comparativas --- V1, hold-out, datos escalados.}}{36}{figure.caption.27}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Curvas ROC comparativas --- V2, validación cruzada, datos sin escalado.}}{37}{figure.caption.30}%
-\contentsline {figure}{\numberline {10}{\ignorespaces Curvas ROC comparativas --- V2, validación cruzada, datos escalados.}}{38}{figure.caption.33}%
-\contentsline {figure}{\numberline {11}{\ignorespaces Curvas ROC comparativas --- V2, hold-out, datos sin escalado.}}{39}{figure.caption.36}%
-\contentsline {figure}{\numberline {12}{\ignorespaces Curvas ROC comparativas --- V2, hold-out, datos escalados.}}{40}{figure.caption.39}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Curvas ROC comparativas --- V1, validación cruzada, conjunto de validación.}}{33}{figure.caption.18}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Curvas ROC comparativas --- V1, entrenamiento simple, conjunto de validación.}}{35}{figure.caption.21}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Curvas ROC comparativas --- V2, validación cruzada, conjunto de validación.}}{36}{figure.caption.24}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Curvas ROC comparativas --- V2, entrenamiento simple, conjunto de validación.}}{37}{figure.caption.27}%

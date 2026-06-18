@@ -554,14 +554,21 @@ Como etapa preliminar a cualquier intervención sobre los datos, se procedió a 
 división del dataset original mediante un esquema de validación externa:
 
 \begin{itemize}
-  \item Proporción de la muestra: Se determinó una división del 80\% para el conjunto
-    de entrenamiento y un 20\% para el conjunto de prueba independiente.
+  \item Proporción de la muestra: Se determinó una división del 70\% para el conjunto
+    de entrenamiento, 15\% para el conjunto de validación y 15\% para el conjunto
+    de prueba independiente.
   \item Mecanismo de estratificación: Se implementó la función createDataPartition
     sobre la variable objetivo hospdead. Esta decisión estratégica asegura que
-    la prevalencia de la mortalidad hospitalaria sea equivalente en ambas
+    la prevalencia de la mortalidad hospitalaria sea equivalente en las tres
     particiones, mitigando sesgos de selección y garantizando que el modelo se
     entrene y evalúe sobre distribuciones de clase representativas del fenómeno
     clínico.
+  \item Uso de los subconjuntos: El conjunto de entrenamiento se utilizó para
+    ajustar los modelos y, cuando correspondía, ejecutar validación cruzada
+    interna. El conjunto de validación se reservó para comparar el rendimiento
+    de los modelos y seleccionar la mejor configuración de hiperparámetros. El
+    conjunto de prueba se mantuvo aislado hasta la evaluación final del modelo
+    seleccionado.
 \end{itemize}
 
 \subsubsection{Estrategia V1: procesamiento clínico-estadístico}
@@ -642,17 +649,25 @@ En este escenario, el preprocesamiento se desvincula del contexto diagnóstico:
 
 \subsubsection{Estandarización y normalización de variables}
 
-Para ambos entornos experimentales, se aplicó un protocolo de escalado Z-score
-sobre todas las variables numéricas:
+Para ambos entornos experimentales, la normalización se integró dentro del flujo
+de modelado mediante recetas de tidymodels. Aunque durante el preprocesamiento
+se conservaron versiones base y escaladas de los datos, el entrenamiento final
+se realizó sobre las versiones base, delegando la estandarización al pipeline
+del modelo:
 
 \begin{itemize}
   \item Aislamiento de parámetros: Las estadísticas de normalización (media y
     desviación estándar) se calcularon exclusivamente con los datos de
-    entrenamiento.
+    entrenamiento dentro de la receta.
   \item Prevención de contaminación: Dichos parámetros se aplicaron posteriormente
-    al conjunto de prueba. Esta decisión estratégica es fundamental en ciencia
-    de datos para evitar la contaminación del modelo con información del
-    conjunto de evaluación, garantizando la integridad de la validación cruzada.
+    a los conjuntos de validación y prueba. Esta decisión estratégica es
+    fundamental en ciencia de datos para evitar la contaminación del modelo con
+    información de los conjuntos de evaluación, garantizando la integridad de la
+    comparación experimental.
+  \item Codificación consistente: Las variables categóricas fueron tratadas como
+    predictores nominales y transformadas a variables indicadoras dentro de la
+    misma receta, incorporando además control de niveles nuevos y eliminación de
+    predictores sin variabilidad.
 \end{itemize}
 
 \subsection{Marco Experimental y Selección de Algoritmos}
@@ -678,8 +693,8 @@ aprendizaje automático para garantizar una comparativa exhaustiva:
     \begin{itemize}
       \item Decision Tree (rpart): Para capturar relaciones no lineales simples y
         estructuras de decisión.
-      \item C5.0: Algoritmo avanzado de reglas y árboles que optimiza la ganancia de
-        información.
+      \item Support Vector Machine (SVM): Modelo de margen máximo con kernel radial,
+        útil para capturar fronteras de decisión no lineales.
     \end{itemize}
   \item Modelos de Ensamble (Ensemble Learning):
     \begin{itemize}
@@ -690,29 +705,29 @@ aprendizaje automático para garantizar una comparativa exhaustiva:
     \end{itemize}
   \item Modelos Basados en Distancia:
     \begin{itemize}
-      \item K-Nearest Neighbors (KNN): Integrado exclusivamente en los escenarios de
-        datos escalados (z-score), debido a su sensibilidad a la magnitud de las
-        variables.
+      \item K-Nearest Neighbors (KNN): Integrado dentro del mismo flujo
+        normalizado, debido a su sensibilidad a la magnitud de las variables.
     \end{itemize}
 \end{itemize}
 
 \subsubsection{Estrategias de Validación y Automatización}
 
 La experimentación se ha modularizado mediante el desarrollo de una librería de
-utilidades propia (modeling\_utils.R), lo que permite una ejecución sistemática y
+utilidades propia (modeling\_utils\_tidymodels\_clean.R), lo que permite una ejecución sistemática y
 reduce el error humano. Se definieron dos metodologías de validación:
 
 \begin{enumerate}
   \item Validación Cruzada (5-fold Cross-Validation): Empleada para la estimación
-    del error de generalización. Al dividir el conjunto de entrenamiento en 5
-    pliegues, se asegura que cada observación sea utilizada tanto para
-    entrenamiento como para validación interna, mitigando el riesgo de
-    sobreajuste (overfitting).
-  \item Entrenamiento Simple (Hold-out): Utilizado para evaluar el rendimiento
-    puro sobre un conjunto de prueba independiente (test\_bio o test\_tech).
-    Esta estrategia permite observar el comportamiento de los modelos en su
-    estado base y comparar la eficiencia computacional frente a la validación
-    cruzada.
+    del error de generalización durante el ajuste inicial. Al dividir el
+    conjunto de entrenamiento en 5 pliegues, se asegura que cada observación sea
+    utilizada tanto para entrenamiento como para validación interna, mitigando el
+    riesgo de sobreajuste (overfitting). Posteriormente, el conjunto de
+    validación externo permitió seleccionar el mejor modelo.
+  \item Entrenamiento Simple (sin CV): Utilizado para evaluar el ajuste directo de
+    modelos sobre el conjunto de entrenamiento y comparar sus configuraciones en
+    el conjunto de validación. Esta estrategia permite observar el comportamiento
+    de los modelos en su estado base y comparar la eficiencia computacional
+    frente a la validación cruzada.
 \end{enumerate}
 
 \subsubsection{Organización computacional del proyecto}
@@ -733,16 +748,17 @@ TFM-ML-Benchmark/
 |-- eda/
 |-- preprocessing/
 |-- models/
-|-- scripts/modeling_utils.R
+|-- scripts/modeling_utils_tidymodels_clean.R
 |-- figures/
 `-- manuscript/
 \end{lstlisting}
 
 Las principales librerías utilizadas incluyeron tidyverse, dplyr, ggplot2,
-caret, pROC, DataExplorer, corrplot, Hmisc, knitr, kableExtra, plotly y
-htmltools. La reproducibilidad se apoyó en particiones de entrenamiento y prueba
-persistidas, versiones base y escaladas de los datos procesados, semillas de
-aleatorización y funciones centralizadas en modeling\_utils.R para entrenar,
+tidymodels, workflows, recipes, parsnip, tune, yardstick, rsample, pROC,
+DataExplorer, corrplot, Hmisc, knitr, kableExtra, plotly y htmltools. La
+reproducibilidad se apoyó en particiones de entrenamiento, validación y prueba
+persistidas, versiones base de los datos procesados, semillas de aleatorización
+y funciones centralizadas en modeling\_utils\_tidymodels\_clean.R para entrenar,
 evaluar y comparar los modelos bajo criterios homogéneos.
 
 \subsubsection{Arquitectura del Flujo de Trabajo (V1 vs. V2)}
@@ -759,21 +775,24 @@ RMarkdown (.Rmd) independientes, lo que permite una trazabilidad total:
     de valores faltantes).
 \end{itemize}
 
-En cada archivo, se ejecutan de forma paralela dos sub-escenarios: Base (datos
-originales con su escala nativa) y Scaled (datos estandarizados mediante
-z-score), garantizando una comparación metodológicamente equivalente entre
-escenarios.
+En cada archivo, se ejecutan de forma paralela dos sub-escenarios: entrenamiento
+con validación cruzada y entrenamiento simple sin validación cruzada. Ambos
+parten de los datos base y aplican las transformaciones necesarias dentro de la
+receta de tidymodels, garantizando una comparación metodológicamente equivalente
+entre escenarios.
 
 \subsubsection{Configuración de Hiperparámetros y Control}
 
-Independientemente del modelo, se ha unificado el entrenamiento mediante la
-función trainControl de la librería caret~\citep{kuhn_caret}, configurada con:
+Independientemente del modelo, se ha unificado el entrenamiento mediante
+workflows de tidymodels, integrando receta, especificación del modelo,
+búsqueda de hiperparámetros y evaluación probabilística:
 
 \begin{itemize}
-  \item classProbs = TRUE: Para la generación de curvas ROC.
-  \item summaryFunction = twoClassSummary: Para priorizar métricas probabilísticas.
-  \item verboseIter = TRUE: Para el seguimiento en tiempo real de la convergencia
-    del algoritmo durante la ejecución experimental.
+  \item Generación de probabilidades de clase: Para la construcción de curvas ROC.
+  \item Optimización por ROC-AUC: Para priorizar la capacidad discriminativa global
+    durante la selección de configuraciones.
+  \item Registro de la mejor configuración: Para conservar los hiperparámetros del
+    modelo con mayor rendimiento sobre el conjunto de validación.
 \end{itemize}
 
 \subsection{Métricas de Evaluación de Rendimiento}
@@ -781,8 +800,8 @@ función trainControl de la librería caret~\citep{kuhn_caret}, configurada con:
 Dado que las métricas de clasificación se describen conceptualmente en la
 Sección~\ref{sec:metricas-clasificacion}, este apartado delimita únicamente su
 uso dentro del protocolo experimental. Para cada modelo y escenario se
-reportaron AUC-ROC, sensibilidad, especificidad y accuracy mediante la función
-evaluar\_benchmark.
+reportaron AUC-ROC, sensibilidad, especificidad y accuracy mediante funciones
+centralizadas de evaluación.
 
 El AUC-ROC se utilizó como métrica principal para comparar la capacidad
 discriminativa global entre algoritmos y estrategias de preprocesamiento. La
@@ -793,6 +812,6 @@ desbalance moderado de la variable hospdead.
 
 Además de las métricas tabulares, se generaron curvas ROC comparativas para cada
 escenario experimental. Estas curvas se presentan en las
-Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v2-scaled-nocv} y permiten contrastar
+Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v2-nocv} y permiten contrastar
 visualmente el comportamiento relativo de los modelos en el espacio de
 sensibilidad frente a 1-especificidad.

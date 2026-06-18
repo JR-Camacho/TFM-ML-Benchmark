@@ -126,278 +126,228 @@
   \label{fig:correlation-matrix}
 \end{figure}
 
+
 \subsection{Resultados de modelos supervisados}
 
 Los resultados del benchmarking se presentan de forma sistemática según la
-estrategia de preprocesamiento (V1: Bio Data; V2: Tech Data), el esquema de
-validación (validación cruzada o hold-out) y el tratamiento de escala de las
-variables (datos base o escalados mediante z-score). En cada escenario se
-reportan las métricas AUC, sensibilidad, especificidad y accuracy, junto con
-las curvas ROC comparativas de todos los modelos evaluados.
+estrategia de preprocesamiento (V1: Bio Data; V2: Tech Data) y el esquema de
+entrenamiento utilizado (validación cruzada o entrenamiento simple sin CV). En
+la nueva arquitectura experimental, los modelos se entrenaron sobre el conjunto
+de entrenamiento, se compararon sobre el conjunto de validación y únicamente el
+mejor modelo de cada escenario fue evaluado sobre el conjunto de prueba final.
+En cada escenario se reportan las métricas AUC, sensibilidad, especificidad y
+accuracy, junto con las curvas ROC comparativas de todos los modelos evaluados.
 
 \subsubsection{V1 -- Bio Data con validación cruzada}
 
-\paragraph{Datos sin escalado (df1\_Base)}
-
-La Tabla~\ref{tab:v1-cv-base} resume el rendimiento de los cinco algoritmos
-entrenados sobre el dataset clínico-estadístico sin normalización. Random
-Forest obtuvo el mayor AUC (0.933), seguido de GBM (0.930) y C5.0 (0.919).
+La Tabla~\ref{tab:v1-cv-base} resume el rendimiento de los modelos entrenados
+sobre el dataset clínico-estadístico mediante validación cruzada interna y
+selección posterior en el conjunto de validación. GBM obtuvo el mayor AUC
+(0.947), seguido por Random Forest (0.942) y Logistic Regression (0.932).
 
 \begin{table}[H]
   \centering
-  \caption[V1 CV sin escalado]{Rendimiento comparativo de modelos supervisados --- V1, validación cruzada, datos sin escalado (df1\_Base).}
+  \caption[V1 CV validación]{Rendimiento comparativo de modelos supervisados --- V1, validación cruzada, conjunto de validación (df1\_Bio).}
   \label{tab:v1-cv-base}
   \small
   \begin{tabular}{llrrrr}
     \toprule
     \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df1\_Base & LogisticRegression & 0.918 & 0.722 & 0.926 & 0.874 \\
-    df1\_Base & DecisionTree       & 0.839 & 0.514 & 0.955 & 0.843 \\
-    df1\_Base & RandomForest       & 0.933 & 0.766 & 0.937 & 0.893 \\
-    df1\_Base & GBM                & 0.930 & 0.742 & 0.946 & 0.894 \\
-    df1\_Base & C50                & 0.919 & 0.755 & 0.932 & 0.887 \\
+    df1\_Bio & GBM                & 0.947 & 0.749 & 0.961 & 0.906 \\
+    df1\_Bio & RandomForest       & 0.942 & 0.746 & 0.948 & 0.896 \\
+    df1\_Bio & LogisticRegression & 0.932 & 0.709 & 0.946 & 0.885 \\
+    df1\_Bio & SVM                & 0.930 & 0.723 & 0.936 & 0.881 \\
+    df1\_Bio & DecisionTree       & 0.919 & 0.698 & 0.937 & 0.875 \\
+    df1\_Bio & KNN                & 0.903 & 0.573 & 0.958 & 0.858 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{roc_v1_cv}
-  \caption{Curvas ROC comparativas --- V1, validación cruzada, datos sin escalado.}
-  \label{fig:roc-v1-cv}
-\end{figure}
-
-\paragraph{Datos escalados (df1\_Scaled)}
-
-Con escalado z-score se incorporó además el modelo KNN, al depender este de la
-magnitud de las variables. La Tabla~\ref{tab:v1-cv-scaled} muestra resultados
-muy similares a los del escenario base; Random Forest mantuvo el AUC más alto
-(0.933), mientras que KNN presentó el menor rendimiento global (AUC = 0.857).
+La mejor configuración correspondió a GBM, con 2000 árboles, min\_n = 10,
+profundidad máxima de 2, tasa de aprendizaje de 0.0068 y loss\_reduction = 0.
+Al evaluar este modelo seleccionado sobre el conjunto de prueba final, se obtuvo
+un AUC de 0.939, sensibilidad de 0.775, especificidad de 0.954 y accuracy de
+0.906 (Tabla~\ref{tab:v1-cv-test}).
 
 \begin{table}[H]
   \centering
-  \caption[V1 CV escalado]{Rendimiento comparativo de modelos supervisados --- V1, validación cruzada, datos escalados (df1\_Scaled).}
-  \label{tab:v1-cv-scaled}
+  \caption[V1 CV prueba]{Evaluación final del mejor modelo --- V1, validación cruzada, conjunto de prueba.}
+  \label{tab:v1-cv-test}
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
+    \textbf{Modelo} & \textbf{Dataset} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df1\_Scaled & LogisticRegression & 0.918 & 0.722 & 0.926 & 0.874 \\
-    df1\_Scaled & DecisionTree       & 0.839 & 0.514 & 0.955 & 0.843 \\
-    df1\_Scaled & RandomForest       & 0.933 & 0.768 & 0.934 & 0.891 \\
-    df1\_Scaled & GBM                & 0.931 & 0.751 & 0.941 & 0.893 \\
-    df1\_Scaled & C50                & 0.919 & 0.757 & 0.932 & 0.888 \\
-    df1\_Scaled & KNN                & 0.857 & 0.460 & 0.955 & 0.829 \\
+    GBM & df1\_Bio & 0.939 & 0.775 & 0.954 & 0.906 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{roc_v1_scaled_cv}
-  \caption{Curvas ROC comparativas --- V1, validación cruzada, datos escalados.}
-  \label{fig:roc-v1-scaled-cv}
+  \includegraphics[width=0.85\textwidth]{bio_roc}
+  \caption{Curvas ROC comparativas --- V1, validación cruzada, conjunto de validación.}
+  \label{fig:roc-v1-cv}
 \end{figure}
 
-\subsubsection{V1 -- Bio Data sin validación cruzada (hold-out)}
+\subsubsection{V1 -- Bio Data sin validación cruzada}
 
-\paragraph{Datos sin escalado (df1\_Base)}
-
-La Tabla~\ref{tab:v1-nocv-base} recoge los resultados obtenidos con partición
-fija entrenamiento/prueba (80/20). Random Forest alcanzó el AUC más elevado
-(0.932), mientras que Decision Tree mostró un comportamiento degenerado
-(AUC = 0.500, sensibilidad nula), indicativo de un modelo que predice
-exclusivamente la clase mayoritaria.
+La Tabla~\ref{tab:v1-nocv-base} recoge los resultados obtenidos mediante
+entrenamiento simple, comparando los modelos en el conjunto de validación. GBM
+alcanzó nuevamente el mayor AUC (0.949), seguido por Random Forest (0.943) y
+SVM (0.934). En este escenario, Decision Tree mostró un comportamiento más
+estable que en experimentos previos, con un AUC de 0.913.
 
 \begin{table}[H]
   \centering
-  \caption[V1 hold-out sin escalado]{Rendimiento comparativo de modelos supervisados --- V1, hold-out, datos sin escalado (df1\_Base).}
+  \caption[V1 sin CV validación]{Rendimiento comparativo de modelos supervisados --- V1, entrenamiento simple, conjunto de validación (df1\_Bio).}
   \label{tab:v1-nocv-base}
   \small
   \begin{tabular}{llrrrr}
     \toprule
     \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df1\_Base & LogisticRegression & 0.918 & 0.722 & 0.926 & 0.874 \\
-    df1\_Base & DecisionTree       & 0.500 & 0.000 & 1.000 & 0.745 \\
-    df1\_Base & RandomForest       & 0.932 & 0.746 & 0.935 & 0.886 \\
-    df1\_Base & GBM                & 0.911 & 0.627 & 0.943 & 0.863 \\
-    df1\_Base & C50                & 0.902 & 0.711 & 0.940 & 0.882 \\
+    df1\_Bio & GBM                & 0.949 & 0.763 & 0.960 & 0.909 \\
+    df1\_Bio & RandomForest       & 0.943 & 0.751 & 0.952 & 0.900 \\
+    df1\_Bio & SVM                & 0.934 & 0.720 & 0.940 & 0.883 \\
+    df1\_Bio & LogisticRegression & 0.933 & 0.701 & 0.950 & 0.885 \\
+    df1\_Bio & DecisionTree       & 0.913 & 0.734 & 0.944 & 0.890 \\
+    df1\_Bio & KNN                & 0.910 & 0.596 & 0.958 & 0.864 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{roc_v1_no_cv}
-  \caption{Curvas ROC comparativas --- V1, hold-out, datos sin escalado.}
-  \label{fig:roc-v1-nocv}
-\end{figure}
-
-\paragraph{Datos escalados (df1\_Scaled)}
-
-En el escenario escalado (Tabla~\ref{tab:v1-nocv-scaled}), los resultados
-mantienen el mismo patrón general: Random Forest lidera con AUC = 0.932 y
-Decision Tree permanece sin capacidad discriminativa. KNN obtuvo el rendimiento
-más bajo (AUC = 0.831).
+La mejor configuración correspondió a GBM, con 644 árboles, profundidad máxima
+de 5, tasa de aprendizaje de 0.0215443, loss\_reduction = 0.0077426 y min\_n =
+20. En el conjunto de prueba final, este modelo alcanzó un AUC de 0.942,
+sensibilidad de 0.755, especificidad de 0.948 y accuracy de 0.896
+(Tabla~\ref{tab:v1-nocv-test}).
 
 \begin{table}[H]
   \centering
-  \caption[V1 hold-out escalado]{Rendimiento comparativo de modelos supervisados --- V1, hold-out, datos escalados (df1\_Scaled).}
-  \label{tab:v1-nocv-scaled}
+  \caption[V1 sin CV prueba]{Evaluación final del mejor modelo --- V1, entrenamiento simple, conjunto de prueba.}
+  \label{tab:v1-nocv-test}
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
+    \textbf{Modelo} & \textbf{Dataset} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df1\_Scaled & LogisticRegression & 0.918 & 0.722 & 0.926 & 0.874 \\
-    df1\_Scaled & DecisionTree       & 0.500 & 0.000 & 1.000 & 0.745 \\
-    df1\_Scaled & RandomForest       & 0.932 & 0.744 & 0.930 & 0.883 \\
-    df1\_Scaled & GBM                & 0.910 & 0.616 & 0.946 & 0.861 \\
-    df1\_Scaled & C50                & 0.902 & 0.711 & 0.941 & 0.883 \\
-    df1\_Scaled & KNN                & 0.831 & 0.505 & 0.937 & 0.827 \\
+    GBM & df1\_Bio & 0.942 & 0.755 & 0.948 & 0.896 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{roc_v1_scaled_no_cv}
-  \caption{Curvas ROC comparativas --- V1, hold-out, datos escalados.}
-  \label{fig:roc-v1-scaled-nocv}
+  \includegraphics[width=0.85\textwidth]{bio_roc_no_cv}
+  \caption{Curvas ROC comparativas --- V1, entrenamiento simple, conjunto de validación.}
+  \label{fig:roc-v1-nocv}
 \end{figure}
 
 \subsubsection{V2 -- Tech Data con validación cruzada}
 
-\paragraph{Datos sin escalado (df2\_Base)}
-
 La Tabla~\ref{tab:v2-cv-base} presenta los resultados sobre el dataset
-técnico-estadístico sin normalización. Random Forest y GBM comparten el AUC más
-alto (0.972), superando claramente a los modelos de la estrategia V1 en este
-escenario.
+técnico-estadístico mediante validación cruzada interna y selección en el
+conjunto de validación. Random Forest y GBM alcanzaron el AUC más alto (0.978),
+seguidos por SVM (0.973) y Logistic Regression (0.972), superando claramente a
+los modelos de la estrategia V1 en este escenario.
 
 \begin{table}[H]
   \centering
-  \caption[V2 CV sin escalado]{Rendimiento comparativo de modelos supervisados --- V2, validación cruzada, datos sin escalado (df2\_Base).}
+  \caption[V2 CV validación]{Rendimiento comparativo de modelos supervisados --- V2, validación cruzada, conjunto de validación (df2\_Tech).}
   \label{tab:v2-cv-base}
   \small
   \begin{tabular}{llrrrr}
     \toprule
     \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df2\_Base & LogisticRegression & 0.968 & 0.844 & 0.943 & 0.917 \\
-    df2\_Base & DecisionTree       & 0.847 & 0.793 & 0.902 & 0.874 \\
-    df2\_Base & RandomForest       & 0.972 & 0.850 & 0.945 & 0.920 \\
-    df2\_Base & GBM                & 0.972 & 0.823 & 0.949 & 0.916 \\
-    df2\_Base & C50                & 0.970 & 0.838 & 0.942 & 0.915 \\
+    df2\_Tech & RandomForest       & 0.978 & 0.824 & 0.955 & 0.921 \\
+    df2\_Tech & GBM                & 0.978 & 0.815 & 0.957 & 0.920 \\
+    df2\_Tech & SVM                & 0.973 & 0.827 & 0.956 & 0.922 \\
+    df2\_Tech & LogisticRegression & 0.972 & 0.824 & 0.956 & 0.921 \\
+    df2\_Tech & DecisionTree       & 0.966 & 0.812 & 0.945 & 0.910 \\
+    df2\_Tech & KNN                & 0.958 & 0.736 & 0.952 & 0.895 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{roc_v2_cv}
-  \caption{Curvas ROC comparativas --- V2, validación cruzada, datos sin escalado.}
-  \label{fig:roc-v2-cv}
-\end{figure}
-
-\paragraph{Datos escalados (df2\_Scaled)}
-
-Con escalado z-score (Tabla~\ref{tab:v2-cv-scaled}), Random Forest y GBM
-mantienen el AUC máximo (0.972). KNN, incorporado en este escenario, alcanzó
-un AUC de 0.921, notablemente superior al observado en V1 bajo las mismas
-condiciones.
+La mejor configuración correspondió a Random Forest, con mtry = 15 y min\_n =
+2. En la evaluación final sobre el conjunto de prueba, este modelo obtuvo un AUC
+de 0.974, sensibilidad de 0.849, especificidad de 0.957 y accuracy de 0.928
+(Tabla~\ref{tab:v2-cv-test}).
 
 \begin{table}[H]
   \centering
-  \caption[V2 CV escalado]{Rendimiento comparativo de modelos supervisados --- V2, validación cruzada, datos escalados (df2\_Scaled).}
-  \label{tab:v2-cv-scaled}
+  \caption[V2 CV prueba]{Evaluación final del mejor modelo --- V2, validación cruzada, conjunto de prueba.}
+  \label{tab:v2-cv-test}
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
+    \textbf{Modelo} & \textbf{Dataset} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df2\_Scaled & LogisticRegression & 0.968 & 0.844 & 0.943 & 0.917 \\
-    df2\_Scaled & DecisionTree       & 0.847 & 0.793 & 0.902 & 0.874 \\
-    df2\_Scaled & RandomForest       & 0.972 & 0.853 & 0.945 & 0.921 \\
-    df2\_Scaled & GBM                & 0.972 & 0.829 & 0.952 & 0.920 \\
-    df2\_Scaled & C50                & 0.969 & 0.827 & 0.946 & 0.915 \\
-    df2\_Scaled & KNN                & 0.921 & 0.686 & 0.940 & 0.874 \\
+    RandomForest & df2\_Tech & 0.974 & 0.849 & 0.957 & 0.928 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{roc_v2_scaled_cv}
-  \caption{Curvas ROC comparativas --- V2, validación cruzada, datos escalados.}
-  \label{fig:roc-v2-scaled-cv}
+  \includegraphics[width=0.85\textwidth]{tech_roc}
+  \caption{Curvas ROC comparativas --- V2, validación cruzada, conjunto de validación.}
+  \label{fig:roc-v2-cv}
 \end{figure}
 
-\subsubsection{V2 -- Tech Data sin validación cruzada (hold-out)}
+\subsubsection{V2 -- Tech Data sin validación cruzada}
 
-\paragraph{Datos sin escalado (df2\_Base)}
-
-La Tabla~\ref{tab:v2-nocv-base} muestra los resultados con partición fija
-entrenamiento/prueba. Random Forest obtuvo el AUC más alto (0.972), seguido de
-GBM (0.967) y C5.0 (0.961). Al igual que en V1, Decision Tree presentó un
-comportamiento degenerado (AUC = 0.500, sensibilidad nula).
+La Tabla~\ref{tab:v2-nocv-base} muestra los resultados con entrenamiento simple
+y comparación en el conjunto de validación. GBM obtuvo el mayor AUC (0.978),
+seguido muy de cerca por Random Forest (0.977), SVM (0.973) y Logistic
+Regression (0.973). La proximidad entre los modelos principales sugiere una alta
+capacidad predictiva de la representación técnico-estadística del dataset.
 
 \begin{table}[H]
   \centering
-  \caption[V2 hold-out sin escalado]{Rendimiento comparativo de modelos supervisados --- V2, hold-out, datos sin escalado (df2\_Base).}
+  \caption[V2 sin CV validación]{Rendimiento comparativo de modelos supervisados --- V2, entrenamiento simple, conjunto de validación (df2\_Tech).}
   \label{tab:v2-nocv-base}
   \small
   \begin{tabular}{llrrrr}
     \toprule
     \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df2\_Base & LogisticRegression & 0.968 & 0.844 & 0.943 & 0.917 \\
-    df2\_Base & DecisionTree       & 0.500 & 0.000 & 1.000 & 0.739 \\
-    df2\_Base & RandomForest       & 0.972 & 0.812 & 0.952 & 0.916 \\
-    df2\_Base & GBM                & 0.967 & 0.765 & 0.964 & 0.912 \\
-    df2\_Base & C50                & 0.961 & 0.827 & 0.940 & 0.911 \\
+    df2\_Tech & GBM                & 0.978 & 0.821 & 0.955 & 0.920 \\
+    df2\_Tech & RandomForest       & 0.977 & 0.832 & 0.957 & 0.924 \\
+    df2\_Tech & SVM                & 0.973 & 0.830 & 0.957 & 0.924 \\
+    df2\_Tech & LogisticRegression & 0.973 & 0.838 & 0.953 & 0.923 \\
+    df2\_Tech & DecisionTree       & 0.966 & 0.790 & 0.944 & 0.904 \\
+    df2\_Tech & KNN                & 0.962 & 0.741 & 0.954 & 0.898 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{roc_v2_no_cv}
-  \caption{Curvas ROC comparativas --- V2, hold-out, datos sin escalado.}
-  \label{fig:roc-v2-nocv}
-\end{figure}
-
-\paragraph{Datos escalados (df2\_Scaled)}
-
-En el escenario escalado (Tabla~\ref{tab:v2-nocv-scaled}), Random Forest alcanzó
-el mejor AUC (0.973). KNN obtuvo un rendimiento intermedio (AUC = 0.907),
-superior al registrado en V1 bajo condiciones equivalentes.
+La mejor configuración correspondió a GBM, con 200 árboles, profundidad máxima
+de 6, tasa de aprendizaje de 0.0464159, loss\_reduction = 0.0464159 y min\_n =
+12. En el conjunto de prueba final, este modelo alcanzó un AUC de 0.975,
+sensibilidad de 0.841, especificidad de 0.950 y accuracy de 0.920
+(Tabla~\ref{tab:v2-nocv-test}).
 
 \begin{table}[H]
   \centering
-  \caption[V2 hold-out escalado]{Rendimiento comparativo de modelos supervisados --- V2, hold-out, datos escalados (df2\_Scaled).}
-  \label{tab:v2-nocv-scaled}
+  \caption[V2 sin CV prueba]{Evaluación final del mejor modelo --- V2, entrenamiento simple, conjunto de prueba.}
+  \label{tab:v2-nocv-test}
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    \textbf{Dataset} & \textbf{Modelo} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
+    \textbf{Modelo} & \textbf{Dataset} & \textbf{AUC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Accuracy} \\
     \midrule
-    df2\_Scaled & LogisticRegression & 0.968 & 0.844 & 0.943 & 0.917 \\
-    df2\_Scaled & DecisionTree       & 0.500 & 0.000 & 1.000 & 0.739 \\
-    df2\_Scaled & RandomForest       & 0.973 & 0.818 & 0.951 & 0.916 \\
-    df2\_Scaled & GBM                & 0.966 & 0.788 & 0.962 & 0.917 \\
-    df2\_Scaled & C50                & 0.961 & 0.827 & 0.940 & 0.911 \\
-    df2\_Scaled & KNN                & 0.907 & 0.692 & 0.933 & 0.870 \\
+    GBM & df2\_Tech & 0.975 & 0.841 & 0.950 & 0.920 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{roc_v2_scaled_no_cv}
-  \caption{Curvas ROC comparativas --- V2, hold-out, datos escalados.}
-  \label{fig:roc-v2-scaled-nocv}
+  \includegraphics[width=0.85\textwidth]{tech_roc_no_cv}
+  \caption{Curvas ROC comparativas --- V2, entrenamiento simple, conjunto de validación.}
+  \label{fig:roc-v2-nocv}
 \end{figure}

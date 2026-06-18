@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.26)  15 JUN 2026 10:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.26)  16 JUN 2026 22:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -905,8 +905,8 @@ Underfull \hbox (badness 7740) in paragraph at lines 526--526
 \T1/lmr/m/n/10 (+20) pafi, prg2m, prg6m,
  []
 
-[23] [24{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [25] [26]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 726.
+[23] [24] [25{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [26]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 741.
  (/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -914,121 +914,96 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [27]) (./sections/04_resultados.tex
-<../figures/support2_missing_values.png, id=522, 469.755pt x 290.08376pt>
+ [27] [28]) (./sections/04_resultados.tex
+<../figures/support2_missing_values.png, id=519, 469.755pt x 290.08376pt>
 File: ../figures/support2_missing_values.png Graphic file (type png)
 <use ../figures/support2_missing_values.png>
 Package pdftex.def Info: ../figures/support2_missing_values.png  used on input line 9.
 (pdftex.def)             Requested size: 455.24411pt x 281.12416pt.
- [28]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 21.
  [29 <../figures/support2_missing_values.png>]
-<../figures/dis_continua_1.png, id=534, 469.755pt x 290.08376pt>
+<../figures/dis_continua_1.png, id=526, 469.755pt x 290.08376pt>
 File: ../figures/dis_continua_1.png Graphic file (type png)
 <use ../figures/dis_continua_1.png>
 Package pdftex.def Info: ../figures/dis_continua_1.png  used on input line 70.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_continua_2.png, id=535, 469.755pt x 290.08376pt>
+<../figures/dis_continua_2.png, id=527, 469.755pt x 290.08376pt>
 File: ../figures/dis_continua_2.png Graphic file (type png)
 <use ../figures/dis_continua_2.png>
 Package pdftex.def Info: ../figures/dis_continua_2.png  used on input line 77.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
  [30]
-<../figures/dis_categorical_1.png, id=540, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_1.png, id=532, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_1.png Graphic file (type png)
 <use ../figures/dis_categorical_1.png>
 Package pdftex.def Info: ../figures/dis_categorical_1.png  used on input line 91.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_2.png, id=541, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_2.png, id=533, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_2.png Graphic file (type png)
 <use ../figures/dis_categorical_2.png>
 Package pdftex.def Info: ../figures/dis_categorical_2.png  used on input line 98.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_3.png, id=542, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_3.png, id=534, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_3.png Graphic file (type png)
 <use ../figures/dis_categorical_3.png>
 Package pdftex.def Info: ../figures/dis_categorical_3.png  used on input line 105.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_4.png, id=543, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_4.png, id=535, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_4.png Graphic file (type png)
 <use ../figures/dis_categorical_4.png>
 Package pdftex.def Info: ../figures/dis_categorical_4.png  used on input line 112.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/correlation_matrix.png, id=544, 469.755pt x 290.08376pt>
+<../figures/correlation_matrix.png, id=536, 469.755pt x 290.08376pt>
 File: ../figures/correlation_matrix.png Graphic file (type png)
 <use ../figures/correlation_matrix.png>
 Package pdftex.def Info: ../figures/correlation_matrix.png  used on input line 124.
 (pdftex.def)             Requested size: 455.24411pt x 281.12416pt.
  [31 <../figures/dis_continua_1.png> <../figures/dis_continua_2.png> <../figures/dis_categorical_1.png> <../figures/dis_categorical_2.png> <../figures/dis_categorical_3.png> <../figures/dis_categorical_4.png>] [32 <../figures/correlation_matrix.png>]
-<../figures/roc_v1_cv.png, id=565, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_cv.png Graphic file (type png)
-<use ../figures/roc_v1_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_cv.png  used on input line 166.
+<../figures/bio_roc.png, id=557, 1405.25pt x 868.24374pt>
+File: ../figures/bio_roc.png Graphic file (type png)
+<use ../figures/bio_roc.png>
+Package pdftex.def Info: ../figures/bio_roc.png  used on input line 189.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [33 <../figures/roc_v1_cv.png>]
-<../figures/roc_v1_scaled_cv.png, id=573, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_scaled_cv.png Graphic file (type png)
-<use ../figures/roc_v1_scaled_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_scaled_cv.png  used on input line 199.
+ [33 <../figures/bio_roc.png>]
+<../figures/bio_roc_no_cv.png, id=565, 1405.25pt x 868.24374pt>
+File: ../figures/bio_roc_no_cv.png Graphic file (type png)
+<use ../figures/bio_roc_no_cv.png>
+Package pdftex.def Info: ../figures/bio_roc_no_cv.png  used on input line 243.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [34 <../figures/roc_v1_scaled_cv.png>]
-<../figures/roc_v1_no_cv.png, id=582, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_no_cv.png Graphic file (type png)
-<use ../figures/roc_v1_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_no_cv.png  used on input line 234.
+ [34] [35 <../figures/bio_roc_no_cv.png>]
+<../figures/tech_roc.png, id=578, 1405.25pt x 868.24374pt>
+File: ../figures/tech_roc.png Graphic file (type png)
+<use ../figures/tech_roc.png>
+Package pdftex.def Info: ../figures/tech_roc.png  used on input line 296.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [35 <../figures/roc_v1_no_cv.png>]
-<../figures/roc_v1_scaled_no_cv.png, id=590, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_scaled_no_cv.png Graphic file (type png)
-<use ../figures/roc_v1_scaled_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_scaled_no_cv.png  used on input line 267.
+ [36 <../figures/tech_roc.png>]
+<../figures/tech_roc_no_cv.png, id=586, 1405.25pt x 868.24374pt>
+File: ../figures/tech_roc_no_cv.png Graphic file (type png)
+<use ../figures/tech_roc_no_cv.png>
+Package pdftex.def Info: ../figures/tech_roc_no_cv.png  used on input line 350.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [36 <../figures/roc_v1_scaled_no_cv.png>]
-<../figures/roc_v2_cv.png, id=598, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_cv.png Graphic file (type png)
-<use ../figures/roc_v2_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_cv.png  used on input line 301.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [37 <../figures/roc_v2_cv.png>]
-<../figures/roc_v2_scaled_cv.png, id=607, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_scaled_cv.png Graphic file (type png)
-<use ../figures/roc_v2_scaled_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_scaled_cv.png  used on input line 334.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [38 <../figures/roc_v2_scaled_cv.png>]
-<../figures/roc_v2_no_cv.png, id=615, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_no_cv.png Graphic file (type png)
-<use ../figures/roc_v2_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_no_cv.png  used on input line 368.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [39 <../figures/roc_v2_no_cv.png>]
-<../figures/roc_v2_scaled_no_cv.png, id=623, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_scaled_no_cv.png Graphic file (type png)
-<use ../figures/roc_v2_scaled_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_scaled_no_cv.png  used on input line 400.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
-) (./sections/05_discusion.tex [40 <../figures/roc_v2_scaled_no_cv.png>] [41]) (./sections/06_conclusiones.tex) [42] [43] [44] (./main.bbl [45]) [46] (./main.aux)
+) (./sections/05_discusion.tex [37 <../figures/tech_roc_no_cv.png>] [38]) (./sections/06_conclusiones.tex) [39] [40] [41] (./main.bbl [42]) [43] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 2184B319BFB12DDDA8BAD151994273D5;13483.
+(rerunfilecheck)             Checksum: EAB999B9494CE8886A46BFA0ACB1A982;13355.
  ) 
 Here is how much of TeX's memory you used:
- 35375 strings out of 469514
- 721986 string characters out of 5469022
- 1166424 words of memory out of 5000000
- 63093 multiletter control sequences out of 15000+600000
- 721247 words of font info for 224 fonts, out of 8000000 for 9000
+ 35290 strings out of 469514
+ 719793 string characters out of 5469022
+ 1167424 words of memory out of 5000000
+ 63037 multiletter control sequences out of 15000+600000
+ 720591 words of font info for 217 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  98i,11n,118p,1001b,1289s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (46 pages, 1840022 bytes).
+Output written on main.pdf (43 pages, 1414819 bytes).
 PDF statistics:
- 770 PDF objects out of 1000 (max. 8388607)
- 657 compressed objects within 7 object streams
- 180 named destinations out of 1000 (max. 500000)
- 54805 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 729 PDF objects out of 1000 (max. 8388607)
+ 627 compressed objects within 7 object streams
+ 165 named destinations out of 1000 (max. 500000)
+ 54785 words of extra memory for PDF output out of 61914 (max. 10000000)
 

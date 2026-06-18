@@ -1,36 +1,111 @@
-Bajwa J, Munir U, Nori A, Williams B. Artificial intelligence in healthcare: transforming the practice of medicine. Future Healthc J. 2021 Jul;8(2):e188-e194. doi:10.7861/fhj.2021-0095. PMID:34286183. Available from: https://doi.org/10.7861/fhj.2021-0095
+—————
+
+BIO MODEL CV
+
+BIO MODEL TABLA COMPARATIVA
+
+Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
+df1_Bio	GBM	0.947	0.749	0.961	0.906
+df1_Bio	RandomForest	0.942	0.746	0.948	0.896
+df1_Bio	LogisticRegression	0.932	0.709	0.946	0.885
+df1_Bio	SVM	0.930	0.723	0.936	0.881
+df1_Bio	DecisionTree	0.919	0.698	0.937	0.875
+df1_Bio	KNN	0.903	0.573	0.958	0.858
+
+MEJORES PARAMETROS DEL MEJOR MODELO:
+
+GMB:
+trees	min_n	tree_depth	learn_rate	loss_reduction	.config
+2000	10	2	0.0068	0	pre0_mod10_post0
+
+CURVA ROC (TODOS LOS MODELOS): 
+
+image: bio_roc
+
+TEST:
+Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
+GBM	df1_Bio	0.939	0.775	0.954	0.906
 
 
-Davenport T, Kalakota R. The potential for artificial intelligence in healthcare. Future Healthc J. 2019 Jun;6(2):94-98. doi:10.7861/futurehosp.6-2-94. PMID:31363513; PMCID:PMC6616181. Available from: https://doi.org/10.7861/futurehosp.6-2-94
+BIO MODEL NO CV
 
-Shamout F, Zhu T, Clifton DA. Machine learning for clinical outcome prediction. IEEE Rev Biomed Eng. 2021;14:116-126. doi:10.1109/RBME.2020.3007816. Epub 2021 Jan 22. PMID:32746368. Available from: https://doi.org/10.1109/RBME.2020.3007816
+BIO MODEL TABLA COMPARATIVA
+
+Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
+df1_Bio	GBM	0.949	0.763	0.960	0.909
+df1_Bio	RandomForest	0.943	0.751	0.952	0.900
+df1_Bio	SVM	0.934	0.720	0.940	0.883
+df1_Bio	LogisticRegression	0.933	0.701	0.950	0.885
+df1_Bio	DecisionTree	0.913	0.734	0.944	0.890
+df1_Bio	KNN	0.910	0.596	0.958	0.864
+
+MEJORES PARAMETROS DEL MEJOR MODELO:
+
+GMB:
+
+trees	tree_depth	learn_rate	loss_reduction	min_n
+644	5	0.0215443	0.0077426	20
+
+CURVA ROC (TODOS LOS MODELOS):
+image: bio_roc_no_cv
+￼
+
+TEST:
+Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
+GBM	df1_Bio	0.942	0.755	0.948	0.896
+
+TECH MODEL CV:
+
+Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
+df2_Tech	RandomForest	0.978	0.824	0.955	0.921
+df2_Tech	GBM	0.978	0.815	0.957	0.920
+df2_Tech	SVM	0.973	0.827	0.956	0.922
+df2_Tech	LogisticRegression	0.972	0.824	0.956	0.921
+df2_Tech	DecisionTree	0.966	0.812	0.945	0.910
+df2_Tech	KNN	0.958	0.736	0.952	0.895
+
+MEJORES PARAMETROS DEL MEJOR MODELO:
+
+RAMDOM FOREST:
+
+mtry	min_n	.config
+15	2	pre0_mod03_post0
+
+CURVA ROC (TODOS LOS MODELOS):
+image: tech_roc
+￼
+
+TEST:
+
+Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
+RandomForest	df2_Tech	0.974	0.849	0.957	0.928
 
 
-Delpino FM, Pimenta LP, Gonzalez DF, Victor A, Fonseca Araujo C, De Araujo-Moura K, Miranda JJ, Batista SRR, Chiavegatto Filho ADP, Nunes BP. Global performance of machine learning models to predict all-cause mortality: systematic review and meta-analysis. Sci Rep. 2025 Nov 27;15(1):42707. doi:10.1038/s41598-025-26714-6. PMID:41309844; PMCID:PMC12663293. Available from: https://doi.org/10.1038/s41598-025-26714-6
+TECH MODEL NO CV
+
+TECH MODEL TABLA COMPARATIVA
+
+Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
+df2_Tech	GBM	0.978	0.821	0.955	0.920
+df2_Tech	RandomForest	0.977	0.832	0.957	0.924
+df2_Tech	SVM	0.973	0.830	0.957	0.924
+df2_Tech	LogisticRegression	0.973	0.838	0.953	0.923
+df2_Tech	DecisionTree	0.966	0.790	0.944	0.904
+df2_Tech	KNN	0.962	0.741	0.954	0.898
 
 
-James G, Witten D, Hastie T, Tibshirani R. An Introduction to Statistical Learning: with Applications in R. 2nd ed. New York: Springer; 2021. Available from: https://www.statlearning.com/
+MEJORES PARAMETROS DEL MEJOR MODELO:
+image: tech_roc_no_cv
 
-Scikit-learn developers. Supervised learning. scikit-learn documentation. Available from: https://scikit-learn.org/stable/supervised_learning.html
+GBM:
 
-Kuhn M. caret: Classification and Regression Training. R package version 6.0-94. Available from: https://cran.r-project.org/package=caret
+trees	tree_depth	learn_rate	loss_reduction	min_n
+200	6	0.0464159	0.0464159	12
 
-Owusu-Adjei M, Ben Hayfron-Acquah J, Frimpong T, Abdul-Salaam G. Imbalanced class distribution and performance evaluation metrics: a systematic review of prediction accuracy for determining model performance in healthcare systems. PLOS Digit Health. 2023 Nov 30;2(11):e0000290. doi:10.1371/journal.pdig.0000290. PMID:38032863; PMCID:PMC10688675. Available from: https://doi.org/10.1371/journal.pdig.0000290
+CURVA ROC (TODOS LOS MODELOS):
+￼
 
+TEST
 
-Moassefi M, Rouzrokh P, Conte GM, Vahdati S, Fu T, Tahmasebi A, Younis M, Farahani K, Gentili A, Kline T, Kitamura FC, Huo Y, Kuanar S, Younis K, Erickson BJ, Faghani S. Reproducibility of deep learning algorithms developed for medical imaging analysis: a systematic review. J Digit Imaging. 2023 Oct;36(5):2306-2312. doi:10.1007/s10278-023-00870-5. Epub 2023 Jul 5. PMID:37407841; PMCID:PMC10501962. Available from: https://doi.org/10.1007/s10278-023-00870-5
-
-
-Li H. Heart failure risk prediction based on machine learning and interpretability analysis. Front Med (Lausanne). 2026 May 20;13:1801693. doi:10.3389/fmed.2026.1801693. PMID:42245940; PMCID:PMC13229728. Available from: https://doi.org/10.3389/fmed.2026.1801693
-
-Uddin KN, Njie E, Jin R, Ghose P, Zahid A, Jamil HM. Robust and interpretable AI for acute appendicitis: a simulation-to-clinical validation pipeline. Comput Methods Programs Biomed. 2026 May 30;285:109467. doi:10.1016/j.cmpb.2026.109467. Epub ahead of print. PMID:42242041. Available from: https://doi.org/10.1016/j.cmpb.2026.109467
-
-Wei K, Li H, Huang H, Lu M, Li X, Huang X, Qin M. Association between lactate-to-albumin ratio and 28-day all-cause mortality in ICU-admitted acute pancreatitis patients: development and validation of a machine learning-based predictive model integrating albumin-corrected indices. Int J Med Inform. 2026 Jun 4;218:106529. doi:10.1016/j.ijmedinf.2026.106529. Epub ahead of print. PMID:42259120. Available from: https://doi.org/10.1016/j.ijmedinf.2026.106529
-
-Wolberg W, Mangasarian O, Street N, Street W. Breast Cancer Wisconsin (Diagnostic) [dataset]. 1993. UCI Machine Learning Repository. Available from: https://doi.org/10.24432/C5DW2B 
-
-Little MA. Parkinsons [dataset]. UCI Machine Learning Repository. 2007. doi:10.24432/C59C74. Available from: https://doi.org/10.24432/C59C74
-
-Rubini L, Soundarapandian P, Eswaran P. Chronic Kidney Disease [dataset]. 2015. UCI Machine Learning Repository. Available from: https://doi.org/10.24432/C5G020
-
-Knaus WA, Lynn J. Study to Understand Prognoses and Preferences for Outcomes and Risks of Treatment (SUPPORT) and Hospitalized Elderly Longitudinal Project (HELP), 1989–1997 [dataset]. Inter-university Consortium for Political and Social Research (ICPSR) [distributor]; 2020 Feb 20. doi:10.3886/ICPSR02957.v2. Available from: https://doi.org/10.3886/ICPSR02957.v2 
+Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
+GBM	df2_Tech	0.975	0.841	0.95	0.92

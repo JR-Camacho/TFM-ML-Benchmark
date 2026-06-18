@@ -136,12 +136,16 @@ umbrales de valores faltantes e imputación global por mediana o moda.
 
 Sobre ambas versiones del dataset se entrenaron y evaluaron modelos de
 clasificación binaria, incluyendo Logistic Regression, Decision Tree, Random
-Forest, Gradient Boosting Machine, C5.0 y K-Nearest Neighbors, bajo escenarios
-con y sin escalado, así como con validación cruzada y partición hold-out. Los
-resultados muestran que los modelos de ensamble, especialmente Random Forest y
-GBM, alcanzaron el mejor rendimiento global. Desde una perspectiva puramente
+Forest, Gradient Boosting Machine, Support Vector Machine y K-Nearest Neighbors,
+mediante una arquitectura reproducible en R/tidymodels. El dataset fue dividido
+en entrenamiento, validación y prueba final, utilizando el conjunto de
+validación para comparar modelos y configuraciones, y reservando el conjunto de
+prueba para la evaluación final del mejor modelo seleccionado. Los resultados
+muestran que los modelos de ensamble, especialmente Random Forest y GBM,
+alcanzaron el mejor rendimiento global. Desde una perspectiva puramente
 métrica, la estrategia técnico-estadística obtuvo los valores más altos de
-AUC-ROC, cercanos a 0.972, frente a valores alrededor de 0.933 en la estrategia
+AUC-ROC, cercanos a 0.978 en validación y 0.975 en prueba, frente a valores
+alrededor de 0.949 en validación y 0.942 en prueba en la estrategia
 clínico-estadística. Sin embargo, esta diferencia revela una tensión
 metodológica central: el mayor rendimiento numérico puede estar influido por la
 retención de variables con menor validez clínica o con riesgo de introducir
