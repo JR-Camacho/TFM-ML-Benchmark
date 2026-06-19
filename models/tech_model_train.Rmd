@@ -45,6 +45,7 @@ resultado_tech <- entrenar_benchmark(
 resultados_validacion <- resultado_tech$validation
 resultados_test <- resultado_tech$test
 mejor_configuracion <- resultado_tech$best_params
+variables_importantes <- resultado_tech$variable_importance
 ```
 
 ```{r}
@@ -65,6 +66,18 @@ mejor_configuracion %>%
   )
 
 generar_graficos_automaticos(resultados_validacion)
+```
+
+```{r}
+variables_importantes %>%
+  dplyr::slice_head(n = 30) %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = FALSE,
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 ```
 
 ```{r}

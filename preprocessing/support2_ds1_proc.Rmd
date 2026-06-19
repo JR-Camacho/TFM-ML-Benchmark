@@ -36,7 +36,7 @@ head(support2_raw)
 ```{r}
 set.seed(123)
 
-index_train <- createDataPartition(support2_raw$hospdead, p = 0.7, list = FALSE)
+index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
 
 train_bio <- support2_raw[index_train, ]
 resto_bio <- support2_raw[-index_train, ]

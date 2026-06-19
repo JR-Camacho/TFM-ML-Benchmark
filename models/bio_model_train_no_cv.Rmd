@@ -41,6 +41,7 @@ resultado_bio <- entrenar_benchmark(
 resultados_validacion <- resultado_bio$validation
 resultados_test <- resultado_bio$test
 mejor_configuracion <- resultado_bio$best_params
+variables_importantes <- resultado_bio$variable_importance
 ```
 
 ```{r}
@@ -64,6 +65,18 @@ mejor_configuracion %>%
     full_width = FALSE, 
     position = "left"
   )
+```
+
+```{r}
+variables_importantes %>%
+  dplyr::slice_head(n = 15) %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 ```
 
 ```{r}

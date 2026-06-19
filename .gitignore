@@ -23,7 +23,9 @@ renv/library/
 renv/staging/
 
 # Datos pesados o sensibles
-data
+data/raw/breast+cancer+wisconsin+diagnostic/
+data/raw/Chronic_Kidney_Disease/
+data/raw/parkinsons/
 
 # PDFS AND HTMLS
 *.pdf

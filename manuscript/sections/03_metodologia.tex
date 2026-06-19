@@ -184,7 +184,8 @@ en la investigación de outcomes en pacientes críticos.
 \textbf{Tipos de variables presentes}
 
 La riqueza del dataset radica en su diversidad de 47 variables, que abarcan
-múltiples dominios:
+múltiples dominios. El diccionario completo de variables se presenta en el
+Anexo~\ref{sec:anexo-diccionario}.
 
 \begin{itemize}
   \item Variables Demográficas: Edad (age), sexo (sex), etnia (race), nivel de
@@ -736,22 +737,8 @@ El flujo experimental se implementó en el ecosistema R mediante archivos
 RMarkdown, separando las etapas de análisis exploratorio, preprocesamiento,
 entrenamiento, evaluación y generación del manuscrito. Esta organización permitió
 mantener trazabilidad entre los datos originales, las transformaciones aplicadas,
-los modelos entrenados y las figuras reportadas.
-
-\begin{lstlisting}[basicstyle=\small\ttfamily]
-TFM-ML-Benchmark/
-|-- data/
-|   |-- raw/
-|   `-- processed/support2/
-|       |-- df1/  # estrategia clinico-estadistica
-|       `-- df2/  # estrategia tecnico-estadistica
-|-- eda/
-|-- preprocessing/
-|-- models/
-|-- scripts/modeling_utils_tidymodels_clean.R
-|-- figures/
-`-- manuscript/
-\end{lstlisting}
+los modelos entrenados y las figuras reportadas. La estructura detallada de
+carpetas del proyecto se presenta en el Anexo~\ref{sec:anexo-estructura}.
 
 Las principales librerías utilizadas incluyeron tidyverse, dplyr, ggplot2,
 tidymodels, workflows, recipes, parsnip, tune, yardstick, rsample, pROC,

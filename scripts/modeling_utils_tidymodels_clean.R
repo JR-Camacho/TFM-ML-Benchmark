@@ -63,12 +63,92 @@
 .evaluate_predictions <- function(truth, estimate, prob_positive, positive) {
   roc_obj <- .roc_for_positive_class(truth, prob_positive, positive)
 
+  truth_chr <- as.character(truth)
+  estimate_chr <- as.character(estimate)
+  positive_chr <- as.character(positive)
+
+  tp <- sum(truth_chr == positive_chr & estimate_chr == positive_chr, na.rm = TRUE)
+  tn <- sum(truth_chr != positive_chr & estimate_chr != positive_chr, na.rm = TRUE)
+  fp <- sum(truth_chr != positive_chr & estimate_chr == positive_chr, na.rm = TRUE)
+  fn <- sum(truth_chr == positive_chr & estimate_chr != positive_chr, na.rm = TRUE)
+
+  precision <- if ((tp + fp) == 0) 0 else tp / (tp + fp)
+  recall <- if ((tp + fn) == 0) 0 else tp / (tp + fn)
+  specificity <- if ((tn + fp) == 0) 0 else tn / (tn + fp)
+  accuracy <- if ((tp + tn + fp + fn) == 0) 0 else (tp + tn) / (tp + tn + fp + fn)
+  f1 <- if ((precision + recall) == 0) 0 else 2 * precision * recall / (precision + recall)
+
   tibble::tibble(
     AUC = as.numeric(pROC::auc(roc_obj)),
-    Sensibilidad = yardstick::sens_vec(truth, estimate, event_level = "first"),
-    Especificidad = yardstick::spec_vec(truth, estimate, event_level = "first"),
-    Accuracy = yardstick::accuracy_vec(truth, estimate)
+    Sensibilidad = recall,
+    Especificidad = specificity,
+    Accuracy = accuracy,
+    `F1-score` = f1
   )
+}
+
+.score_model_predictions <- function(fit, data, positive, target = "hospdead") {
+  prepared <- .prepare_target(data, target = target, positive = positive)
+  probs <- stats::predict(fit, new_data = prepared, type = "prob")
+  classes <- stats::predict(fit, new_data = prepared, type = "class")
+
+  truth <- prepared[[target]]
+  estimate <- factor(.extract_class_predictions(classes), levels = levels(truth))
+  prob_positive <- .extract_prob_column(probs, positive)
+
+  list(
+    truth = truth,
+    estimate = estimate,
+    prob_positive = prob_positive
+  )
+}
+
+.permutation_importance <- function(fit, data, positive, target = "hospdead",
+                                    n_repeats = 5, seed = 123) {
+  .check_required_packages(c("dplyr", "purrr", "tibble"))
+
+  if (n_repeats < 1) {
+    stop("n_repeats debe ser al menos 1.", call. = FALSE)
+  }
+
+  scored_base <- .score_model_predictions(fit, data, positive, target = target)
+  baseline_metrics <- .evaluate_predictions(
+    scored_base$truth,
+    scored_base$estimate,
+    scored_base$prob_positive,
+    positive
+  )
+  baseline_auc <- baseline_metrics$AUC[[1]]
+
+  predictor_names <- setdiff(names(.prepare_target(data, target = target, positive = positive)), target)
+  set.seed(seed)
+
+  importancia_tbl <- purrr::map_dfr(predictor_names, function(variable) {
+    deltas <- replicate(n_repeats, {
+      permuted_data <- data
+      permuted_data[[variable]] <- permuted_data[[variable]][sample.int(nrow(permuted_data))]
+
+      permuted_scored <- .score_model_predictions(fit, permuted_data, positive, target = target)
+      permuted_metrics <- .evaluate_predictions(
+        permuted_scored$truth,
+        permuted_scored$estimate,
+        permuted_scored$prob_positive,
+        positive
+      )
+
+      baseline_auc - permuted_metrics$AUC[[1]]
+    })
+
+    tibble::tibble(
+      Variable = variable,
+      AUC_base = baseline_auc,
+      AUC_perm_media = baseline_auc - mean(deltas, na.rm = TRUE),
+      Importancia = mean(deltas, na.rm = TRUE),
+      Importancia_sd = stats::sd(deltas)
+    )
+  })
+
+  dplyr::arrange(importancia_tbl, dplyr::desc(Importancia), Variable)
 }
 
 .extract_prob_column <- function(probs, positive) {
@@ -77,6 +157,22 @@
     stop("No se encontro la columna de probabilidad ", prob_col, ".", call. = FALSE)
   }
   probs[[prob_col]]
+}
+
+.extract_class_predictions <- function(classes) {
+  if (is.data.frame(classes) && ".pred_class" %in% names(classes)) {
+    return(classes$.pred_class)
+  }
+
+  if (is.atomic(classes) && !is.list(classes)) {
+    return(classes)
+  }
+
+  if (is.data.frame(classes) && ncol(classes) == 1) {
+    return(classes[[1]])
+  }
+
+  stop("No se pudo interpretar la salida de prediccion de clase.", call. = FALSE)
 }
 
 .make_recipe <- function(train_data, target = "hospdead") {
@@ -203,8 +299,8 @@
       size = grid_size
     ),
     SVM = dials::grid_space_filling(
-      dials::cost(range = c(-4, 2)),
-      dials::rbf_sigma(range = c(-6, -1)),
+      dials::cost(range = c(-2, 1)),
+      dials::rbf_sigma(range = c(-5, -2)),
       size = grid_size
     ),
     NULL
@@ -247,6 +343,7 @@
           Sensibilidad = NA_real_,
           Especificidad = NA_real_,
           Accuracy = NA_real_,
+          `F1-score` = NA_real_,
           error = conditionMessage(e)
         )
       )
@@ -256,7 +353,13 @@
   })
 
   scored <- scored |>
-    dplyr::arrange(dplyr::desc(AUC), dplyr::desc(Accuracy), dplyr::desc(Sensibilidad), dplyr::desc(Especificidad))
+    dplyr::arrange(
+      dplyr::desc(AUC),
+      dplyr::desc(`F1-score`),
+      dplyr::desc(Accuracy),
+      dplyr::desc(Sensibilidad),
+      dplyr::desc(Especificidad)
+    )
 
   best_params <- scored |>
     dplyr::slice(1) |>
@@ -397,7 +500,13 @@ entrenar_benchmark <- function(train_data, valid_data, test_data, nombre_dataset
   }
 
   validacion_tbl <- dplyr::bind_rows(resumen_validacion) |>
-    dplyr::arrange(dplyr::desc(AUC), dplyr::desc(Accuracy), dplyr::desc(Sensibilidad), dplyr::desc(Especificidad))
+    dplyr::arrange(
+      dplyr::desc(AUC),
+      dplyr::desc(`F1-score`),
+      dplyr::desc(Accuracy),
+      dplyr::desc(Sensibilidad),
+      dplyr::desc(Especificidad)
+    )
 
   best_row <- validacion_tbl |>
     dplyr::slice(1)
@@ -417,6 +526,15 @@ entrenar_benchmark <- function(train_data, valid_data, test_data, nombre_dataset
   best_workflow <- tune::finalize_workflow(best_workflow, best_params)
   best_final_fit <- workflows::fit(best_workflow, data = .prepare_target(train_valid_data, positive = clase_positiva))
 
+  variables_importantes <- .permutation_importance(
+    fit = best_final_fit,
+    data = valid_data,
+    positive = clase_positiva,
+    target = "hospdead",
+    n_repeats = 5,
+    seed = 123
+  )
+
   test_eval <- .prepare_target(test_data, positive = clase_positiva)
   test_probs <- stats::predict(best_final_fit, new_data = test_eval, type = "prob")
   test_classes <- stats::predict(best_final_fit, new_data = test_eval, type = "class")
@@ -434,6 +552,7 @@ entrenar_benchmark <- function(train_data, valid_data, test_data, nombre_dataset
     best_model = best_model_name,
     best_params = best_params,
     best_fit = best_final_fit,
+    variable_importance = variables_importantes,
     validation_fits = fitting_train,
     model_details = detalles_modelos
   )
@@ -441,7 +560,7 @@ entrenar_benchmark <- function(train_data, valid_data, test_data, nombre_dataset
 
 generar_graficos_automaticos <- function(resultados) {
   datasets_unicos <- unique(resultados$Dataset)
-  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy")
+  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy", "F1-score")
   lista_graficos <- list()
 
   for (ds in datasets_unicos) {

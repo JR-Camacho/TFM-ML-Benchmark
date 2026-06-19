@@ -1,111 +1,49 @@
-—————
-
-BIO MODEL CV
-
-BIO MODEL TABLA COMPARATIVA
-
-Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
-df1_Bio	GBM	0.947	0.749	0.961	0.906
-df1_Bio	RandomForest	0.942	0.746	0.948	0.896
-df1_Bio	LogisticRegression	0.932	0.709	0.946	0.885
-df1_Bio	SVM	0.930	0.723	0.936	0.881
-df1_Bio	DecisionTree	0.919	0.698	0.937	0.875
-df1_Bio	KNN	0.903	0.573	0.958	0.858
-
-MEJORES PARAMETROS DEL MEJOR MODELO:
-
-GMB:
-trees	min_n	tree_depth	learn_rate	loss_reduction	.config
-2000	10	2	0.0068	0	pre0_mod10_post0
-
-CURVA ROC (TODOS LOS MODELOS): 
-
-image: bio_roc
-
-TEST:
-Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
-GBM	df1_Bio	0.939	0.775	0.954	0.906
-
-
-BIO MODEL NO CV
-
-BIO MODEL TABLA COMPARATIVA
-
-Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
-df1_Bio	GBM	0.949	0.763	0.960	0.909
-df1_Bio	RandomForest	0.943	0.751	0.952	0.900
-df1_Bio	SVM	0.934	0.720	0.940	0.883
-df1_Bio	LogisticRegression	0.933	0.701	0.950	0.885
-df1_Bio	DecisionTree	0.913	0.734	0.944	0.890
-df1_Bio	KNN	0.910	0.596	0.958	0.864
-
-MEJORES PARAMETROS DEL MEJOR MODELO:
-
-GMB:
-
-trees	tree_depth	learn_rate	loss_reduction	min_n
-644	5	0.0215443	0.0077426	20
-
-CURVA ROC (TODOS LOS MODELOS):
-image: bio_roc_no_cv
-￼
-
-TEST:
-Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
-GBM	df1_Bio	0.942	0.755	0.948	0.896
-
-TECH MODEL CV:
-
-Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
-df2_Tech	RandomForest	0.978	0.824	0.955	0.921
-df2_Tech	GBM	0.978	0.815	0.957	0.920
-df2_Tech	SVM	0.973	0.827	0.956	0.922
-df2_Tech	LogisticRegression	0.972	0.824	0.956	0.921
-df2_Tech	DecisionTree	0.966	0.812	0.945	0.910
-df2_Tech	KNN	0.958	0.736	0.952	0.895
-
-MEJORES PARAMETROS DEL MEJOR MODELO:
-
-RAMDOM FOREST:
-
-mtry	min_n	.config
-15	2	pre0_mod03_post0
-
-CURVA ROC (TODOS LOS MODELOS):
-image: tech_roc
-￼
-
-TEST:
-
-Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
-RandomForest	df2_Tech	0.974	0.849	0.957	0.928
-
-
-TECH MODEL NO CV
-
-TECH MODEL TABLA COMPARATIVA
-
-Dataset	Modelo	AUC	Sensibilidad	Especificidad	Accuracy
-df2_Tech	GBM	0.978	0.821	0.955	0.920
-df2_Tech	RandomForest	0.977	0.832	0.957	0.924
-df2_Tech	SVM	0.973	0.830	0.957	0.924
-df2_Tech	LogisticRegression	0.973	0.838	0.953	0.923
-df2_Tech	DecisionTree	0.966	0.790	0.944	0.904
-df2_Tech	KNN	0.962	0.741	0.954	0.898
-
-
-MEJORES PARAMETROS DEL MEJOR MODELO:
-image: tech_roc_no_cv
-
-GBM:
-
-trees	tree_depth	learn_rate	loss_reduction	min_n
-200	6	0.0464159	0.0464159	12
-
-CURVA ROC (TODOS LOS MODELOS):
-￼
-
-TEST
-
-Modelo	Dataset	AUC	Sensibilidad	Especificidad	Accuracy
-GBM	df2_Tech	0.975	0.841	0.95	0.92
+Variable	Tipo	Descripción	Unidades / Valores posibles
+id	Entero	Identificador único del paciente en el estudio.	Número único
+age	Continuo	Edad del paciente al ingresar al estudio.	Años
+death	Continuo	Fallecimiento en cualquier momento del seguimiento (hasta el 31/DIC/1994).	0 = No, 1 = Sí
+sex	Categórico	Género biológico del paciente.	male (hombre), female (mujer)
+hospdead	Binario	Fallecimiento ocurrido dentro del hospital durante el ingreso.	0 = No, 1 = Sí
+slos	Continuo	Días transcurridos desde el ingreso al estudio hasta el alta.	Días
+d.time	Continuo	Días totales de seguimiento del paciente en el estudio.	Días
+dzgroup	Categórico	Subcategoría específica del diagnóstico principal de ingreso.	ARF/MOSF con Sepsis, CHF, COPD, Cirrosis, Cáncer de Colon, Coma, Cáncer de Pulmón, MOSF con Malignidad
+dzclass	Categórico	Categoría general de la enfermedad (agrupación de dzgroup).	"ARF/MOSF", "COPD/CHF/Cirrhosis", "Cancer", "Coma"
+num.co	Continuo	Número de comorbilidades (enfermedades simultáneas). A mayor valor, peor pronóstico.	Número ordinal
+edu	Categórico	Nivel educativo medido en años de escolaridad.	Años
+income	Categórico	Nivel estimado de ingresos económicos anuales del paciente.	"under $11k", "$11-$25k", "$25-$50k", ">$50k"
+scoma	Continuo	Puntuación de coma basada en la escala de Glasgow en el día 3 (predicha por modelo).	Escala numérica
+charges	Continuo	Cargos o costos económicos facturados por el hospital.	Dólares ($)
+totcst	Continuo	Costo total calculado mediante la relación costo-cargo (RCC).	Dólares ($)
+totmcst	Continuo	Micro-costo total calculado para el paciente.	Dólares ($)
+avtisst	Continuo	Puntuación promedio TISS (días 3-25). Mide la intensidad de intervenciones terapéuticas en UCI.	Escala TISS
+race	Categórico	Etnia o raza registrada del paciente.	asian, black, hispanic, missing, other, white
+sps	Continuo	Puntuación de fisiología SUPPORT en el día 3 (predicha por modelo).	Escala numérica
+aps	Continuo	Puntuación fisiológica APACHE III en el día 3 (sin coma, con BUN corregido y diuresis).	Escala numérica
+surv2m	Continuo	Estimación del modelo SUPPORT de la probabilidad de supervivencia a los 2 meses (en el día 3).	Probabilidad (0 a 1)
+surv6m	Continuo	Estimación del modelo SUPPORT de la probabilidad de supervivencia a los 6 meses (en el día 3).	Probabilidad (0 a 1)
+hday	Entero	Día de hospitalización en el que el paciente ingresó formalmente al estudio.	Días
+diabetes	Continuo	Presencia de diabetes mellitus como enfermedad comórbida preexistente.	0 = No, 1 = Sí
+dementia	Continuo	Presencia de demencia crónica como enfermedad comórbida preexistente.	0 = No, 1 = Sí
+ca	Categórico	Estado de enfermedad oncológica activa en el paciente.	no (sano), yes (cáncer localizado), metastatic (metástasis)
+prg2m	Continuo	Estimación subjetiva del médico sobre la probabilidad de supervivencia a 2 meses.	Probabilidad (0 a 1)
+prg6m	Categórico	Estimación subjetiva del médico sobre la probabilidad de supervivencia a 6 meses.	Probabilidad (0 a 1)
+dnr	Categórico	Estado de la orden de No Reanimación (DNR) y el momento de su firma.	no dnr, dnr before sadm, dnr after sadm, missing
+dnrday	Continuo	Día del ingreso en que se firmó la orden DNR (valores negativos indican pre-ingreso).	Días
+meanbp	Continuo	Presión arterial media (PAM) del paciente registrada en el día 3.	mmHg
+wblc	Continuo	Conteo total de glóbulos blancos en sangre en el día 3.	Miles por $\mu L$
+hrt	Continuo	Frecuencia cardíaca registrada en el día 3.	Latidos por minuto (lpm)
+resp	Continuo	Frecuencia respiratoria registrada en el día 3.	Respiraciones por minuto (rpm)
+temp	Continuo	Temperatura corporal medida en el día 3.	Grados Celsius (°C)
+pafi	Continuo	Índice de oxigenación Kirby ($PaO_2/FiO_2$). Indicador clínico clave de hipoxemia.	Ratio ($mmHg$)
+alb	Continuo	Nivel de albúmina sérica (proteína) medido en el día 3.	g/dL
+bili	Continuo	Nivel de bilirrubina total en sangre medido en el día 3.	mg/dL
+crea	Continuo	Nivel de creatinina sérica en sangre (función renal) medido en el día 3.	mg/dL
+sod	Continuo	Concentración de sodio sérico en sangre medida en el día 3.	mEq/L
+ph	Continuo	pH de la sangre arterial medido en el día 3 (equilibrio ácido-base).	Escala de pH (6.8 a 7.8)
+glucose	Entero	Nivel de glucosa en sangre medido en el día 3.	mg/dL
+bun	Entero	Nitrógeno ureico en sangre (función renal/metabólica) medido en el día 3.	mg/dL
+urine	Entero	Gasto urinario (diuresis total de 24 horas) medido en el día 3.	mL
+adlp	Categórico	Índice de Actividades de la Vida Diaria (ADL) respondido por el propio paciente.	Escala ordinal
+adls	Continuo	Índice de Actividades de la Vida Diaria (ADL) respondido por un familiar/representante.	Escala ordinal
+sfdm2	Categórico	Escala de discapacidad funcional (SIP) a los 2 meses. El nivel 5 denota muerte temprana.	Escala 1 al 5
+adlsc	Continuo	Índice ADL imputado y calibrado estadísticamente con respecto al reporte del familiar.	Escala numérica

@@ -40,7 +40,33 @@ resultado_tech <- entrenar_benchmark(
 
 resultados_validacion <- resultado_tech$validation
 resultados_test <- resultado_tech$test
+mejor_modelo <- resultado_tech$best_model
 mejor_configuracion <- resultado_tech$best_params
+variables_importantes <- resultado_tech$variable_importance
+```
+
+```{r}
+data.frame(Modelo = mejor_modelo) %>%
+  kbl(col.names = c("Mejor modelo")) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = FALSE,
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+
+if (is.null(mejor_configuracion) || nrow(mejor_configuracion) == 0) {
+  cat("Este mejor modelo no tiene hiperparametros tunables en modo no_cv.\n")
+} else {
+  mejor_configuracion %>%
+    kbl() %>%
+    kable_styling(
+      bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+      full_width = FALSE,
+      position = "left"
+    ) %>%
+    row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+}
 ```
 
 ```{r}
@@ -57,13 +83,15 @@ generar_graficos_automaticos(resultados_validacion)
 ```
 
 ```{r}
-mejor_configuracion %>%
-  kbl() %>%
+variables_importantes %>%
+  dplyr::slice_head(n = 15) %>%
+  kbl(digits = 4) %>%
   kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
-    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = FALSE,
     position = "left"
-  )
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 ```
 
 ```{r}

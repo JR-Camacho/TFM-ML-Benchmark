@@ -305,7 +305,7 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE, us
     }
 
     return(data.frame(
-      .pred_class = clases$.pred_class,
+      .pred_class = if (is.data.frame(clases) && ".pred_class" %in% names(clases)) clases$.pred_class else clases,
       .pred_positive = probs[[prob_col]]
     ))
   }
@@ -338,13 +338,22 @@ evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_po
     spec <- yardstick::spec_vec(y_test_valid, clases_valid, event_level = "first")
     acc <- yardstick::accuracy_vec(y_test_valid, clases_valid)
 
+    tp <- sum(y_test_valid == clase_positiva & clases_valid == clase_positiva, na.rm = TRUE)
+    tn <- sum(y_test_valid != clase_positiva & clases_valid != clase_positiva, na.rm = TRUE)
+    fp <- sum(y_test_valid != clase_positiva & clases_valid == clase_positiva, na.rm = TRUE)
+    fn <- sum(y_test_valid == clase_positiva & clases_valid != clase_positiva, na.rm = TRUE)
+    precision <- if ((tp + fp) == 0) 0 else tp / (tp + fp)
+    recall <- if ((tp + fn) == 0) 0 else tp / (tp + fn)
+    f1 <- if ((precision + recall) == 0) 0 else 2 * precision * recall / (precision + recall)
+
     fila <- data.frame(
       Dataset = nombre_dataset,
       Modelo = nombre,
       AUC = as.numeric(pROC::auc(roc_obj)),
       Sensibilidad = sens,
       Especificidad = spec,
-      Accuracy = acc
+      Accuracy = acc,
+      `F1-score` = f1
     )
 
     resultados_finales <- rbind(resultados_finales, fila)
@@ -379,7 +388,7 @@ generar_graficos_automaticos <- function(resultados) {
   .check_required_packages(c("dplyr", "ggplot2", "plotly", "htmltools"))
 
   datasets_unicos <- unique(resultados$Dataset)
-  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy")
+  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy", "F1-score")
   lista_graficos <- list()
 
   for (ds in datasets_unicos) {
