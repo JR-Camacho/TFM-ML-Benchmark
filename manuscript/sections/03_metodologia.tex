@@ -449,12 +449,12 @@ benchmark donde el conocimiento de dominio sea el factor diferencial.
 \endfoot
 meanbp, hrt, resp, temp, sod, scoma, aps, crea & Eliminar observaciones & Eliminación puntual & Nulos mínimos en variables basales; se priorizó conservar registros clínicamente completos. \\
 race, dnr, edu & Imputar & Categoría ``Unknown'' & La ausencia se trató como información administrativa potencialmente útil. \\
-charges & Imputar & Mediana global & Baja proporción de nulos y utilidad como variable de contexto hospitalario. \\
 wblc, bili, alb, ph, pafi & Imputar & Mediana por dzgroup & Imputación condicionada por diagnóstico para preservar coherencia fisiológica. \\
 adls & Imputar & Valor 8 & Se codificó como ``No completado'', interpretando la ausencia como señal clínica. \\
 urine, bun, glucose & Eliminar variable & Missing elevado & La imputación masiva podía homogeneizar artificialmente variables clínicas relevantes. \\
 prg2m, prg6m, surv2m, surv6m & Eliminar variable & Riesgo de leakage & Variables pronósticas o derivadas de modelos previos, no adecuadas como predictores basales. \\
 death, d.time & Eliminar variable & Leakage directo y temporal & Incorporan información del desenlace o del seguimiento posterior. \\
+slos, charges & Eliminar variable & Información posterior & Estancia hospitalaria y cargos acumulados dependen de la evolución clínica y no estarían disponibles al ingreso. \\
 totcst, totmcst, income, sfdm2 & Eliminar variable & Missing/redundancia & Baja utilidad clínica directa o alta proporción de ausencia. \\
 dnrday, dzclass, adlsc & Eliminar variable & Redundancia y derivación & Información duplicada o ya procesada en variables relacionadas. \\
 adlp & Eliminar variable & Sesgo de recolección & Alto poder predictivo asociado al patrón de ausencia, no a una medición fisiológica estable. \\
@@ -464,20 +464,22 @@ sps, avtisst & Eliminar variable & Score derivado y leakage & Métricas procesad
 
 \subsubsection{Estrategia técnico-estadística (V2)}
 
-\textbf{Filosofía y Reglas Automáticas}
+\textbf{Filosofía y reglas técnico-estadísticas}
 
-Esta aproximación sigue un enfoque agnóstico al dominio, basado en la eficiencia
-computacional y en estándares de la ciencia de datos aplicada. En esta
-estrategia, el preprocesamiento es guiado por reglas automáticas y umbrales cuantitativos
-(thresholds), minimizando la intervención subjetiva y buscando la máxima
-reproducibilidad algorítmica.
+Esta aproximación sigue un enfoque técnico-estadístico menos dependiente del
+contexto clínico. Las decisiones de preprocesamiento se basan en criterios
+generales de partición, completitud de datos y medidas de tendencia central,
+sin incorporar razonamiento fisiológico específico para cada variable. Por ello,
+funciona como contraste metodológico frente a V1: reproduce decisiones comunes
+en pipelines computacionales, pero con un componente más arbitrario y menos
+informado por el significado biomédico de las variables.
 
 \textbf{Criterios de Selección y Thresholds}
 
 \begin{itemize}
-  \item Regla del 35\% de Ausencia: Bajo este enfoque, se establece un umbral técnico
+  \item Regla del 35\% de Ausencia: Bajo este enfoque, se establece un umbral
     estricto: cualquier variable con más de un 35\% de valores faltantes es
-    eliminada automáticamente del estudio (alb, bun, glucose, urine, adlp,
+    eliminada del estudio (alb, bun, glucose, urine, adlp,
     totmcst). Se asume que el ruido introducido por la imputación masiva
     superaría el valor informativo de la variable.
   \item Eliminación por Redundancia Estadística: Se eliminan variables como dnrday
@@ -555,8 +557,8 @@ Como etapa preliminar a cualquier intervención sobre los datos, se procedió a 
 división del dataset original mediante un esquema de validación externa:
 
 \begin{itemize}
-  \item Proporción de la muestra: Se determinó una división del 70\% para el conjunto
-    de entrenamiento, 15\% para el conjunto de validación y 15\% para el conjunto
+  \item Proporción de la muestra: Se determinó una división del 80\% para el conjunto
+    de entrenamiento, 10\% para el conjunto de validación y 10\% para el conjunto
     de prueba independiente.
   \item Mecanismo de estratificación: Se implementó la función createDataPartition
     sobre la variable objetivo hospdead. Esta decisión estratégica asegura que
@@ -566,11 +568,30 @@ división del dataset original mediante un esquema de validación externa:
     clínico.
   \item Uso de los subconjuntos: El conjunto de entrenamiento se utilizó para
     ajustar los modelos y, cuando correspondía, ejecutar validación cruzada
-    interna. El conjunto de validación se reservó para comparar el rendimiento
-    de los modelos y seleccionar la mejor configuración de hiperparámetros. El
-    conjunto de prueba se mantuvo aislado hasta la evaluación final del modelo
-    seleccionado.
+    interna. En los experimentos con CV, la selección de hiperparámetros y del
+    mejor modelo se realizó con los pliegues internos del entrenamiento, y la
+    evaluación externa se efectuó sobre la unión de validación y prueba. En los
+    experimentos sin CV, el conjunto de validación externo se utilizó para
+    comparar configuraciones y seleccionar el mejor modelo, reservando el
+    conjunto de prueba para la evaluación final.
 \end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{Caracterización de los conjuntos de entrenamiento utilizados en modelado.}
+  \label{tab:caracterizacion-modelado}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Escenario} & \textbf{Observaciones} & \textbf{Predictores} & \textbf{No} & \textbf{Yes} \\
+    \midrule
+    V1 -- Bio Data & 7,232 & 25 & 5,372 & 1,860 \\
+    V2 -- Tech Data & 7,166 & 35 & 5,311 & 1,855 \\
+    V2 -- Tech Data sin columnas de riesgo & 7,166 & 26 & 5,311 & 1,855 \\
+    V1 -- Bio Data con downsampling & 7,232 & 25 & 5,372 & 1,860 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsubsection{Estrategia V1: procesamiento clínico-estadístico}
 
@@ -582,7 +603,7 @@ continuación:
 
 Se ejecutó una limpieza profunda orientada a eliminar variables que introdujeran
 información posterior al ingreso o directamente ligada al desenlace. Se
-eliminaron columnas como death, d.time, surv2m y totcst. La razón fundamental es
+eliminaron columnas como death, d.time, surv2m, slos y charges. La razón fundamental es
 evitar la fuga de datos (Data Leakage); la inclusión de información "futura"
 generaría modelos con una precisión artificialmente elevada pero carentes de
 utilidad en un escenario predictivo en tiempo real al ingreso del paciente.
@@ -618,19 +639,20 @@ Se aplicaron criterios diferenciados según la relevancia de la variable:
 
 \subsubsection{Estrategia V2: procesamiento técnico-estadístico}
 
-Este flujo representa una aproximación agnóstica al dominio clínico, optimizada
-mediante heurísticas técnicas y reglas de tendencia central global.
+Este flujo representa una aproximación técnico-estadística menos dependiente del
+dominio clínico, basada en umbrales de completitud, particiones estándar y
+reglas de tendencia central global.
 
-\paragraph{Criterios de limpieza y exclusión agresiva}
+\textbf{Criterios de limpieza y exclusión}
 
-A diferencia de la V1, se aplicó una decisión de exclusión más agresiva
-basada en la integridad técnica. Se eliminaron directamente variables con altos
-volúmenes de nulidad, como alb, glucose y bun, bajo la premisa de que un exceso
-de datos faltantes compromete la capacidad de recuperación fiable del predictor,
+A diferencia de la V1, se aplicó un criterio de exclusión basado principalmente
+en completitud y simplicidad operativa. Se eliminaron directamente variables con
+altos volúmenes de nulidad, como alb, glucose y bun, bajo la premisa de que un
+exceso de datos faltantes compromete la recuperación fiable del predictor,
 optando por un modelo con menos variables pero con mayor densidad de datos
-reales.
+observados.
 
-\paragraph{Tratamiento de nulos mediante estrategia de imputación global}
+\textbf{Tratamiento de nulos mediante estrategia de imputación global}
 
 En este escenario, el preprocesamiento se desvincula del contexto diagnóstico:
 
@@ -676,8 +698,8 @@ del modelo:
 El diseño experimental de esta investigación se fundamenta en un enfoque de
 benchmarking multinivel. El objetivo no es solo identificar el modelo con mayor
 capacidad predictiva, sino evaluar cómo la calidad intrínseca del dato
-(Estrategia Biológica vs. Técnica) y su tratamiento métrico (Escalamiento)
-impactan en dicha predicción.
+(Estrategia Biológica vs. Técnica), el esquema de validación y el manejo del
+desbalance impactan en dicha predicción.
 
 \subsubsection{Selección de Modelos Supervisados}
 
@@ -694,15 +716,18 @@ aprendizaje automático para garantizar una comparativa exhaustiva:
     \begin{itemize}
       \item Decision Tree (rpart): Para capturar relaciones no lineales simples y
         estructuras de decisión.
-      \item Support Vector Machine (SVM): Modelo de margen máximo con kernel radial,
-        útil para capturar fronteras de decisión no lineales.
     \end{itemize}
   \item Modelos de Ensamble (Ensemble Learning):
     \begin{itemize}
       \item Random Forest (rf): Para reducir la varianza mediante bagging y mejorar
         la robustez frente a outliers.
-      \item Stochastic Gradient Boosting (GBM): Para optimizar la precisión mediante
-        boosting secuencial.
+      \item XGBoost: Para optimizar la capacidad predictiva mediante boosting
+        secuencial regularizado.
+    \end{itemize}
+  \item Modelos Probabilísticos:
+    \begin{itemize}
+      \item Naive Bayes: Para incorporar una referencia probabilística simple,
+        basada en independencia condicional entre predictores.
     \end{itemize}
   \item Modelos Basados en Distancia:
     \begin{itemize}
@@ -722,8 +747,8 @@ reduce el error humano. Se definieron dos metodologías de validación:
     del error de generalización durante el ajuste inicial. Al dividir el
     conjunto de entrenamiento en 5 pliegues, se asegura que cada observación sea
     utilizada tanto para entrenamiento como para validación interna, mitigando el
-    riesgo de sobreajuste (overfitting). Posteriormente, el conjunto de
-    validación externo permitió seleccionar el mejor modelo.
+    riesgo de sobreajuste (overfitting). La selección de hiperparámetros y del
+    mejor modelo se realizó con las métricas internas de estos pliegues.
   \item Entrenamiento Simple (sin CV): Utilizado para evaluar el ajuste directo de
     modelos sobre el conjunto de entrenamiento y comparar sus configuraciones en
     el conjunto de validación. Esta estrategia permite observar el comportamiento
@@ -762,11 +787,15 @@ RMarkdown (.Rmd) independientes, lo que permite una trazabilidad total:
     de valores faltantes).
 \end{itemize}
 
-En cada archivo, se ejecutan de forma paralela dos sub-escenarios: entrenamiento
+En cada estrategia se ejecutaron dos sub-escenarios principales: entrenamiento
 con validación cruzada y entrenamiento simple sin validación cruzada. Ambos
 parten de los datos base y aplican las transformaciones necesarias dentro de la
-receta de tidymodels, garantizando una comparación metodológicamente equivalente
-entre escenarios.
+receta de tidymodels, favoreciendo una comparación metodológicamente consistente
+entre escenarios. Además, se incorporaron dos análisis complementarios: una
+versión de V2 con eliminación de variables potencialmente problemáticas por
+leakage o baja coherencia biológica, y un experimento V1 con downsampling dentro
+de la validación cruzada para estudiar el efecto del desbalance sobre la
+sensibilidad.
 
 \subsubsection{Configuración de Hiperparámetros y Control}
 
@@ -779,26 +808,65 @@ búsqueda de hiperparámetros y evaluación probabilística:
   \item Optimización por ROC-AUC: Para priorizar la capacidad discriminativa global
     durante la selección de configuraciones.
   \item Registro de la mejor configuración: Para conservar los hiperparámetros del
-    modelo con mayor rendimiento sobre el conjunto de validación.
+    modelo con mayor rendimiento. En CV, este criterio se aplicó sobre las
+    métricas internas de los pliegues; en entrenamiento simple, sobre el conjunto
+    de validación externo.
 \end{itemize}
+
+La Tabla~\ref{tab:config-modelos} resume los hiperparámetros ajustados en cada
+familia de modelos y los rangos utilizados en el entrenamiento simple sin CV.
+En los escenarios con validación cruzada se mantuvo el mismo conjunto de
+hiperparámetros por modelo, pero la construcción de la grilla se realizó con
+\texttt{tune\_grid()} y \texttt{grid\_size = 10}, usando los rangos por defecto
+definidos por tidymodels/dials para cada parámetro. En los escenarios sin CV se
+empleó una grilla manual de tamaño equivalente para evaluar cada combinación
+contra el conjunto de validación externo. Por esta razón, las configuraciones
+óptimas obtenidas con CV pueden ubicarse fuera de los rangos manuales definidos
+para el entrenamiento simple.
+
+\begin{table}[H]
+  \centering
+  \caption{Configuración de hiperparámetros por modelo.}
+  \label{tab:config-modelos}
+  \scriptsize
+  \begin{tabular}{p{0.22\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
+    \toprule
+    \textbf{Modelo} & \textbf{Hiperparámetros ajustados} & \textbf{Grilla manual sin CV / configuración base} \\
+    \midrule
+    Logistic Regression & penalty, mixture & penalty: $10^{-6}$--$10^{0}$; mixture: 0--1; motor glmnet. \\
+    Decision Tree & cost\_complexity, tree\_depth, min\_n & cost\_complexity: $10^{-6}$--$10^{-1}$; tree\_depth: 1--15; min\_n: 2--20; motor rpart. \\
+    Random Forest & mtry, min\_n & mtry: 1--p, donde p es el número de predictores tras la receta; min\_n: 2--20; trees fijo en 500; motor ranger. \\
+    Naive Bayes & smoothness, Laplace & smoothness: 0.5--1.5; Laplace: 0--3; motor klaR. \\
+    XGBoost & trees, tree\_depth, learn\_rate, loss\_reduction, min\_n & trees: 200--700; tree\_depth: 2--8; learn\_rate: $10^{-4}$--$10^{-1}$; loss\_reduction: $10^{-6}$--$10^{1}$; min\_n: 2--20. \\
+    KNN & neighbors, weight\_func, dist\_power & neighbors entre 3 y el máximo permitido por dimensión/tamaño muestral; weight\_func: rectangular, triangular y epanechnikov; dist\_power: 1 o 2. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+El experimento con downsampling se implementó con themis dentro de la receta de
+tidymodels. Esta operación se activa únicamente en el flujo con validación
+cruzada, por lo que el remuestreo se aplica a cada partición de entrenamiento
+de los folds y no al dataset completo ni a los subconjuntos de evaluación.
 
 \subsection{Métricas de Evaluación de Rendimiento}
 
 Dado que las métricas de clasificación se describen conceptualmente en la
 Sección~\ref{sec:metricas-clasificacion}, este apartado delimita únicamente su
 uso dentro del protocolo experimental. Para cada modelo y escenario se
-reportaron AUC-ROC, sensibilidad, especificidad y accuracy mediante funciones
-centralizadas de evaluación.
+reportaron AUC-ROC, sensibilidad, especificidad, accuracy y F1-score mediante
+funciones centralizadas de evaluación.
 
 El AUC-ROC se utilizó como métrica principal para comparar la capacidad
 discriminativa global entre algoritmos y estrategias de preprocesamiento. La
 sensibilidad y la especificidad se emplearon para interpretar el balance entre
-la detección de pacientes fallecidos y supervivientes, respectivamente. Accuracy
-se mantuvo como métrica complementaria, interpretada con cautela debido al
-desbalance moderado de la variable hospdead.
+la detección de pacientes fallecidos y supervivientes, respectivamente. El
+F1-score se utilizó como medida complementaria para valorar el equilibrio entre
+precisión y recall de la clase positiva. Accuracy se mantuvo como métrica
+complementaria, interpretada con cautela debido al desbalance moderado de la
+variable hospdead.
 
 Además de las métricas tabulares, se generaron curvas ROC comparativas para cada
 escenario experimental. Estas curvas se presentan en las
-Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v2-nocv} y permiten contrastar
+Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v1-down} y permiten contrastar
 visualmente el comportamiento relativo de los modelos en el espacio de
 sensibilidad frente a 1-especificidad.

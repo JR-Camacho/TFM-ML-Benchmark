@@ -1,12 +1,18 @@
 \contentsline {table}{\numberline {1}{\ignorespaces Preprocesamiento V1}}{21}{table.1}%
 \contentsline {table}{\numberline {2}{\ignorespaces Preprocesamiento V2}}{23}{table.2}%
-\contentsline {table}{\numberline {3}{\ignorespaces Nulos por variable según hospdead}}{30}{table.caption.10}%
-\contentsline {table}{\numberline {4}{\ignorespaces V1 CV validación}}{33}{table.caption.16}%
-\contentsline {table}{\numberline {5}{\ignorespaces V1 CV prueba}}{33}{table.caption.17}%
-\contentsline {table}{\numberline {6}{\ignorespaces V1 sin CV validación}}{34}{table.caption.19}%
-\contentsline {table}{\numberline {7}{\ignorespaces V1 sin CV prueba}}{34}{table.caption.20}%
-\contentsline {table}{\numberline {8}{\ignorespaces V2 CV validación}}{35}{table.caption.22}%
-\contentsline {table}{\numberline {9}{\ignorespaces V2 CV prueba}}{36}{table.caption.23}%
-\contentsline {table}{\numberline {10}{\ignorespaces V2 sin CV validación}}{36}{table.caption.25}%
-\contentsline {table}{\numberline {11}{\ignorespaces V2 sin CV prueba}}{37}{table.caption.26}%
-\contentsline {table}{\numberline {12}{\ignorespaces Diccionario de variables del dataset SUPPORT2.}}{44}{table.12}%
+\contentsline {table}{\numberline {3}{\ignorespaces Caracterización de los conjuntos de entrenamiento utilizados en modelado.}}{24}{table.caption.4}%
+\contentsline {table}{\numberline {4}{\ignorespaces Configuración de hiperparámetros por modelo.}}{29}{table.caption.8}%
+\contentsline {table}{\numberline {5}{\ignorespaces Nulos por variable según hospdead}}{31}{table.caption.10}%
+\contentsline {table}{\numberline {6}{\ignorespaces V1 CV validación}}{34}{table.caption.16}%
+\contentsline {table}{\numberline {7}{\ignorespaces V1 CV evaluación}}{34}{table.caption.17}%
+\contentsline {table}{\numberline {8}{\ignorespaces V1 sin CV validación}}{35}{table.caption.19}%
+\contentsline {table}{\numberline {9}{\ignorespaces V1 sin CV prueba}}{36}{table.caption.20}%
+\contentsline {table}{\numberline {10}{\ignorespaces V2 CV validación}}{37}{table.caption.22}%
+\contentsline {table}{\numberline {11}{\ignorespaces V2 CV evaluación}}{37}{table.caption.23}%
+\contentsline {table}{\numberline {12}{\ignorespaces V2 sin CV validación}}{38}{table.caption.25}%
+\contentsline {table}{\numberline {13}{\ignorespaces V2 sin CV prueba}}{38}{table.caption.26}%
+\contentsline {table}{\numberline {14}{\ignorespaces V2 CV sin columnas de riesgo}}{39}{table.caption.28}%
+\contentsline {table}{\numberline {15}{\ignorespaces V2 CV sin columnas prueba}}{40}{table.caption.29}%
+\contentsline {table}{\numberline {16}{\ignorespaces V1 CV downsampling}}{41}{table.caption.31}%
+\contentsline {table}{\numberline {17}{\ignorespaces V1 CV downsampling prueba}}{41}{table.caption.32}%
+\contentsline {table}{\numberline {18}{\ignorespaces Diccionario de variables del dataset SUPPORT2.}}{48}{table.18}%

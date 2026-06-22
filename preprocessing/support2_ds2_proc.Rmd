@@ -240,7 +240,8 @@ saveRDS(train_tech, "../data/processed/support2/df2/train_base.rds")
 saveRDS(valid_tech, "../data/processed/support2/df2/valid_base.rds")
 saveRDS(test_tech,  "../data/processed/support2/df2/test_base.rds")
 
-saveRDS(train_tech_scaled, "../data/processed/support2/df2/train_scaled.rds")
-saveRDS(valid_tech_scaled, "../data/processed/support2/df2/valid_scaled.rds")
-saveRDS(test_tech_scaled,  "../data/processed/support2/df2/test_scaled.rds")
+# No se utiliza la version scalada debido a que se eolica la normalizacion directamente desde el recipe en tidymodels
+# saveRDS(train_tech_scaled, "../data/processed/support2/df2/train_scaled.rds")
+# saveRDS(valid_tech_scaled, "../data/processed/support2/df2/valid_scaled.rds")
+# saveRDS(test_tech_scaled,  "../data/processed/support2/df2/test_scaled.rds")
 ```

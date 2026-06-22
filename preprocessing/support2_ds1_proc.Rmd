@@ -79,7 +79,7 @@ delete_vars <- function(df, vars_to_remove) {
 vars_to_remove <- c(
   "urine", "dnrday", "prg2m", "prg6m", "surv2m", "surv6m", 
   "totmcst", "totcst", "income", "sfdm2", "adlp", 
-  "death", "d.time", "dzclass", "adlsc", "sps", "avtisst", "glucose", "bun"
+  "death", "d.time", "dzclass", "adlsc", "sps", "avtisst", "glucose", "bun", "slos", "charges"
 )
 
 train_bio <- delete_vars(train_bio, vars_to_remove)
@@ -138,19 +138,6 @@ apply_imputation <- function(df, medians) {
 train_bio <- apply_imputation(train_bio, imputation_medians)
 valid_bio <- apply_imputation(valid_bio, imputation_medians)
 test_bio  <- apply_imputation(test_bio, imputation_medians)
-
-# --- 6. Imputación global y limpieza de categóricas ---
-# Imputar glucosa con la mediana global del train
-# global_glucose <- median(train_bio$glucose, na.rm = TRUE)
-# train_bio <- train_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
-# test_bio  <- test_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
-
-# Imputar charges con la mediana global del train
-global_charges <- median(train_bio$charges, na.rm = TRUE)
-train_bio <- train_bio %>% mutate(charges = replace_na(charges, global_charges))
-valid_bio <- valid_bio %>% mutate(charges = replace_na(charges, global_charges))
-test_bio  <- test_bio %>% mutate(charges = replace_na(charges, global_charges))
-
 
 # Aplicar la misma lógica de transformación que en tus gráficos
 transform_edu <- function(df) {
@@ -264,7 +251,8 @@ saveRDS(train_bio, "../data/processed/support2/df1/train_base.rds")
 saveRDS(valid_bio, "../data/processed/support2/df1/valid_base.rds")
 saveRDS(test_bio,  "../data/processed/support2/df1/test_base.rds")
 
-saveRDS(train_bio_scaled, "../data/processed/support2/df1/train_scaled.rds")
-saveRDS(valid_bio_scaled, "../data/processed/support2/df1/valid_scaled.rds")
-saveRDS(test_bio_scaled,  "../data/processed/support2/df1/test_scaled.rds")
+# No se utiliza la version scalada debido a que se eolica la normalizacion directamente desde el recipe en tidymodels
+# saveRDS(train_bio_scaled, "../data/processed/support2/df1/train_scaled.rds")
+# saveRDS(valid_bio_scaled, "../data/processed/support2/df1/valid_scaled.rds")
+# saveRDS(test_bio_scaled,  "../data/processed/support2/df1/test_scaled.rds")
 ```

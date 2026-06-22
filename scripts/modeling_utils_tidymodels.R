@@ -43,6 +43,14 @@
   )
 }
 
+.cv_metric_set <- function(nombre) {
+  if (identical(nombre, "SVM")) {
+    return(yardstick::metric_set(yardstick::roc_auc))
+  }
+
+  .make_metric_set()
+}
+
 .roc_for_positive_class <- function(truth, prob_positive, clase_positiva) {
   negative_levels <- setdiff(levels(truth), clase_positiva)
   if (length(negative_levels) != 1) {
@@ -178,8 +186,8 @@
       wf,
       resamples = folds,
       grid = grid_size,
-      metrics = metricas,
-      control = tune::control_grid(save_pred = TRUE, verbose = TRUE)
+      metrics = .cv_metric_set(nombre),
+      control = tune::control_grid(save_pred = FALSE, verbose = TRUE)
     )
 
     best_params <- tune::select_best(tuned, metric = "roc_auc")
@@ -305,12 +313,39 @@ entrenar_benchmark <- function(train_data, nombre_dataset, scaled_df = FALSE, us
     }
 
     return(data.frame(
-      .pred_class = if (is.data.frame(clases) && ".pred_class" %in% names(clases)) clases$.pred_class else clases,
-      .pred_positive = probs[[prob_col]]
+      class_predictions = .extract_class_predictions(clases),
+      positive_probability = probs[[prob_col]]
     ))
   }
 
   stop("Tipo de modelo no reconocido: ", modelo$engine, call. = FALSE)
+}
+
+.extract_class_predictions <- function(classes) {
+  if (is.data.frame(classes) && ".pred_class" %in% names(classes)) {
+    return(as.character(classes$.pred_class))
+  }
+
+  if (is.data.frame(classes)) {
+    if (ncol(classes) == 1) {
+      return(as.character(classes[[1]]))
+    }
+    stop("No se pudo interpretar la salida de prediccion de clase.", call. = FALSE)
+  }
+
+  if (is.factor(classes)) {
+    return(as.character(classes))
+  }
+
+  if (is.character(classes)) {
+    return(classes)
+  }
+
+  if (is.atomic(classes) && !is.list(classes)) {
+    return(as.character(classes))
+  }
+
+  stop("No se pudo interpretar la salida de prediccion de clase.", call. = FALSE)
 }
 
 evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_positiva = "Yes") {
@@ -325,11 +360,11 @@ evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_po
     modelo <- modelos_lista[[nombre]]
     pred <- .predict_modelo_tidymodels(modelo, test_data, clase_positiva)
 
-    filas_validas <- !is.na(pred$.pred_class) & !is.na(pred$.pred_positive)
+    filas_validas <- !is.na(pred$class_predictions) & !is.na(pred$positive_probability)
     y_test_valid <- test_data$hospdead[filas_validas]
-    probs_valid <- pred$.pred_positive[filas_validas]
+    probs_valid <- pred$positive_probability[filas_validas]
     clases_valid <- factor(
-      pred$.pred_class[filas_validas],
+      pred$class_predictions[filas_validas],
       levels = levels(y_test_valid)
     )
 

@@ -2,7 +2,7 @@
 title: "bio_model_train"
 output: 
   pdf_document: default
-  #html_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -28,16 +28,11 @@ source("../scripts/modeling_utils_tidymodels_clean.R")
 train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
 valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
 test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
+test_bio_eval <- dplyr::bind_rows(valid_bio, test_bio)
 ```
 
 ```{r}
-cols_to_delete <- c("slos", "charges")
-
-train_bio <- dplyr::select(train_bio, -dplyr::any_of(cols_to_delete))
-valid_bio <- dplyr::select(valid_bio, -dplyr::any_of(cols_to_delete))
-test_bio <- dplyr::select(test_bio, -dplyr::any_of(cols_to_delete))
-
-train_bio
+head(train_bio)
 table(train_bio$hospdead)
 ```
 
@@ -45,8 +40,7 @@ table(train_bio$hospdead)
 ```{r}
 resultado_bio <- entrenar_benchmark(
   train_data = train_bio,
-  valid_data = valid_bio,
-  test_data = test_bio,
+  test_data = test_bio_eval,
   nombre_dataset = "df1_Bio",
   usar_cv = TRUE,
   folds = 5,
@@ -56,7 +50,11 @@ resultado_bio <- entrenar_benchmark(
 
 resultados_validacion <- resultado_bio$validation
 resultados_test <- resultado_bio$test
-mejor_configuracion <- resultado_bio$best_params
+mejor_test <- resultado_bio$best_test
+mejor_configuracion <- dplyr::bind_cols(
+  tibble::tibble(Modelo = resultado_bio$best_model),
+  resultado_bio$best_params
+)
 variables_importantes <- resultado_bio$variable_importance
 ```
 
@@ -83,7 +81,7 @@ generar_graficos_automaticos(resultados_validacion)
 
 ```{r}
 variables_importantes %>%
-  dplyr::slice_head(n = 35) %>%
+  dplyr::slice_head(n = 10) %>%
   kbl(digits = 4) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
@@ -95,7 +93,7 @@ variables_importantes %>%
 
 ```{r}
 resultados_test %>%
-  kbl(digits = 3) %>% 
+  kbl(digits = 3, caption = "Test de todos los modelos") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -103,6 +101,14 @@ resultados_test %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-plot_roc_comparativo(resultado_bio$validation_fits, valid_bio, "ROC: Validacion - df1_Bio")
-plot_roc_comparativo(list(Best = resultado_bio$best_fit), test_bio, "ROC: Test Final - df1_Bio")
+mejor_test %>%
+  kbl(digits = 3, caption = "Test del mejor modelo") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+
+plot_roc_comparativo(resultado_bio$validation_fits, test_bio_eval, "ROC: Test Final - df1_Bio")
 ```

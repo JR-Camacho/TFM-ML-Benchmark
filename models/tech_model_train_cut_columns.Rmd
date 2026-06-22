@@ -28,24 +28,23 @@ source("../scripts/modeling_utils_tidymodels_clean.R")
 train <- readRDS("../data/processed/support2/df2/train_base.rds")
 valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
 test <- readRDS("../data/processed/support2/df2/test_base.rds")
+test_eval <- dplyr::bind_rows(valid, test)
 ```
 
 ```{r}
-cols_to_delete <- c("prg2m", "prg6m", "sfdm2", "avtisst", "sps", "slos", "charges", "adlsc", "dzclass", "income")
+cols_to_delete <- c("prg2m", "prg6m", "sfdm2", "avtisst", "sps", "slos", "charges", "adlsc", "income")
 
 train <- dplyr::select(train, -dplyr::any_of(cols_to_delete))
 valid <- dplyr::select(valid, -dplyr::any_of(cols_to_delete))
 test <- dplyr::select(test, -dplyr::any_of(cols_to_delete))
 
-# Eliminar columnas (prg2m, prg6m) en todas las particiones para entrenar sin estas variables.
 train
 ```
 
 ```{r}
 resultado_tech <- entrenar_benchmark(
   train_data = train,
-  valid_data = valid,
-  test_data = test,
+  test_data = test_eval,
   nombre_dataset = "df2_Tech",
   usar_cv = TRUE,
   folds = 5,
@@ -55,7 +54,11 @@ resultado_tech <- entrenar_benchmark(
 
 resultados_validacion <- resultado_tech$validation
 resultados_test <- resultado_tech$test
-mejor_configuracion <- resultado_tech$best_params
+mejor_test <- resultado_tech$best_test
+mejor_configuracion <- dplyr::bind_cols(
+  tibble::tibble(Modelo = resultado_tech$best_model),
+  resultado_tech$best_params
+)
 variables_importantes <- resultado_tech$variable_importance
 ```
 
@@ -81,7 +84,7 @@ generar_graficos_automaticos(resultados_validacion)
 
 ```{r}
 variables_importantes %>%
-  dplyr::slice_head(n = 15) %>%
+  dplyr::slice_head(n = 10) %>%
   kbl(digits = 4) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"),
@@ -93,7 +96,16 @@ variables_importantes %>%
 
 ```{r}
 resultados_test %>%
-  kbl(digits = 3) %>% 
+  kbl(digits = 3, caption = "Test de todos los modelos") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+
+mejor_test %>%
+  kbl(digits = 3, caption = "Test del mejor modelo") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -103,6 +115,5 @@ resultados_test %>%
 ```
 
 ```{r}
-plot_roc_comparativo(resultado_tech$validation_fits, valid, "ROC: Validacion - df2_Tech")
-plot_roc_comparativo(list(Best = resultado_tech$best_fit), test, "ROC: Test Final - df2_Tech")
+plot_roc_comparativo(resultado_tech$validation_fits, test_eval, "ROC: Test Final - df2_Tech")
 ```

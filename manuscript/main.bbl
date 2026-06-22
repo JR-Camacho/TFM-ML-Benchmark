@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -90,11 +90,5 @@ L.~Rubini, P.~Soundarapandian, and P.~Eswaran.
 W.~A. Knaus and J.~Lynn.
 \newblock Study to understand prognoses and preferences for outcomes and risks of treatment ({SUPPORT}) and hospitalized elderly longitudinal project ({HELP}), 1989--1997 [dataset].
 \newblock Inter-university Consortium for Political and Social Research (ICPSR) [distributor], February 2020.
-
-\bibitem[Kuhn(2024)]{kuhn_caret}
-M.~Kuhn.
-\newblock caret: Classification and regression training.
-\newblock R package version 6.0-94, 2024.
-\newblock URL \url{https://cran.r-project.org/package=caret}.
 
 \end{thebibliography}

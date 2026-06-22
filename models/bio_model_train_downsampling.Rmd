@@ -1,6 +1,6 @@
 ---
-title: "tech_model_train_no_cv"
-output:
+title: "bio_model_train_downsampling"
+output: 
   pdf_document: default
   html_document: default
 ---
@@ -9,7 +9,9 @@ output:
 set.seed(123)
 ```
 
+
 ```{r}
+# Cargar librerías
 library(ggplot2)
 library(dplyr)
 library(plotly)
@@ -22,42 +24,39 @@ source("../scripts/modeling_utils_tidymodels_clean.R")
 ```
 
 ```{r}
-train <- readRDS("../data/processed/support2/df2/train_base.rds")
-valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
-test <- readRDS("../data/processed/support2/df2/test_base.rds")
+# Cargamos los datasets procesados
+train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
+valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
+test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
+test_bio_eval <- dplyr::bind_rows(valid_bio, test_bio)
 ```
 
 ```{r}
-resultado_tech <- entrenar_benchmark(
-  train_data = train,
-  valid_data = valid,
-  test_data = test,
-  nombre_dataset = "df2_Tech",
-  usar_cv = FALSE,
+head(train_bio)
+table(train_bio$hospdead)
+```
+
+
+```{r}
+resultado_bio <- entrenar_benchmark(
+  train_data = train_bio,
+  test_data = test_bio_eval,
+  nombre_dataset = "df1_Bio",
+  usar_cv = TRUE,
+  folds = 5,
   grid_size = 10,
+  usar_downsampling = TRUE,
   clase_positiva = "Yes"
 )
 
-resultados_validacion <- resultado_tech$validation
-resultados_test <- resultado_tech$test
-mejor_test <- resultado_tech$best_test
-mejor_modelo <- resultado_tech$best_model
+resultados_validacion <- resultado_bio$validation
+resultados_test <- resultado_bio$test
+mejor_test <- resultado_bio$best_test
 mejor_configuracion <- dplyr::bind_cols(
-  tibble::tibble(Modelo = resultado_tech$best_model),
-  resultado_tech$best_params
+  tibble::tibble(Modelo = resultado_bio$best_model),
+  resultado_bio$best_params
 )
-variables_importantes <- resultado_tech$variable_importance
-```
-
-```{r}
-mejor_configuracion %>%
-    kbl() %>%
-    kable_styling(
-      bootstrap_options = c("striped", "hover", "condensed", "bordered"),
-      full_width = FALSE,
-      position = "left"
-    ) %>%
-    row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+variables_importantes <- resultado_bio$variable_importance
 ```
 
 ```{r}
@@ -70,6 +69,14 @@ resultados_validacion %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
+mejor_configuracion %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  )
+
 generar_graficos_automaticos(resultados_validacion)
 ```
 
@@ -78,8 +85,8 @@ variables_importantes %>%
   dplyr::slice_head(n = 10) %>%
   kbl(digits = 4) %>%
   kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
-    full_width = FALSE,
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
@@ -103,9 +110,6 @@ mejor_test %>%
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
-```
 
-```{r}
-plot_roc_comparativo(resultado_tech$validation_fits, valid, "ROC: Validacion - df2_Tech")
-plot_roc_comparativo(resultado_tech$validation_fits, test, "ROC: Test Final - df2_Tech")
+plot_roc_comparativo(resultado_bio$validation_fits, test_bio_eval, "ROC: Test Final - df1_Bio")
 ```
