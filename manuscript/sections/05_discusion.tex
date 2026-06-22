@@ -60,6 +60,14 @@ datos:
     El experimento con downsampling modifica este equilibrio, elevando la
     sensibilidad de XGBoost y Random Forest hasta 0.863 en evaluación externa,
     aunque con una reducción de especificidad.
+    En ese mismo contexto, Naive Bayes fue el algoritmo más afectado por el
+    desbalance de clases: en el escenario original mostró una sensibilidad muy
+    baja (0.133), aunque mantuvo una especificidad cercana a 1. Tras aplicar
+    downsampling durante el entrenamiento, la sensibilidad aumentó hasta 0.737,
+    mientras que la especificidad descendió a 0.862. Este comportamiento es
+    coherente con la dependencia explícita de Naive Bayes respecto a las
+    probabilidades a priori de las clases, que se modifican directamente al
+    balancear la distribución de entrenamiento.
   \item Rendimiento de KNN: Las Tablas~\ref{tab:v1-cv-base},
     \ref{tab:v1-nocv-base}, \ref{tab:v2-cv-base} y
     \ref{tab:v2-nocv-base} muestran que KNN fue superado por los métodos
@@ -84,9 +92,11 @@ datos:
     complejos. En el experimento con downsampling, incluso fue el mejor modelo
     durante validación cruzada.
   \item Naive Bayes: Aunque mostró un rendimiento aceptable en AUC, en algunos
-    escenarios sin remuestreo presentó sensibilidades bajas, lo que evidencia la
-    importancia de no interpretar el AUC de forma aislada cuando existe
-    desbalance de clases.
+    escenarios sin remuestreo presentó sensibilidades muy bajas. Su mejora
+    notable bajo downsampling sugiere que este modelo es especialmente
+    dependiente de la distribución de clases observada durante el entrenamiento,
+    por lo que su interpretación debe hacerse junto con sensibilidad y
+    especificidad, no solo con AUC.
   \item Decision Tree (rpart): A diferencia de experimentos previos, el árbol de
     decisión simple mantuvo un rendimiento discriminativo razonable en los
     escenarios actualizados. Sin embargo, continuó por debajo de Random Forest y
