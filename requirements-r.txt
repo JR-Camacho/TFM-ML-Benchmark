@@ -1,0 +1,43 @@
+# Dependencias R del proyecto TFM-ML-Benchmark
+# Instalacion sugerida:
+# install.packages(c(
+#   "caret", "corrplot", "DataExplorer", "dplyr", "farff", "ggplot2",
+#   "gridExtra", "Hmisc", "htmltools", "kableExtra", "knitr", "plotly",
+#   "pROC", "purrr", "readr", "rpart", "rsample", "recipes",
+#   "workflows", "tune", "yardstick", "parsnip", "dials", "themis",
+#   "glmnet", "ranger", "kknn", "discrim", "klaR", "xgboost",
+#   "tidyverse", "tibble"
+# ))
+
+caret
+corrplot
+DataExplorer
+dials
+discrim
+dplyr
+farff
+ggplot2
+glmnet
+gridExtra
+Hmisc
+htmltools
+kableExtra
+klaR
+knitr
+kknn
+parsnip
+plotly
+pROC
+purrr
+ranger
+readr
+recipes
+rpart
+rsample
+themis
+tibble
+tidyverse
+tune
+workflows
+yardstick
+xgboost

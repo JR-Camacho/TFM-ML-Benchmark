@@ -132,25 +132,24 @@
 Los resultados del benchmarking se presentan según la estrategia de
 preprocesamiento (V1: Bio Data; V2: Tech Data) y el esquema de entrenamiento
 utilizado. En los experimentos con validación cruzada, la comparación principal
-se realizó con las métricas internas de los folds y posteriormente se evaluaron
-los modelos sobre un conjunto externo formado por validación y prueba. En los
-experimentos sin CV, la selección se realizó sobre el conjunto de validación y
-la evaluación final sobre el conjunto de prueba independiente. En todos los
-escenarios se reportan AUC, sensibilidad, especificidad, accuracy y F1-score.
+se realizó con las métricas internas de los folds y posteriormente se probaron
+los modelos sobre un conjunto externo de prueba formado por la combinación de
+los conjuntos de validación y prueba definidos en la partición inicial
+80-10-10, ambos sin ser vistos por el modelo en ningún momento durante el
+entrenamiento o el ajuste de parámetros. En los experimentos sin CV, la
+selección se realizó sobre el conjunto de validación y la evaluación final
+sobre el conjunto de prueba independiente. En todos los escenarios se reportan
+AUC, sensibilidad, especificidad, accuracy y F1-score.
 
 La importancia de variables se estimó mediante permutación: se calcula primero
 el AUC del modelo sin alterar los datos y luego se vuelve a evaluar el modelo
-tras permutar una variable. La columna ``Importancia'' corresponde a la pérdida
-media de AUC causada por esa permutación; por tanto, valores mayores indican una
-mayor contribución predictiva de la variable.
+tras permutar una variable.
 
 \subsubsection{V1 -- Bio Data con validación cruzada}
 
 En el escenario clínico-estadístico con validación cruzada, XGBoost obtuvo el
 mayor AUC interno (0.917), seguido muy de cerca por Logistic Regression (0.916)
-y Random Forest (0.915). La proximidad entre estos modelos indica que la
-representación V1 conserva una señal predictiva estable, aunque con menor
-rendimiento bruto que la estrategia técnica.
+y Random Forest (0.915).
 
 \begin{table}[H]
   \centering
@@ -267,10 +266,7 @@ mientras que el XGBoost seleccionado alcanzó 0.925.
 
 La estrategia técnico-estadística obtuvo los valores de AUC más altos del
 benchmark principal. XGBoost lideró la validación cruzada con AUC de 0.974,
-seguido por Random Forest (0.973) y Logistic Regression (0.970). La diferencia
-respecto a V1 sugiere que la representación V2 retiene variables de fuerte
-capacidad predictiva, aunque algunas requieren interpretación metodológica
-cautelosa.
+seguido por Random Forest (0.973) y Logistic Regression (0.970).
 
 \begin{table}[H]
   \centering

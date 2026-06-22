@@ -10,6 +10,7 @@ set.seed(123)
 ```
 
 ```{r}
+# Cargar librerías
 library(ggplot2)
 library(dplyr)
 library(plotly)
@@ -18,10 +19,11 @@ library(kableExtra)
 ```
 
 ```{r}
-source("../scripts/modeling_utils_tidymodels_clean.R")
+source("../scripts/modeling_utils_tidymodels.R")
 ```
 
 ```{r}
+# Cargamos los datasets procesados
 train <- readRDS("../data/processed/support2/df2/train_base.rds")
 valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
 test <- readRDS("../data/processed/support2/df2/test_base.rds")

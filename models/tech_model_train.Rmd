@@ -20,7 +20,7 @@ library(kableExtra)
 ```
 
 ```{r}
-source("../scripts/modeling_utils_tidymodels_clean.R")
+source("../scripts/modeling_utils_tidymodels.R")
 ```
 
 ```{r}

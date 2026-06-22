@@ -13,7 +13,7 @@ validación y hasta 0.979 en evaluación externa.
 Sin embargo, en medicina predictiva, el mayor rendimiento métrico no implica
 necesariamente una mayor validez clínica. La diferencia observada en AUC sugiere
 que la estrategia V2 podría beneficiarse de variables que la estrategia V1
-excluyó por riesgo de \textit{Data Leakage} o por menor coherencia biológica. En
+excluyó por riesgo de fuga de datos (\textit{Data Leakage}) o por menor coherencia biológica. En
 este sentido, la V2 ofrece mayor rendimiento estadístico, mientras que la V1
 representa una aproximación más prudente desde el punto de vista clínico y
 metodológico.
@@ -77,7 +77,7 @@ datos:
     que Random Forest fue especialmente competitivo en la evaluación externa.
     Este patrón refleja su capacidad para capturar interacciones no lineales
     entre variables clínicas.
-  \item Regresión logística: Este modelo alcanzó AUC superiores a 0.91 en Bio Data,
+  \item Regresión logística: Este modelo alcanzó AUC superiores a 0.91 en V1 (Bio Data),
     lo que sugiere que varias de las variables clínicas seleccionadas mantienen
     una relación discriminativa estable con la mortalidad. Además, su mayor
     interpretabilidad la convierte en una referencia útil frente a modelos más

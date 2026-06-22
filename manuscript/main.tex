@@ -112,7 +112,7 @@
 variables clínicas binarias en R/tidymodels}
 \author{Jose Rafael Camacho Custodio%
   \thanks{Máster en Bioinformática, Universidad Nebrija.}}
-\date{14 Junio 2026}
+\date{22 Junio 2026}
 
 % =============================================================================
 \begin{document}
@@ -120,19 +120,20 @@ variables clínicas binarias en R/tidymodels}
 
 % --- Resumen -----------------------------------------------------------------
 \begin{abstract}\noindent
-La aplicación de modelos de Machine Learning supervisado en medicina predictiva
+La aplicación de modelos de aprendizaje automático (Machine Learning)
+supervisado en medicina predictiva
 depende no solo de la capacidad de los algoritmos, sino también de la calidad
 metodológica con la que se preparan los datos clínicos. En este trabajo se
-desarrolla un benchmarking comparativo para evaluar el impacto de dos
+desarrolla un benchmarking para evaluar el impacto de dos
 estrategias de preprocesamiento sobre la predicción de mortalidad hospitalaria
 (\textit{hospdead}) en el dataset SUPPORT2, una cohorte multicéntrica de
 pacientes críticos con alta heterogeneidad clínica, valores faltantes
-informativos y riesgo potencial de \textit{Data Leakage}. La primera estrategia
-(V1) incorpora razonamiento clínico-estadístico mediante imputación
+informativos y riesgo potencial de fuga de datos (\textit{Data Leakage}). La estrategia V1
+(Bio Data) incorpora razonamiento clínico-estadístico mediante imputación
 estratificada por diagnóstico, exclusión de variables derivadas o temporales y
-tratamiento contextual de la ausencia de datos. La segunda estrategia (V2)
-representa un enfoque técnico-estadístico basado en reglas automáticas,
-umbrales de valores faltantes e imputación global por mediana o moda.
+tratamiento contextual de la ausencia de datos. La estrategia V2 (Tech Data)
+representa un enfoque técnico-estadístico basado en reglas puramente técnicas,
+sin considerar la lógica biológica ni el contexto clínico.
 
 Sobre ambas versiones del dataset se entrenaron y evaluaron modelos de
 clasificación binaria, incluyendo Logistic Regression, Decision Tree, Random
@@ -142,24 +143,24 @@ en entrenamiento, validación y prueba final; la validación cruzada se ejecutó
 dentro del conjunto de entrenamiento, mientras que el entrenamiento simple
 utilizó el conjunto de validación externo para la selección de configuraciones.
 Los resultados muestran que los modelos de ensamble, especialmente Random Forest
-y XGBoost,
-alcanzaron el mejor rendimiento global. Desde una perspectiva puramente
-métrica, la estrategia técnico-estadística obtuvo los valores más altos de
-AUC-ROC, cercanos a 0.974 en validación cruzada y 0.979 en evaluación externa,
-frente a valores alrededor de 0.920 en validación y 0.927 en evaluación externa
-en la estrategia
-clínico-estadística. Sin embargo, esta diferencia revela una tensión
-metodológica central: el mayor rendimiento numérico puede estar influido por la
-retención de variables con menor validez clínica o con riesgo de introducir
-información no disponible en un escenario predictivo real. En conjunto, los
-hallazgos indican que la hipótesis inicial se confirma de forma parcial: el
-preprocesamiento informado por conocimiento clínico no maximiza necesariamente
-el AUC bruto, pero sí contribuye a construir modelos más interpretables,
-metodológicamente prudentes y coherentes con la lógica biomédica.
+y XGBoost, alcanzaron el mejor rendimiento global. Desde una perspectiva
+puramente métrica, la estrategia V2 obtuvo los valores más altos de área bajo la
+curva ROC (AUC-ROC), cercanos a 0.974 en validación cruzada y 0.979 en
+evaluación externa, mientras que V1 mantuvo un rendimiento competitivo, con
+valores alrededor de 0.920 en validación y entre 0.927 y 0.932 en evaluación
+externa según el esquema experimental. Sin embargo, esta diferencia revela una
+tensión metodológica central: el mayor rendimiento numérico puede estar
+influido por la retención de variables con menor validez clínica o con riesgo
+de introducir información no disponible en un escenario predictivo real. En
+conjunto, los hallazgos indican
+que la hipótesis inicial se confirma de forma parcial: el preprocesamiento
+informado por conocimiento clínico no maximiza necesariamente el AUC bruto,
+pero sí contribuye a construir modelos más interpretables, metodológicamente
+prudentes y coherentes con la lógica biomédica.
 \medskip\noindent
 \textbf{Palabras clave:} Machine Learning supervisado, medicina predictiva,
-SUPPORT2, mortalidad hospitalaria, preprocesamiento clínico, benchmarking,
-Data Leakage, R
+SUPPORT2, mortalidad hospitalaria, preprocesamiento de datos, fuga de datos,
+benchmarking, V1, V2, tidymodels
 \end{abstract}
 
 % --- Índice ------------------------------------------------------------------

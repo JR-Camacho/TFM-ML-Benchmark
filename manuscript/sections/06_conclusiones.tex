@@ -5,27 +5,26 @@ predictivo en salud depende tanto de la capacidad de los algoritmos como de la
 calidad metodológica del flujo de preprocesamiento. Mediante un esquema modular
 y reproducible, se observó que los modelos de ensamble, específicamente Random
 Forest y XGBoost, lideraron la capacidad de discriminación con valores de AUC de
-hasta 0.920 en validación y 0.932 en evaluación externa en el escenario
-clínico-estadístico, y de hasta 0.974 en validación cruzada y 0.979 en
-evaluación externa en el escenario técnico-estadístico. Estos resultados indican
-que, ante variables fisiológicas con alta variabilidad, multicolinealidad y
-relaciones no lineales, los algoritmos basados en árboles presentan ventajas
-frente a aproximaciones basadas en distancia como KNN. La regresión logística
-también mostró un rendimiento relevante, con AUC superiores a 0.91 en el
-escenario biológico, lo que sugiere que parte de los
-predictores seleccionados mantienen una relación discriminativa estable con la
-mortalidad hospitalaria. La evaluación externa permitió contrastar la tendencia
-observada durante la validación sin utilizar los conjuntos de evaluación como
-criterio de selección.
+hasta 0.920 en validación y 0.932 en evaluación externa en V1 (Bio Data), y de
+hasta 0.974 en validación cruzada y 0.979 en evaluación externa en V2 (Tech
+Data). Estos resultados indican que, ante variables fisiológicas con alta
+variabilidad, multicolinealidad y relaciones no lineales, los algoritmos
+basados en árboles presentan ventajas frente a aproximaciones basadas en
+distancia como KNN. La regresión logística también mostró un rendimiento
+relevante, con AUC superiores a 0.91 en V1 (Bio Data), lo que sugiere que parte
+de los predictores seleccionados mantienen una relación discriminativa estable
+con la mortalidad hospitalaria. La evaluación externa permitió contrastar la
+tendencia observada durante la validación sin utilizar los conjuntos de
+evaluación como criterio de selección.
 
 El aporte principal de este trabajo reside en mostrar que el preprocesamiento
 informado por conocimiento clínico no debe evaluarse únicamente por la
 optimización métrica, sino también por su capacidad para preservar la validez
-metodológica del experimento. La comparación entre la estrategia basada en
-lógica clínica y la estrategia técnica reveló una paradoja relevante: aunque los
-métodos automatizados pueden alcanzar valores superiores de AUC, dichos
-resultados pueden estar influidos por la retención de variables con potenciales
-sesgos o riesgo de \textit{Data Leakage}. La eliminación de variables de
+metodológica del experimento. La comparación entre V1 (Bio Data) y V2 (Tech
+Data) reveló una paradoja relevante: aunque los métodos automatizados pueden
+alcanzar valores superiores de AUC, dichos resultados pueden estar influidos
+por la retención de variables con potenciales sesgos o riesgo de \textit{Data
+Leakage}. La eliminación de variables de
 seguimiento temporal y de estimaciones derivadas de modelos previos, junto con
 la imputación estratificada por grupo diagnóstico, permitió preservar mejor la
 coherencia biológica del conjunto de datos. Además, el análisis del carácter
