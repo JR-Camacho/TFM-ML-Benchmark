@@ -1,6 +1,6 @@
 ---
-title: "bio_model_train_no_cv"
-output:
+title: "bio_model_train_downsampling"
+output: 
   pdf_document: default
   html_document: default
 ---
@@ -8,6 +8,7 @@ output:
 ```{r}
 set.seed(123)
 ```
+
 
 ```{r}
 # Cargar librerías
@@ -27,10 +28,11 @@ source("../scripts/modeling_utils_tidymodels.R")
 train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
 valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
 test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
+test_bio_eval <- dplyr::bind_rows(valid_bio, test_bio)
 ```
 
 ```{r}
-train_bio
+head(train_bio)
 table(train_bio$hospdead)
 ```
 
@@ -38,11 +40,12 @@ table(train_bio$hospdead)
 ```{r}
 resultado_bio <- entrenar_benchmark(
   train_data = train_bio,
-  valid_data = valid_bio,
-  test_data = test_bio,
+  test_data = test_bio_eval,
   nombre_dataset = "df1_Bio",
-  usar_cv = FALSE,
+  usar_cv = TRUE,
+  folds = 5,
   grid_size = 10,
+  usar_downsampling = TRUE,
   clase_positiva = "Yes"
 )
 
@@ -66,17 +69,15 @@ resultados_validacion %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-generar_graficos_automaticos(resultados_validacion)
-```
-
-```{r}
 mejor_configuracion %>%
-  kbl() %>%
+  kbl(digits = 4) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
     position = "left"
   )
+
+generar_graficos_automaticos(resultados_validacion)
 ```
 
 ```{r}
@@ -109,9 +110,6 @@ mejor_test %>%
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
-```
 
-```{r}
-plot_roc_comparativo(resultado_bio$validation_fits, valid_bio, "ROC: Validacion - df1_Bio")
-plot_roc_comparativo(resultado_bio$validation_fits, test_bio, "ROC: Test Final - df1_Bio")
+plot_roc_comparativo(resultado_bio$validation_fits, test_bio_eval, "ROC: Test Final - df1_Bio")
 ```

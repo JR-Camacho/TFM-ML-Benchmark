@@ -20,58 +20,78 @@ library(kableExtra)
 ```
 
 ```{r}
-source("../scripts/modeling_utils.R")
+source("../scripts/modeling_utils_tidymodels.R")
 ```
 
 ```{r}
 # Cargamos los datasets procesados
 train <- readRDS("../data/processed/support2/df2/train_base.rds")
+valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
 test <- readRDS("../data/processed/support2/df2/test_base.rds")
-
-train_scaled <- readRDS("../data/processed/support2/df2/train_scaled.rds")
-test_scaled <- readRDS("../data/processed/support2/df2/test_scaled.rds")
+test_eval <- dplyr::bind_rows(valid, test)
 ```
 
 ```{r}
 head(train)
+table(train$hospdead)
 ```
 
-
 ```{r}
-# --- 1. Ejecución con los datos BASE ---
-modelos_base <- entrenar_benchmark(
-  train_data = train, 
-  nombre_dataset = "df2_Base"
-)
-
-resultados_base <- evaluar_benchmark(
-  modelos_lista = modelos_base, 
-  test_data = test, 
-  nombre_dataset = "df2_Base",
+resultado_tech <- entrenar_benchmark(
+  train_data = train,
+  test_data = test_eval,
+  nombre_dataset = "df2_Tech",
+  usar_cv = TRUE,
+  folds = 5,
+  grid_size = 10,
   clase_positiva = "Yes"
 )
-```
 
-
-```{r}
-# --- 2. Ejecución con los datos ESCALADOS ---
-modelos_scaled <- entrenar_benchmark(
-  train_data = train_scaled, 
-  nombre_dataset = "df2_Scaled",
-  scaled_df = TRUE
+resultados_validacion <- resultado_tech$validation
+resultados_test <- resultado_tech$test
+mejor_test <- resultado_tech$best_test
+mejor_configuracion <- dplyr::bind_cols(
+  tibble::tibble(Modelo = resultado_tech$best_model),
+  resultado_tech$best_params
 )
-
-resultados_scaled <- evaluar_benchmark(
-  modelos_lista = modelos_scaled, 
-  test_data = test_scaled, 
-  nombre_dataset = "df2_Scaled",
-  clase_positiva = "Yes"
-)
+variables_importantes <- resultado_tech$variable_importance
 ```
 
 ```{r}
-resultados_base %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+resultados_validacion %>%
+  kbl(digits = 3) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+mejor_configuracion %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  )
+
+generar_graficos_automaticos(resultados_validacion)
+```
+
+```{r}
+variables_importantes %>%
+  dplyr::slice_head(n = 10) %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = FALSE,
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+```
+
+```{r}
+resultados_test %>%
+  kbl(digits = 3, caption = "Test de todos los modelos") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -79,29 +99,16 @@ resultados_base %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_base)
-```
-
-```{r}
-resultados_scaled %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+mejor_test %>%
+  kbl(digits = 3, caption = "Test del mejor modelo") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
-
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_scaled)
 ```
 
 ```{r}
-# Para el dataset Base
-plot_roc_comparativo(modelos_base, test, "ROC: Modelos en Dataset Base")
-
-# Para el dataset Scaled
-plot_roc_comparativo(modelos_scaled, test_scaled, "ROC: Modelos en Dataset Scaled")
+plot_roc_comparativo(resultado_tech$validation_fits, test_eval, "ROC: Test Final - df2_Tech")
 ```
-

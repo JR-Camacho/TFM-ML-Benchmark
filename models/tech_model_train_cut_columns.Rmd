@@ -1,6 +1,6 @@
 ---
-title: "bio_model_train_no_cv"
-output:
+title: "tech_model_train_cut_columns"
+output: 
   pdf_document: default
   html_document: default
 ---
@@ -8,6 +8,7 @@ output:
 ```{r}
 set.seed(123)
 ```
+
 
 ```{r}
 # Cargar librerías
@@ -24,36 +25,41 @@ source("../scripts/modeling_utils_tidymodels.R")
 
 ```{r}
 # Cargamos los datasets procesados
-train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
-valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
-test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
+train <- readRDS("../data/processed/support2/df2/train_base.rds")
+valid <- readRDS("../data/processed/support2/df2/valid_base.rds")
+test <- readRDS("../data/processed/support2/df2/test_base.rds")
+test_eval <- dplyr::bind_rows(valid, test)
 ```
 
 ```{r}
-train_bio
-table(train_bio$hospdead)
+cols_to_delete <- c("prg2m", "prg6m", "sfdm2", "avtisst", "sps", "slos", "charges", "adlsc", "income")
+
+train <- dplyr::select(train, -dplyr::any_of(cols_to_delete))
+valid <- dplyr::select(valid, -dplyr::any_of(cols_to_delete))
+test <- dplyr::select(test, -dplyr::any_of(cols_to_delete))
+
+train
 ```
 
-
 ```{r}
-resultado_bio <- entrenar_benchmark(
-  train_data = train_bio,
-  valid_data = valid_bio,
-  test_data = test_bio,
-  nombre_dataset = "df1_Bio",
-  usar_cv = FALSE,
+resultado_tech <- entrenar_benchmark(
+  train_data = train,
+  test_data = test_eval,
+  nombre_dataset = "df2_Tech",
+  usar_cv = TRUE,
+  folds = 5,
   grid_size = 10,
   clase_positiva = "Yes"
 )
 
-resultados_validacion <- resultado_bio$validation
-resultados_test <- resultado_bio$test
-mejor_test <- resultado_bio$best_test
+resultados_validacion <- resultado_tech$validation
+resultados_test <- resultado_tech$test
+mejor_test <- resultado_tech$best_test
 mejor_configuracion <- dplyr::bind_cols(
-  tibble::tibble(Modelo = resultado_bio$best_model),
-  resultado_bio$best_params
+  tibble::tibble(Modelo = resultado_tech$best_model),
+  resultado_tech$best_params
 )
-variables_importantes <- resultado_bio$variable_importance
+variables_importantes <- resultado_tech$variable_importance
 ```
 
 ```{r}
@@ -65,11 +71,6 @@ resultados_validacion %>%
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
-
-generar_graficos_automaticos(resultados_validacion)
-```
-
-```{r}
 mejor_configuracion %>%
   kbl() %>%
   kable_styling(
@@ -77,6 +78,8 @@ mejor_configuracion %>%
     full_width = FALSE, 
     position = "left"
   )
+
+generar_graficos_automaticos(resultados_validacion)
 ```
 
 ```{r}
@@ -84,8 +87,8 @@ variables_importantes %>%
   dplyr::slice_head(n = 10) %>%
   kbl(digits = 4) %>%
   kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
-    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = FALSE,
     position = "left"
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
@@ -112,6 +115,5 @@ mejor_test %>%
 ```
 
 ```{r}
-plot_roc_comparativo(resultado_bio$validation_fits, valid_bio, "ROC: Validacion - df1_Bio")
-plot_roc_comparativo(resultado_bio$validation_fits, test_bio, "ROC: Test Final - df1_Bio")
+plot_roc_comparativo(resultado_tech$validation_fits, test_eval, "ROC: Test Final - df2_Tech")
 ```

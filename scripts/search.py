@@ -25,6 +25,10 @@ SCOPUS_MAX_RESULTS = int(os.getenv("SCOPUS_MAX_RESULTS", "40"))
 # AND (benchmarking OR "model comparison")
 # AND (biomedical OR clinical OR bioinformatics OR biological)
 # AND (dataset OR database OR "public dataset")"""
+# PUBMED_QUERY = """("machine learning" OR "supervised learning")
+# AND (benchmarking OR "model comparison")
+# AND (biomedical OR clinical OR bioinformatics OR biological)
+# AND (dataset OR database OR "public dataset")"""
 PUBMED_QUERY = """("machine learning" OR "supervised learning")
 AND (benchmarking OR "model comparison" OR evaluation)
 AND (classification OR prediction)

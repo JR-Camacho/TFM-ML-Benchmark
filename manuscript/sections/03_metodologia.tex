@@ -2,7 +2,7 @@
 
 \subsection{Enfoque metodológico}
 
-El diseño metodológico del presente trabajo es de carácter cuantitativo, experimental y comparativo. Se basa en la construcción de un benchmarking sistemático para determinar cómo las decisiones en la etapa de preparación de datos condicionan el rendimiento de modelos de aprendizaje supervisado en el dominio clínico.
+El diseño metodológico del presente trabajo se basa en la construcción de un benchmarking sistemático para determinar cómo las decisiones en la etapa de preparación de datos condicionan el rendimiento de modelos de aprendizaje supervisado en el dominio clínico.
 
 \subsection{Evaluación y selección de datasets}
 
@@ -10,7 +10,7 @@ El diseño metodológico del presente trabajo es de carácter cuantitativo, expe
 
 La fase inicial de selección de datos constituyó una etapa crítica en la
 configuración metodológica. El objetivo primordial no fue simplemente adquirir un conjunto de datos biomédicos, sino identificar un entorno de información que presentara una complejidad intrínseca y desafíos en el preprocesamiento, adecuados para validar la hipótesis central
-del estudio (Sección~\ref{sec:hipotesis}). Para ello, se requería un dataset que reflejara la heterogeneidad y los desafíos de los datos reales en salud, incluyendo valores faltantes, informativos, multicolinealidad fisiológica y el potencial de data leakage
+del estudio (Sección~\ref{sec:hipotesis}). Para ello, se requería un conjunto de datos que reflejara la heterogeneidad y los desafíos de los datos reales en salud, incluyendo valores faltantes, informativos, multicolinealidad fisiológica y el potencial de fuga de datos
 temporal o estructural.
 
 \textbf{Datasets evaluados y desestimados}
@@ -94,17 +94,11 @@ objetivos de este trabajo. Los criterios de evaluación considerados fueron:
     administrativos.
   \item Diversidad de Variables: La presencia de una mezcla amplia de variables
     continuas, categóricas, demográficas y administrativas.
-  \item Patrones de Missing Values: La existencia de valores faltantes no aleatorios
-    (Missing Not At Random, MNAR) que requieren imputación basada en
-    conocimiento clínico.
   \item Tamaño del Dataset: Un número suficiente de registros para asegurar la
     robustez estadística de los modelos y la estabilidad de las particiones.
 \end{itemize}
 
-En resumen, los datasets desestimados, aunque adecuados para tareas académicas
-controladas o interesantes por sus dominios, se desviaban del propósito de este trabajo al ofrecer
-una baja complejidad estructural, menor riqueza clínica y escasos patrones de
-valores faltantes informativos. Esto reduciría la capacidad de demostrar el
+Estos factores reducirían la capacidad de demostrar el
 impacto diferencial de un preprocesamiento avanzado y la comprensión de las
 decisiones tomadas bajo un razonamiento clínico-estadístico.
 
@@ -114,7 +108,7 @@ decisiones tomadas bajo un razonamiento clínico-estadístico.
 
 El dataset SUPPORT2 (Study to Understand Prognoses and Preferences for Outcomes
 and Risks of Treatments)~\citep{knaus_support2} fue seleccionado como el eje central de este estudio
-por su excepcional complejidad, riqueza de información y su fiel representación
+por su alta dimensionalidad, riqueza de información y su fiel representación
 de los desafíos inherentes a los datos hospitalarios del mundo real. Este
 dataset no solo ofrece una alta dimensionalidad con 9,105 registros y 47
 variables, sino que también presenta patrones de datos faltantes significativos
@@ -125,7 +119,7 @@ y un preprocesamiento rigurosos.
 
 La variable hospdead (mortalidad hospitalaria) fue elegida como la variable
 objetivo principal para el problema de clasificación binaria. Esta decisión se
-fundamenta en un análisis multidimensional que considera la naturaleza del
+fundamenta en un análisis detallado que considera la naturaleza del
 dataset, su contexto clínico original y las observaciones clave del EDA:
 
 \begin{enumerate}
@@ -135,8 +129,7 @@ dataset, su contexto clínico original y las observaciones clave del EDA:
     central a esta misión, caracterizando un evento bien definido dentro del
     período de hospitalización.
   \item Relevancia Clínica y Metodológica: La mortalidad intrahospitalaria es una
-    métrica de alto interés biomédico y educativo, fundamental para la
-    estratificación de riesgo, la toma de decisiones clínicas y la evaluación de
+    métrica de alto interés biomédico, fundamental para la predicción de riesgo, la toma de decisiones clínicas y la evaluación de
     la severidad del paciente. Al integrar múltiples variables
     fisiológicas, funcionales y clínicas agudas, está especialmente diseñado
     para modelar la evolución del paciente durante la hospitalización, haciendo
@@ -184,7 +177,8 @@ en la investigación de outcomes en pacientes críticos.
 \textbf{Tipos de variables presentes}
 
 La riqueza del dataset radica en su diversidad de 47 variables, que abarcan
-múltiples dominios:
+múltiples dominios. El diccionario completo de variables se presenta en el
+Anexo~\ref{sec:anexo-diccionario}.
 
 \begin{itemize}
   \item Variables Demográficas: Edad (age), sexo (sex), etnia (race), nivel de
@@ -237,7 +231,7 @@ altamente informativo:
   \item Variables con Moderada Ausencia de Datos (Missingness 5\% - 40\%):
     \begin{itemize}
       \item alb (Albúmina sérica): 37.03\% (3,372 registros).
-      \item bili (Bilirrubina sérica): 28.57\% (2,600 registros).
+      \item bili (Bilirrubina sérica): 28.57\% (2,601 registros).
       \item pafi (Índice de oxigenación Kirby): 25.54\% (2,325 registros). Se observó
         una menor ausencia en pacientes con patologías respiratorias (ej.,
         un 13.7\% en COPD), sugiriendo una recolección condicionada al protocolo
@@ -264,7 +258,7 @@ El análisis de las distribuciones y estadísticas descriptivas reveló una
 heterogeneidad considerable:
 
 \begin{itemize}
-  \item Sesgo Positivo Severo: Una gran mayoría de variables continuas, incluyendo
+  \item Sesgo Positivo: Una gran mayoría de variables continuas, incluyendo
     crea, bun, bili, wblc, charges, totcst, totmcst, slos (estancia
     hospitalaria) y hday (día de ingreso), muestran una fuerte asimetría
     positiva. Esto se manifiesta con una acumulación de registros en los valores
@@ -292,10 +286,10 @@ heterogeneidad considerable:
     la hospitalización.
 \end{itemize}
 
-\textbf{Análisis de correlación y detección de Data Leakage}
+\textbf{Análisis de correlación y detección de fuga de datos}
 
 La matriz de correlación reveló importantes relaciones lineales y potenciales
-fuentes de data leakage:
+fuentes de fuga de datos:
 
 \begin{itemize}
   \item Redundancia Alta: Se identificó una correlación perfecta (r = 1.0) entre
@@ -320,13 +314,13 @@ fuentes de data leakage:
     del sistema urinario.
 \end{itemize}
 
-\subsection{Construcción de estrategias de preprocessing}
+\subsection{Construcción de estrategias de preprocesamiento}
 
 Esta sección detalla las dos aproximaciones metodológicas diseñadas para el
 preprocesamiento del dataset SUPPORT2. La comparación de estas estrategias
 constituye el núcleo del experimento, permitiendo evaluar si la integración del
 conocimiento de dominio mejora la capacidad predictiva y la robustez de los
-modelos de Machine Learning frente a un enfoque puramente algorítmico.
+modelos de aprendizaje automático frente a un enfoque puramente algorítmico.
 
 \subsubsection{Estrategia clínico-estadística (V1)}
 
@@ -361,7 +355,7 @@ alta incertidumbre o riesgo metodológico.
     artificialmente la muestra, destruyendo el sentido biológico del dato.
 \end{itemize}
 
-\textbf{Prevención de Data Leakage}
+\textbf{Prevención de fuga de datos}
 
 \begin{itemize}
   \item Leakage de Modelos Previos: Las variables surv2m y surv6m fueron eliminadas
@@ -370,7 +364,7 @@ alta incertidumbre o riesgo metodológico.
     protocolo original de SUPPORT (JAMA, 1995), se identificó que prg2m y prg6m
     formaron parte de una intervención clínica posterior, lo que las inhabilita
     como predictores de línea base.
-  \item Leakage Temporal: Se eliminó d.time (tiempo de seguimiento) por su
+  \item Fuga temporal: Se eliminó d.time (tiempo de seguimiento) y slos (estancia hospitalaria) por su
     separación matemática perfecta con el desenlace hospdead, y se descartaron
     sps y avtisst por representar métricas procesadas que pueden verse alteradas
     por decisiones terapéuticas posteriores al ingreso.
@@ -421,12 +415,14 @@ Uno de los puntos más críticos fue el tratamiento de las escalas funcionales:
     ser una agrupación redundante de dzgroup, y adlsc por ser una versión ya
     imputada previamente en el estudio original sobre la cual se perdió el
     control metodológico.
-  \item Simplificación Económica: Se conservó únicamente charges (con solo un 2\% de
-    nulos) y se eliminaron totcst, totmcst e income por su alta correlación y
-    baja relevancia clínica directa frente a la mortalidad aguda.
+  \item Simplificación Económica: Se eliminaron charges (con solo un 2\% de
+    nulos), totcst, totmcst e income por su alta correlación y
+    baja relevancia clínica directa frente a la mortalidad aguda, además de que
+    son variables que no están disponibles al ingreso y pueden introducir fuga
+    de datos temporal.
 \end{itemize}
 
-Este conjunto de decisiones asegura que el Dataset 1 no solo sea
+Este conjunto de decisiones asegura que V1 no solo sea
 estadísticamente apto, sino clínicamente veraz, sentando las bases para un
 benchmark donde el conocimiento de dominio sea el factor diferencial.
 
@@ -448,12 +444,12 @@ benchmark donde el conocimiento de dominio sea el factor diferencial.
 \endfoot
 meanbp, hrt, resp, temp, sod, scoma, aps, crea & Eliminar observaciones & Eliminación puntual & Nulos mínimos en variables basales; se priorizó conservar registros clínicamente completos. \\
 race, dnr, edu & Imputar & Categoría ``Unknown'' & La ausencia se trató como información administrativa potencialmente útil. \\
-charges & Imputar & Mediana global & Baja proporción de nulos y utilidad como variable de contexto hospitalario. \\
 wblc, bili, alb, ph, pafi & Imputar & Mediana por dzgroup & Imputación condicionada por diagnóstico para preservar coherencia fisiológica. \\
 adls & Imputar & Valor 8 & Se codificó como ``No completado'', interpretando la ausencia como señal clínica. \\
 urine, bun, glucose & Eliminar variable & Missing elevado & La imputación masiva podía homogeneizar artificialmente variables clínicas relevantes. \\
 prg2m, prg6m, surv2m, surv6m & Eliminar variable & Riesgo de leakage & Variables pronósticas o derivadas de modelos previos, no adecuadas como predictores basales. \\
 death, d.time & Eliminar variable & Leakage directo y temporal & Incorporan información del desenlace o del seguimiento posterior. \\
+slos, charges & Eliminar variable & Información posterior & Estancia hospitalaria y cargos acumulados dependen de la evolución clínica y no estarían disponibles al ingreso. \\
 totcst, totmcst, income, sfdm2 & Eliminar variable & Missing/redundancia & Baja utilidad clínica directa o alta proporción de ausencia. \\
 dnrday, dzclass, adlsc & Eliminar variable & Redundancia y derivación & Información duplicada o ya procesada en variables relacionadas. \\
 adlp & Eliminar variable & Sesgo de recolección & Alto poder predictivo asociado al patrón de ausencia, no a una medición fisiológica estable. \\
@@ -463,20 +459,22 @@ sps, avtisst & Eliminar variable & Score derivado y leakage & Métricas procesad
 
 \subsubsection{Estrategia técnico-estadística (V2)}
 
-\textbf{Filosofía y Reglas Automáticas}
+\textbf{Filosofía y reglas técnico-estadísticas}
 
-Esta aproximación sigue un enfoque agnóstico al dominio, basado en la eficiencia
-computacional y en estándares de la ciencia de datos aplicada. En esta
-estrategia, el preprocesamiento es guiado por reglas automáticas y umbrales cuantitativos
-(thresholds), minimizando la intervención subjetiva y buscando la máxima
-reproducibilidad algorítmica.
+Esta aproximación sigue un enfoque técnico-estadístico menos dependiente del
+contexto clínico. Las decisiones de preprocesamiento se basan en criterios
+generales de partición, completitud de datos y medidas de tendencia central,
+sin incorporar razonamiento fisiológico específico para cada variable. Por ello,
+funciona como contraste metodológico frente a V1: reproduce decisiones comunes
+en flujos computacionales, pero con un componente más arbitrario y menos
+informado por el significado biomédico de las variables.
 
-\textbf{Criterios de Selección y Thresholds}
+\textbf{Criterios de Selección y Umbrales}
 
 \begin{itemize}
-  \item Regla del 35\% de Ausencia: Bajo este enfoque, se establece un umbral técnico
+  \item Regla del 35\% de Ausencia: Bajo este enfoque, se establece un umbral
     estricto: cualquier variable con más de un 35\% de valores faltantes es
-    eliminada automáticamente del estudio (alb, bun, glucose, urine, adlp,
+    eliminada del estudio (alb, bun, glucose, urine, adlp,
     totmcst). Se asume que el ruido introducido por la imputación masiva
     superaría el valor informativo de la variable.
   \item Eliminación por Redundancia Estadística: Se eliminan variables como dnrday
@@ -488,7 +486,7 @@ reproducibilidad algorítmica.
     predictores numéricos útiles, independientemente de su origen.
 \end{itemize}
 
-\textbf{Imputación Global (Agnóstica)}
+\textbf{Imputación Global}
 
 En lugar de considerar el diagnóstico o el contexto del paciente, se aplican
 técnicas de imputación masiva centralizada:
@@ -542,11 +540,11 @@ distorsionar el aprendizaje del algoritmo.
 
 \subsection{Preparación experimental}
 
-Este apartado describe el protocolo técnico y la metodología aplicados para la
+Aquí vamos a desglosar el protocolo técnico y la metodología aplicados para la
 construcción de los entornos experimentales. El diseño se fundamenta en la
 creación de dos flujos de procesamiento diferenciados, cuya comparación
 permitirá evaluar la eficiencia de la curación de datos basada en conocimiento
-de dominio frente a métodos automatizados.
+de dominio frente a métodos rígidos.
 
 \subsubsection{Protocolo de partición y estratificación de la muestra}
 
@@ -555,14 +553,40 @@ división del dataset original mediante un esquema de validación externa:
 
 \begin{itemize}
   \item Proporción de la muestra: Se determinó una división del 80\% para el conjunto
-    de entrenamiento y un 20\% para el conjunto de prueba independiente.
+    de entrenamiento, 10\% para el conjunto de validación y 10\% para el conjunto
+    de prueba independiente.
   \item Mecanismo de estratificación: Se implementó la función createDataPartition
     sobre la variable objetivo hospdead. Esta decisión estratégica asegura que
-    la prevalencia de la mortalidad hospitalaria sea equivalente en ambas
+    la prevalencia de la mortalidad hospitalaria sea equivalente en las tres
     particiones, mitigando sesgos de selección y garantizando que el modelo se
     entrene y evalúe sobre distribuciones de clase representativas del fenómeno
     clínico.
+  \item Uso de los subconjuntos: El conjunto de entrenamiento se utilizó para
+    ajustar los modelos y, cuando correspondía, ejecutar validación cruzada
+    interna. En los experimentos con CV, la selección de hiperparámetros y del
+    mejor modelo se realizó con los pliegues internos del entrenamiento, y la
+    evaluación externa se efectuó sobre la unión de validación y prueba. En los
+    experimentos sin CV, el conjunto de validación externo se utilizó para
+    comparar configuraciones y seleccionar el mejor modelo, reservando el
+    conjunto de prueba para la evaluación final.
 \end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{Caracterización de los conjuntos de entrenamiento utilizados en modelado.}
+  \label{tab:caracterizacion-modelado}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Escenario} & \textbf{Observaciones} & \textbf{Predictores} & \textbf{No} & \textbf{Yes} \\
+    \midrule
+    V1 -- Bio Data & 7,232 & 25 & 5,372 & 1,860 \\
+    V2 -- Tech Data & 7,166 & 35 & 5,311 & 1,855 \\
+    V2 -- Tech Data sin columnas de riesgo & 7,166 & 26 & 5,311 & 1,855 \\
+    V1 -- Bio Data con downsampling & 7,232 & 25 & 5,372 & 1,860 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsubsection{Estrategia V1: procesamiento clínico-estadístico}
 
@@ -570,12 +594,10 @@ Este flujo se diseñó bajo la premisa de preservar la coherencia biológica y e
 rigor fisiológico. Las decisiones tomadas en este entorno se detallan a
 continuación:
 
-\paragraph{Prevención de Data Leakage y depuración de variables}
-
-Se ejecutó una limpieza profunda orientada a eliminar variables que introdujeran
+Para la prevención de fuga de datos (Data Leakage), se ejecutó una limpieza profunda orientada a eliminar variables que introdujeran
 información posterior al ingreso o directamente ligada al desenlace. Se
-eliminaron columnas como death, d.time, surv2m y totcst. La razón fundamental es
-evitar la fuga de datos (Data Leakage); la inclusión de información "futura"
+eliminaron columnas como death, d.time, surv2m, slos y charges. La razón fundamental es
+evitar la fuga de datos (Data Leakage); la inclusión de información futura
 generaría modelos con una precisión artificialmente elevada pero carentes de
 utilidad en un escenario predictivo en tiempo real al ingreso del paciente.
 
@@ -610,19 +632,20 @@ Se aplicaron criterios diferenciados según la relevancia de la variable:
 
 \subsubsection{Estrategia V2: procesamiento técnico-estadístico}
 
-Este flujo representa una aproximación agnóstica al dominio clínico, optimizada
-mediante heurísticas técnicas y reglas de tendencia central global.
+Este flujo representa una aproximación técnico-estadística menos dependiente del
+dominio clínico, basada en umbrales de completitud, particiones estándar y
+reglas de tendencia central global.
 
-\paragraph{Criterios de limpieza y exclusión agresiva}
+\textbf{Criterios de limpieza y exclusión}
 
-A diferencia de la V1, se aplicó una decisión de exclusión más agresiva
-basada en la integridad técnica. Se eliminaron directamente variables con altos
-volúmenes de nulidad, como alb, glucose y bun, bajo la premisa de que un exceso
-de datos faltantes compromete la capacidad de recuperación fiable del predictor,
+A diferencia de la V1, se aplicó un criterio de exclusión basado principalmente
+en completitud y simplicidad operativa. Se eliminaron directamente variables con
+altos volúmenes de nulidad, como alb, glucose y bun, bajo la premisa de que un
+exceso de datos faltantes compromete la recuperación fiable del predictor,
 optando por un modelo con menos variables pero con mayor densidad de datos
-reales.
+observados.
 
-\paragraph{Tratamiento de nulos mediante estrategia de imputación global}
+\textbf{Tratamiento de nulos mediante estrategia de imputación global}
 
 En este escenario, el preprocesamiento se desvincula del contexto diagnóstico:
 
@@ -642,26 +665,35 @@ En este escenario, el preprocesamiento se desvincula del contexto diagnóstico:
 
 \subsubsection{Estandarización y normalización de variables}
 
-Para ambos entornos experimentales, se aplicó un protocolo de escalado Z-score
-sobre todas las variables numéricas:
+Para ambos entornos experimentales, la normalización se integró dentro del flujo
+de modelado mediante recetas de tidymodels. Aunque durante el preprocesamiento
+se conservaron versiones base y escaladas de los datos, el entrenamiento final
+se realizó sobre las versiones base, delegando la estandarización al flujo de
+modelado
+del modelo:
 
 \begin{itemize}
   \item Aislamiento de parámetros: Las estadísticas de normalización (media y
     desviación estándar) se calcularon exclusivamente con los datos de
-    entrenamiento.
+    entrenamiento dentro de la receta.
   \item Prevención de contaminación: Dichos parámetros se aplicaron posteriormente
-    al conjunto de prueba. Esta decisión estratégica es fundamental en ciencia
-    de datos para evitar la contaminación del modelo con información del
-    conjunto de evaluación, garantizando la integridad de la validación cruzada.
+    a los conjuntos de validación y prueba. Esta decisión estratégica es
+    fundamental en ciencia de datos para evitar la contaminación del modelo con
+    información de los conjuntos de evaluación, garantizando la integridad de la
+    comparación experimental.
+  \item Codificación consistente: Las variables categóricas fueron tratadas como
+    predictores nominales y transformadas a variables indicadoras dentro de la
+    misma receta, incorporando además control de niveles nuevos y eliminación de
+    predictores sin variabilidad.
 \end{itemize}
 
 \subsection{Marco Experimental y Selección de Algoritmos}
 
 El diseño experimental de esta investigación se fundamenta en un enfoque de
-benchmarking multinivel. El objetivo no es solo identificar el modelo con mayor
+benchmarking. El objetivo no es solo identificar el modelo con mayor
 capacidad predictiva, sino evaluar cómo la calidad intrínseca del dato
-(Estrategia Biológica vs. Técnica) y su tratamiento métrico (Escalamiento)
-impactan en dicha predicción.
+(Estrategia Biológica vs. Técnica), el esquema de validación y el manejo del
+desbalance impactan en dicha predicción.
 
 \subsubsection{Selección de Modelos Supervisados}
 
@@ -678,71 +710,60 @@ aprendizaje automático para garantizar una comparativa exhaustiva:
     \begin{itemize}
       \item Decision Tree (rpart): Para capturar relaciones no lineales simples y
         estructuras de decisión.
-      \item C5.0: Algoritmo avanzado de reglas y árboles que optimiza la ganancia de
-        información.
     \end{itemize}
   \item Modelos de Ensamble (Ensemble Learning):
     \begin{itemize}
       \item Random Forest (rf): Para reducir la varianza mediante bagging y mejorar
         la robustez frente a outliers.
-      \item Stochastic Gradient Boosting (GBM): Para optimizar la precisión mediante
-        boosting secuencial.
+      \item XGBoost: Para optimizar la capacidad predictiva mediante boosting
+        secuencial regularizado.
+    \end{itemize}
+  \item Modelos Probabilísticos:
+    \begin{itemize}
+      \item Naive Bayes: Para incorporar una referencia probabilística simple,
+        basada en independencia condicional entre predictores.
     \end{itemize}
   \item Modelos Basados en Distancia:
     \begin{itemize}
-      \item K-Nearest Neighbors (KNN): Integrado exclusivamente en los escenarios de
-        datos escalados (z-score), debido a su sensibilidad a la magnitud de las
-        variables.
+      \item K-Nearest Neighbors (KNN): Integrado dentro del mismo flujo
+        normalizado, debido a su sensibilidad a la magnitud de las variables.
     \end{itemize}
 \end{itemize}
 
 \subsubsection{Estrategias de Validación y Automatización}
 
 La experimentación se ha modularizado mediante el desarrollo de una librería de
-utilidades propia (modeling\_utils.R), lo que permite una ejecución sistemática y
-reduce el error humano. Se definieron dos metodologías de validación:
+utilidades propia (modeling\_utils\_tidymodels.R), lo que permite una ejecución sistemática y centralizada. Se definieron dos metodologías de validación:
 
 \begin{enumerate}
   \item Validación Cruzada (5-fold Cross-Validation): Empleada para la estimación
-    del error de generalización. Al dividir el conjunto de entrenamiento en 5
-    pliegues, se asegura que cada observación sea utilizada tanto para
-    entrenamiento como para validación interna, mitigando el riesgo de
-    sobreajuste (overfitting).
-  \item Entrenamiento Simple (Hold-out): Utilizado para evaluar el rendimiento
-    puro sobre un conjunto de prueba independiente (test\_bio o test\_tech).
-    Esta estrategia permite observar el comportamiento de los modelos en su
-    estado base y comparar la eficiencia computacional frente a la validación
-    cruzada.
+    del error de generalización durante el ajuste inicial. Al dividir el
+    conjunto de entrenamiento en 5 pliegues, se asegura que cada observación sea
+    utilizada tanto para entrenamiento como para validación interna, mitigando el
+    riesgo de sobreajuste (overfitting). La selección de hiperparámetros y del
+    mejor modelo se realizó con las métricas internas de estos pliegues.
+  \item Entrenamiento Simple (sin CV): Utilizado para evaluar el ajuste directo de
+    modelos sobre el conjunto de entrenamiento y comparar sus configuraciones en
+    el conjunto de validación. Esta estrategia permite observar el comportamiento
+    de los modelos en su estado base y comparar la eficiencia de los modelos
+    frente a la validación cruzada.
 \end{enumerate}
 
 \subsubsection{Organización computacional del proyecto}
 
 El flujo experimental se implementó en el ecosistema R mediante archivos
 RMarkdown, separando las etapas de análisis exploratorio, preprocesamiento,
-entrenamiento, evaluación y generación del manuscrito. Esta organización permitió
+entrenamiento, evaluación, test, generación metrica y comparación de en base a metricas de rendimiento. Esta organización permitió
 mantener trazabilidad entre los datos originales, las transformaciones aplicadas,
-los modelos entrenados y las figuras reportadas.
-
-\begin{lstlisting}[basicstyle=\small\ttfamily]
-TFM-ML-Benchmark/
-|-- data/
-|   |-- raw/
-|   `-- processed/support2/
-|       |-- df1/  # estrategia clinico-estadistica
-|       `-- df2/  # estrategia tecnico-estadistica
-|-- eda/
-|-- preprocessing/
-|-- models/
-|-- scripts/modeling_utils.R
-|-- figures/
-`-- manuscript/
-\end{lstlisting}
+los modelos entrenados, validados y testeados. La estructura detallada de
+carpetas del proyecto se presenta en el Anexo~\ref{sec:anexo-estructura}.
 
 Las principales librerías utilizadas incluyeron tidyverse, dplyr, ggplot2,
-caret, pROC, DataExplorer, corrplot, Hmisc, knitr, kableExtra, plotly y
-htmltools. La reproducibilidad se apoyó en particiones de entrenamiento y prueba
-persistidas, versiones base y escaladas de los datos procesados, semillas de
-aleatorización y funciones centralizadas en modeling\_utils.R para entrenar,
+tidymodels, workflows, recipes, parsnip, tune, yardstick, rsample, pROC,
+DataExplorer, corrplot, Hmisc, knitr, kableExtra, plotly, htmltools, caret y themis. La
+reproducibilidad se apoyó en particiones de entrenamiento, validación y prueba
+persistidas, versiones base de los datos procesados, semillas de aleatorización
+y funciones centralizadas en modeling\_utils\_tidymodels.R para entrenar,
 evaluar y comparar los modelos bajo criterios homogéneos.
 
 \subsubsection{Arquitectura del Flujo de Trabajo (V1 vs. V2)}
@@ -759,40 +780,86 @@ RMarkdown (.Rmd) independientes, lo que permite una trazabilidad total:
     de valores faltantes).
 \end{itemize}
 
-En cada archivo, se ejecutan de forma paralela dos sub-escenarios: Base (datos
-originales con su escala nativa) y Scaled (datos estandarizados mediante
-z-score), garantizando una comparación metodológicamente equivalente entre
-escenarios.
+En cada estrategia se ejecutaron dos sub-escenarios principales: entrenamiento
+con validación cruzada y entrenamiento simple sin validación cruzada. Ambos
+parten de los datos base y aplican las transformaciones necesarias dentro de la
+receta de tidymodels, favoreciendo una comparación metodológicamente consistente
+entre escenarios. Además, se incorporaron dos análisis complementarios: una
+versión de V2 con eliminación de variables potencialmente problemáticas por
+leakage o baja coherencia biológica, y un experimento V1 con downsampling dentro
+de la validación cruzada para estudiar el efecto del desbalance sobre la
+sensibilidad.
 
 \subsubsection{Configuración de Hiperparámetros y Control}
 
-Independientemente del modelo, se ha unificado el entrenamiento mediante la
-función trainControl de la librería caret~\citep{kuhn_caret}, configurada con:
+Independientemente del modelo, se ha unificado el entrenamiento mediante
+workflows de tidymodels, integrando receta, especificación del modelo,
+búsqueda de hiperparámetros y evaluación probabilística:
 
 \begin{itemize}
-  \item classProbs = TRUE: Para la generación de curvas ROC.
-  \item summaryFunction = twoClassSummary: Para priorizar métricas probabilísticas.
-  \item verboseIter = TRUE: Para el seguimiento en tiempo real de la convergencia
-    del algoritmo durante la ejecución experimental.
+  \item Generación de probabilidades de clase: Para la construcción de curvas ROC.
+  \item Optimización por ROC-AUC: Para priorizar la capacidad discriminativa global
+    durante la selección de configuraciones.
+  \item Registro de la mejor configuración: Para conservar los hiperparámetros del
+    modelo con mayor rendimiento. En CV, este criterio se aplicó sobre las
+    métricas internas de los pliegues; en entrenamiento simple, sobre el conjunto
+    de validación externo.
 \end{itemize}
+
+La Tabla~\ref{tab:config-modelos} resume los hiperparámetros ajustados en cada
+familia de modelos y los rangos utilizados en el entrenamiento simple sin CV.
+En los escenarios con validación cruzada se mantuvo el mismo conjunto de
+hiperparámetros por modelo, pero la construcción de la grilla se realizó con
+\texttt{tune\_grid()} y \texttt{grid\_size = 10}, usando los rangos por defecto
+definidos por tidymodels/dials para cada parámetro. En los escenarios sin CV se
+empleó una grilla manual de tamaño equivalente para evaluar cada combinación
+contra el conjunto de validación externo. Por esta razón, las configuraciones
+óptimas obtenidas con CV pueden ubicarse fuera de los rangos manuales definidos
+para el entrenamiento simple.
+
+\begin{table}[H]
+  \centering
+  \caption{Configuración de hiperparámetros por modelo.}
+  \label{tab:config-modelos}
+  \scriptsize
+  \begin{tabular}{p{0.22\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
+    \toprule
+    \textbf{Modelo} & \textbf{Hiperparámetros ajustados} & \textbf{Grilla manual sin CV / configuración base} \\
+    \midrule
+    Logistic Regression & penalty, mixture & penalty: $10^{-6}$--$10^{0}$; mixture: 0--1; motor glmnet. \\
+    Decision Tree & cost\_complexity, tree\_depth, min\_n & cost\_complexity: $10^{-6}$--$10^{-1}$; tree\_depth: 1--15; min\_n: 2--20; motor rpart. \\
+    Random Forest & mtry, min\_n & mtry: 1--p, donde p es el número de predictores tras la receta; min\_n: 2--20; trees fijo en 500; motor ranger. \\
+    Naive Bayes & smoothness, Laplace & smoothness: 0.5--1.5; Laplace: 0--3; motor klaR. \\
+    XGBoost & trees, tree\_depth, learn\_rate, loss\_reduction, min\_n & trees: 200--700; tree\_depth: 2--8; learn\_rate: $10^{-4}$--$10^{-1}$; loss\_reduction: $10^{-6}$--$10^{1}$; min\_n: 2--20. \\
+    KNN & neighbors, weight\_func, dist\_power & neighbors entre 3 y el máximo permitido por dimensión/tamaño muestral; weight\_func: rectangular, triangular y epanechnikov; dist\_power: 1 o 2. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+El experimento con downsampling se implementó con themis dentro de la receta de
+tidymodels. Esta operación se activa únicamente en el flujo con validación
+cruzada, por lo que el remuestreo se aplica a cada partición de entrenamiento
+de los folds y no al dataset completo ni a los subconjuntos de evaluación.
 
 \subsection{Métricas de Evaluación de Rendimiento}
 
 Dado que las métricas de clasificación se describen conceptualmente en la
 Sección~\ref{sec:metricas-clasificacion}, este apartado delimita únicamente su
 uso dentro del protocolo experimental. Para cada modelo y escenario se
-reportaron AUC-ROC, sensibilidad, especificidad y accuracy mediante la función
-evaluar\_benchmark.
+reportaron AUC-ROC, sensibilidad, especificidad, accuracy y F1-score mediante
+funciones centralizadas de evaluación.
 
 El AUC-ROC se utilizó como métrica principal para comparar la capacidad
 discriminativa global entre algoritmos y estrategias de preprocesamiento. La
 sensibilidad y la especificidad se emplearon para interpretar el balance entre
-la detección de pacientes fallecidos y supervivientes, respectivamente. Accuracy
-se mantuvo como métrica complementaria, interpretada con cautela debido al
-desbalance moderado de la variable hospdead.
+la detección de pacientes fallecidos y supervivientes, respectivamente. El
+F1-score se utilizó como medida complementaria para valorar el equilibrio entre
+precisión y recall de la clase positiva. Accuracy se mantuvo como métrica
+complementaria, interpretada con cautela debido al desbalance moderado de la
+variable hospdead.
 
 Además de las métricas tabulares, se generaron curvas ROC comparativas para cada
 escenario experimental. Estas curvas se presentan en las
-Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v2-scaled-nocv} y permiten contrastar
+Figuras~\ref{fig:roc-v1-cv}--\ref{fig:roc-v1-down} y permiten contrastar
 visualmente el comportamiento relativo de los modelos en el espacio de
 sensibilidad frente a 1-especificidad.

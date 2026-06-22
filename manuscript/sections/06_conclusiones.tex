@@ -4,34 +4,38 @@ La ejecución de esta investigación permite concluir que la robustez de un sist
 predictivo en salud depende tanto de la capacidad de los algoritmos como de la
 calidad metodológica del flujo de preprocesamiento. Mediante un esquema modular
 y reproducible, se observó que los modelos de ensamble, específicamente Random
-Forest y Gradient Boosting Machine (GBM), lideraron la capacidad de
-discriminación con valores de AUC de 0.933 en el escenario clínico-estadístico
-y de hasta 0.972 en el escenario técnico-estadístico. Estos resultados indican
-que, ante variables fisiológicas con alta variabilidad, multicolinealidad y
-relaciones no lineales, los algoritmos basados en árboles presentan ventajas
-frente a aproximaciones lineales o basadas en distancia como KNN. La regresión
-logística también mostró un rendimiento relevante, con un AUC de 0.918 en el
-escenario biológico, lo que sugiere que parte de los predictores seleccionados
-mantienen una relación discriminativa estable con la mortalidad hospitalaria.
-Por el contrario, la inestabilidad del árbol de decisión simple (rpart) en los
-escenarios sin validación cruzada subraya la necesidad de emplear metodologías
-de remuestreo y evaluación probabilística para mejorar la estabilidad de las
-predicciones en entornos biomédicos.
+Forest y XGBoost, lideraron la capacidad de discriminación con valores de AUC de
+hasta 0.920 en validación y 0.932 en evaluación externa en V1 (Bio Data), y de
+hasta 0.974 en validación cruzada y 0.979 en evaluación externa en V2 (Tech
+Data). Estos resultados indican que, ante variables fisiológicas con alta
+variabilidad, multicolinealidad y relaciones no lineales, los algoritmos
+basados en árboles presentan ventajas frente a aproximaciones basadas en
+distancia como KNN. La regresión logística también mostró un rendimiento
+relevante, con AUC superiores a 0.91 en V1 (Bio Data), lo que sugiere que parte
+de los predictores seleccionados mantienen una relación discriminativa estable
+con la mortalidad hospitalaria. La evaluación externa permitió contrastar la
+tendencia observada durante la validación sin utilizar los conjuntos de
+evaluación como criterio de selección.
 
 El aporte principal de este trabajo reside en mostrar que el preprocesamiento
 informado por conocimiento clínico no debe evaluarse únicamente por la
 optimización métrica, sino también por su capacidad para preservar la validez
-metodológica del experimento. La comparación entre la estrategia basada en
-lógica clínica y la estrategia técnica reveló una paradoja relevante: aunque los
-métodos automatizados pueden alcanzar valores superiores de AUC, dichos
-resultados pueden estar influidos por la retención de variables con potenciales
-sesgos o riesgo de \textit{Data Leakage}. La eliminación de variables de
+metodológica del experimento. La comparación entre V1 (Bio Data) y V2 (Tech
+Data) reveló una paradoja relevante: aunque los métodos automatizados pueden
+alcanzar valores superiores de AUC, dichos resultados pueden estar influidos
+por la retención de variables con potenciales sesgos o riesgo de \textit{Data
+Leakage}. La eliminación de variables de
 seguimiento temporal y de estimaciones derivadas de modelos previos, junto con
 la imputación estratificada por grupo diagnóstico, permitió preservar mejor la
 coherencia biológica del conjunto de datos. Además, el análisis del carácter
 informativo de los valores faltantes en las escalas de dependencia funcional
 mostró que la ausencia de datos no siempre representa un error técnico, sino que
-puede constituir una señal clínica relevante. Como limitación principal, la
+puede constituir una señal clínica relevante. Los experimentos complementarios
+aportaron dos observaciones relevantes: al eliminar en V2 columnas con riesgo de
+leakage o baja disponibilidad prospectiva, el rendimiento se aproximó al de V1;
+y al aplicar downsampling dentro de la validación cruzada, aumentó la
+sensibilidad hacia la clase positiva, aunque con una reducción relativa de la
+especificidad. Como limitación principal, la
 validez de estos hallazgos se encuentra acotada a la cohorte SUPPORT2 y debe ser
 interpretada con cautela fuera de este contexto. En conjunto, el estudio
 respalda la integración del razonamiento clínico en el preprocesamiento como una

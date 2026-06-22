@@ -14,6 +14,18 @@
 *.pdf
 *.docx
 
+# Artefactos de compilacion LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+
 # Cache de RMarkdown / Quarto
 _cache/
 *_cache/
@@ -21,9 +33,12 @@ _cache/
 # Entornos virtuales / paquetes
 renv/library/
 renv/staging/
+.R/library/
 
 # Datos pesados o sensibles
-data
+data/raw/breast+cancer+wisconsin+diagnostic/
+data/raw/Chronic_Kidney_Disease/
+data/raw/parkinsons/
 
 # PDFS AND HTMLS
 *.pdf

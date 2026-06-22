@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.26)  15 JUN 2026 10:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.26)  22 JUN 2026 02:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -886,27 +886,35 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \openout7 = `main.lot'.
 
  [6] (./sections/01_introduccion.tex [7]) (./sections/02_estado_del_arte.tex [8] [9] [10] [11]) (./sections/03_metodologia.tex [12] [13] [14] [15] [16] [17] [18] [19] [20]
-Underfull \hbox (badness 5726) in paragraph at lines 449--450
+Underfull \hbox (badness 5726) in paragraph at lines 443--444
 []|\T1/lmr/m/n/10 (+20) Nulos mín-i-mos en vari-ables
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 458--458
+Underfull \hbox (badness 5359) in paragraph at lines 450--451
+\T1/lmr/m/n/10 (+20) acu-mu-la-dos de-pen-den de la
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 []|\T1/lmr/m/n/10 (+20) Redundancia y
  []
 
 ignored error: Infinite glue shrinkage found in box being split [21] [22]
-Underfull \hbox (badness 1107) in paragraph at lines 524--524
+Underfull \hbox (badness 1107) in paragraph at lines 520--520
 \T1/lmr/m/n/10 (+20) sod, scoma, sps, aps,
  []
 
 
-Underfull \hbox (badness 7740) in paragraph at lines 526--526
+Underfull \hbox (badness 7740) in paragraph at lines 522--522
 \T1/lmr/m/n/10 (+20) pafi, prg2m, prg6m,
  []
 
-[23] [24{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [25] [26]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 726.
+[23]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 577.
+ [24] [25{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [26] [27]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 810.
  (/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -914,121 +922,392 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [27]) (./sections/04_resultados.tex
-<../figures/support2_missing_values.png, id=522, 469.755pt x 290.08376pt>
+ [28]
+Underfull \hbox (badness 10000) in paragraph at lines 827--827
+[]|\T1/lmr/m/n/8 (+20) cost_complexity, tree_depth,
+ []
+
+
+Underfull \hbox (badness 7631) in paragraph at lines 830--830
+[]|\T1/lmr/m/n/8 (+20) trees, tree_depth, learn_rate,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 831--831
+[]|\T1/lmr/m/n/8 (+20) neighbors, weight_func,
+ []
+
+) (./sections/04_resultados.tex
+<../figures/support2_missing_values.png, id=547, 469.755pt x 290.08376pt>
 File: ../figures/support2_missing_values.png Graphic file (type png)
 <use ../figures/support2_missing_values.png>
 Package pdftex.def Info: ../figures/support2_missing_values.png  used on input line 9.
 (pdftex.def)             Requested size: 455.24411pt x 281.12416pt.
- [28]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 21.
- [29 <../figures/support2_missing_values.png>]
-<../figures/dis_continua_1.png, id=534, 469.755pt x 290.08376pt>
+ [29{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}] [30 <../figures/support2_missing_values.png>]
+<../figures/dis_continua_1.png, id=563, 469.755pt x 290.08376pt>
 File: ../figures/dis_continua_1.png Graphic file (type png)
 <use ../figures/dis_continua_1.png>
 Package pdftex.def Info: ../figures/dis_continua_1.png  used on input line 70.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_continua_2.png, id=535, 469.755pt x 290.08376pt>
+<../figures/dis_continua_2.png, id=564, 469.755pt x 290.08376pt>
 File: ../figures/dis_continua_2.png Graphic file (type png)
 <use ../figures/dis_continua_2.png>
 Package pdftex.def Info: ../figures/dis_continua_2.png  used on input line 77.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
- [30]
-<../figures/dis_categorical_1.png, id=540, 469.755pt x 290.08376pt>
+ [31]
+<../figures/dis_categorical_1.png, id=570, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_1.png Graphic file (type png)
 <use ../figures/dis_categorical_1.png>
 Package pdftex.def Info: ../figures/dis_categorical_1.png  used on input line 91.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_2.png, id=541, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_2.png, id=571, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_2.png Graphic file (type png)
 <use ../figures/dis_categorical_2.png>
 Package pdftex.def Info: ../figures/dis_categorical_2.png  used on input line 98.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_3.png, id=542, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_3.png, id=572, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_3.png Graphic file (type png)
 <use ../figures/dis_categorical_3.png>
 Package pdftex.def Info: ../figures/dis_categorical_3.png  used on input line 105.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/dis_categorical_4.png, id=543, 469.755pt x 290.08376pt>
+<../figures/dis_categorical_4.png, id=573, 469.755pt x 290.08376pt>
 File: ../figures/dis_categorical_4.png Graphic file (type png)
 <use ../figures/dis_categorical_4.png>
 Package pdftex.def Info: ../figures/dis_categorical_4.png  used on input line 112.
 (pdftex.def)             Requested size: 218.51521pt x 134.93623pt.
-<../figures/correlation_matrix.png, id=544, 469.755pt x 290.08376pt>
+<../figures/correlation_matrix.png, id=574, 469.755pt x 290.08376pt>
 File: ../figures/correlation_matrix.png Graphic file (type png)
 <use ../figures/correlation_matrix.png>
 Package pdftex.def Info: ../figures/correlation_matrix.png  used on input line 124.
 (pdftex.def)             Requested size: 455.24411pt x 281.12416pt.
- [31 <../figures/dis_continua_1.png> <../figures/dis_continua_2.png> <../figures/dis_categorical_1.png> <../figures/dis_categorical_2.png> <../figures/dis_categorical_3.png> <../figures/dis_categorical_4.png>] [32 <../figures/correlation_matrix.png>]
-<../figures/roc_v1_cv.png, id=565, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_cv.png Graphic file (type png)
-<use ../figures/roc_v1_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_cv.png  used on input line 166.
+ [32 <../figures/dis_continua_1.png> <../figures/dis_continua_2.png> <../figures/dis_categorical_1.png> <../figures/dis_categorical_2.png> <../figures/dis_categorical_3.png> <../figures/dis_categorical_4.png>] [33 <../figures/correlation_matrix.png>]
+<../figures/v1_roc_test.png, id=593, 1405.25pt x 868.24374pt>
+File: ../figures/v1_roc_test.png Graphic file (type png)
+<use ../figures/v1_roc_test.png>
+Package pdftex.def Info: ../figures/v1_roc_test.png  used on input line 200.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [33 <../figures/roc_v1_cv.png>]
-<../figures/roc_v1_scaled_cv.png, id=573, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_scaled_cv.png Graphic file (type png)
-<use ../figures/roc_v1_scaled_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_scaled_cv.png  used on input line 199.
+ [34] [35 <../figures/v1_roc_test.png>]
+<../figures/v1_roc_test_no_cv.png, id=603, 1405.25pt x 868.24374pt>
+File: ../figures/v1_roc_test_no_cv.png Graphic file (type png)
+<use ../figures/v1_roc_test_no_cv.png>
+Package pdftex.def Info: ../figures/v1_roc_test_no_cv.png  used on input line 258.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [34 <../figures/roc_v1_scaled_cv.png>]
-<../figures/roc_v1_no_cv.png, id=582, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_no_cv.png Graphic file (type png)
-<use ../figures/roc_v1_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_no_cv.png  used on input line 234.
+ [36 <../figures/v1_roc_test_no_cv.png>]
+<../figures/v2_roc_test.png, id=609, 1405.25pt x 868.24374pt>
+File: ../figures/v2_roc_test.png Graphic file (type png)
+<use ../figures/v2_roc_test.png>
+Package pdftex.def Info: ../figures/v2_roc_test.png  used on input line 317.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [35 <../figures/roc_v1_no_cv.png>]
-<../figures/roc_v1_scaled_no_cv.png, id=590, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v1_scaled_no_cv.png Graphic file (type png)
-<use ../figures/roc_v1_scaled_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v1_scaled_no_cv.png  used on input line 267.
+ [37 <../figures/v2_roc_test.png>]
+<../figures/v2_roc_test_no_cv.png, id=616, 1405.25pt x 868.24374pt>
+File: ../figures/v2_roc_test_no_cv.png Graphic file (type png)
+<use ../figures/v2_roc_test_no_cv.png>
+Package pdftex.def Info: ../figures/v2_roc_test_no_cv.png  used on input line 373.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [36 <../figures/roc_v1_scaled_no_cv.png>]
-<../figures/roc_v2_cv.png, id=598, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_cv.png Graphic file (type png)
-<use ../figures/roc_v2_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_cv.png  used on input line 301.
+ [38 <../figures/v2_roc_test_no_cv.png>]
+<../figures/v2_roc_test_cut.png, id=622, 1405.25pt x 868.24374pt>
+File: ../figures/v2_roc_test_cut.png Graphic file (type png)
+<use ../figures/v2_roc_test_cut.png>
+Package pdftex.def Info: ../figures/v2_roc_test_cut.png  used on input line 431.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [37 <../figures/roc_v2_cv.png>]
-<../figures/roc_v2_scaled_cv.png, id=607, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_scaled_cv.png Graphic file (type png)
-<use ../figures/roc_v2_scaled_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_scaled_cv.png  used on input line 334.
+ [39] [40 <../figures/v2_roc_test_cut.png>]
+<../figures/v1_roc_test_down.png, id=633, 1405.25pt x 868.24374pt>
+File: ../figures/v1_roc_test_down.png Graphic file (type png)
+<use ../figures/v1_roc_test_down.png>
+Package pdftex.def Info: ../figures/v1_roc_test_down.png  used on input line 492.
 (pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [38 <../figures/roc_v2_scaled_cv.png>]
-<../figures/roc_v2_no_cv.png, id=615, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_no_cv.png Graphic file (type png)
-<use ../figures/roc_v2_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_no_cv.png  used on input line 368.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
- [39 <../figures/roc_v2_no_cv.png>]
-<../figures/roc_v2_scaled_no_cv.png, id=623, 1405.25pt x 868.24374pt>
-File: ../figures/roc_v2_scaled_no_cv.png Graphic file (type png)
-<use ../figures/roc_v2_scaled_no_cv.png>
-Package pdftex.def Info: ../figures/roc_v2_scaled_no_cv.png  used on input line 400.
-(pdftex.def)             Requested size: 386.96027pt x 239.0791pt.
-) (./sections/05_discusion.tex [40 <../figures/roc_v2_scaled_no_cv.png>] [41]) (./sections/06_conclusiones.tex) [42] [43] [44] (./main.bbl [45]) [46] (./main.aux)
+) (./sections/05_discusion.tex [41 <../figures/v1_roc_test_down.png>] [42]) (./sections/06_conclusiones.tex) [43] [44] [45] (./main.bbl [46]) [47] (./sections/07_anexos.tex
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 36--36
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 37--37
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 38--38
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 40--40
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 41--41
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 42--42
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 43--43
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Underfull \hbox (badness 1502) in paragraph at lines 43--43
+[]|\T1/lmr/m/n/10.95 (+20) Categoría gen-eral de la en-fer-medad
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--44
+[]|\T1/lmr/m/n/10.95 (+20) ``ARF/MOSF'',
+ []
+
+
+Overfull \hbox (8.95482pt too wide) in paragraph at lines 43--44
+\T1/lmr/m/n/10.95 (-20) ``COPD/CHF/Cirrhosis'',
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 44--44
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+[]|\T1/lmr/m/n/10.95 (+20) Número de co-mor-bil-i-dades (en-fer-
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 45--45
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 46--47
+[]|\T1/lmr/m/n/10.95 (+20) ``under $11k'', ``$11-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
+\T1/lmr/m/n/10.95 (+20) $25k'', ``$25-$50k'',
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 47--47
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 48--48
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 49--49
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Underfull \hbox (badness 4899) in paragraph at lines 49--49
+[]|\T1/lmr/m/n/10.95 (+20) Costo to-tal cal-cu-lado me-di-ante la
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 50--50
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 51--51
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 52--52
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 53--53
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 54--54
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 55--55
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 56--56
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 58--58
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 59--59
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 60--60
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 61--61
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 62--62
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 63--63
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Underfull \hbox (badness 3229) in paragraph at lines 63--64
+[]|\T1/lmr/m/n/10.95 (+20) no dnr, dnr be-fore
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 64--64
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 65--65
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 66--66
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 67--67
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Underfull \hbox (badness 5288) in paragraph at lines 67--68
+[]|\T1/lmr/m/n/10.95 (+20) Latidos por min-uto
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 68--68
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 69--69
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 70--70
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
+[]|\T1/lmr/m/n/10.95 (+20) Índice de ox-i-ge-nación Kirby
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
+\T1/lmr/m/n/10.95 (+20) ($\OML/lmm/m/it/10.95 PaO[]=FiO[]$\T1/lmr/m/n/10.95 (+20) ). In-di-cador clínico
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 71--71
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 72--72
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 73--73
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 74--74
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 75--75
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 79--79
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 80--80
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+
+Overfull \hbox (10.27406pt too wide) in paragraph at lines 81--81
+[]|\T1/lmr/m/n/10.95 (-20) Categórico| 
+ []
+
+
+Overfull \hbox (3.07773pt too wide) in paragraph at lines 82--82
+[]|\T1/lmr/m/n/10.95 (-20) Continuo| 
+ []
+
+ignored error: Infinite glue shrinkage found in box being split [48]
+ignored error: Infinite glue shrinkage found in box being split [49]
+ignored error: Infinite glue shrinkage found in box being split [50{/Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]) [51] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 2184B319BFB12DDDA8BAD151994273D5;13483.
+(rerunfilecheck)             Checksum: CBC97DBF76AC62C3878A2332453C83EC;14569.
  ) 
 Here is how much of TeX's memory you used:
- 35375 strings out of 469514
- 721986 string characters out of 5469022
- 1166424 words of memory out of 5000000
- 63093 multiletter control sequences out of 15000+600000
- 721247 words of font info for 224 fonts, out of 8000000 for 9000
+ 35434 strings out of 469514
+ 722481 string characters out of 5469022
+ 1193423 words of memory out of 5000000
+ 63100 multiletter control sequences out of 15000+600000
+ 729309 words of font info for 248 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 98i,11n,118p,1001b,1289s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (46 pages, 1840022 bytes).
+ 98i,12n,118p,1001b,1291s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/joserafaelcamachocustodio/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (51 pages, 1720591 bytes).
 PDF statistics:
- 770 PDF objects out of 1000 (max. 8388607)
- 657 compressed objects within 7 object streams
- 180 named destinations out of 1000 (max. 500000)
- 54805 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 832 PDF objects out of 1000 (max. 8388607)
+ 707 compressed objects within 8 object streams
+ 183 named destinations out of 1000 (max. 500000)
+ 60979 words of extra memory for PDF output out of 61914 (max. 10000000)
 

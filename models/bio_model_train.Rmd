@@ -2,7 +2,7 @@
 title: "bio_model_train"
 output: 
   pdf_document: default
-  #html_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -20,54 +20,47 @@ library(kableExtra)
 ```
 
 ```{r}
-source("../scripts/modeling_utils.R")
+source("../scripts/modeling_utils_tidymodels.R")
 ```
 
 ```{r}
 # Cargamos los datasets procesados
 train_bio <- readRDS("../data/processed/support2/df1/train_base.rds")
+valid_bio <- readRDS("../data/processed/support2/df1/valid_base.rds")
 test_bio <- readRDS("../data/processed/support2/df1/test_base.rds")
-
-train_bio_scaled <- readRDS("../data/processed/support2/df1/train_scaled.rds")
-test_bio_scaled <- readRDS("../data/processed/support2/df1/test_scaled.rds")
+test_bio_eval <- dplyr::bind_rows(valid_bio, test_bio)
 ```
 
 ```{r}
+head(train_bio)
+table(train_bio$hospdead)
+```
 
-# --- 1. Ejecución con los datos BASE ---
-modelos_base <- entrenar_benchmark(
-  train_data = train_bio, 
-  nombre_dataset = "df1_Base"
-)
 
-resultados_base <- evaluar_benchmark(
-  modelos_lista = modelos_base, 
-  test_data = test_bio, 
-  nombre_dataset = "df1_Base",
+```{r}
+resultado_bio <- entrenar_benchmark(
+  train_data = train_bio,
+  test_data = test_bio_eval,
+  nombre_dataset = "df1_Bio",
+  usar_cv = TRUE,
+  folds = 5,
+  grid_size = 10,
   clase_positiva = "Yes"
 )
-```
-```{r}
-# --- 2. Ejecución con los datos ESCALADOS ---
-modelos_scaled <- entrenar_benchmark(
-  train_data = train_bio_scaled, 
-  nombre_dataset = "df1_Scaled",
-  scaled_df = TRUE
+
+resultados_validacion <- resultado_bio$validation
+resultados_test <- resultado_bio$test
+mejor_test <- resultado_bio$best_test
+mejor_configuracion <- dplyr::bind_cols(
+  tibble::tibble(Modelo = resultado_bio$best_model),
+  resultado_bio$best_params
 )
-
-resultados_scaled <- evaluar_benchmark(
-  modelos_lista = modelos_scaled, 
-  test_data = test_bio_scaled, 
-  nombre_dataset = "df1_Scaled",
-  clase_positiva = "Yes"
-)
+variables_importantes <- resultado_bio$variable_importance
 ```
 
 ```{r}
-resultados_totales <- rbind(resultados_base)
-
-resultados_totales %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+resultados_validacion %>%
+  kbl(digits = 3) %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -75,14 +68,32 @@ resultados_totales %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_totales)
-```
-```{r}
-resultados_totales <- rbind(resultados_base)
+mejor_configuracion %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  )
 
-resultados_totales %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+generar_graficos_automaticos(resultados_validacion)
+```
+
+```{r}
+variables_importantes %>%
+  dplyr::slice_head(n = 10) %>%
+  kbl(digits = 4) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
+    full_width = FALSE, 
+    position = "left"
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
+```
+
+```{r}
+resultados_test %>%
+  kbl(digits = 3, caption = "Test de todos los modelos") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -90,15 +101,8 @@ resultados_totales %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_totales)
-```
-
-```{r}
-resultados_totales <- rbind(resultados_scaled)
-
-resultados_totales %>%
-  kbl(digits = 3, align = "lcccc") %>% 
+mejor_test %>%
+  kbl(digits = 3, caption = "Test del mejor modelo") %>% 
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "bordered"), 
     full_width = FALSE, 
@@ -106,15 +110,5 @@ resultados_totales %>%
   ) %>%
   row_spec(0, bold = TRUE, color = "#2c3e50", background = "#eaedf1")
 
-# Genera todos los gráficos interactivos automáticamente
-generar_graficos_automaticos(resultados_totales)
+plot_roc_comparativo(resultado_bio$validation_fits, test_bio_eval, "ROC: Test Final - df1_Bio")
 ```
-
-```{r}
-# Para el dataset Base
-plot_roc_comparativo(modelos_base, test_bio, "ROC: Modelos en Dataset Base")
-
-# Para el dataset Scaled
-plot_roc_comparativo(modelos_scaled, test_bio_scaled, "ROC: Modelos en Dataset Scaled")
-```
-

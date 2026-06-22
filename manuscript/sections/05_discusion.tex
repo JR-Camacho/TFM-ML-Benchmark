@@ -4,14 +4,16 @@
 
 Desde un punto de vista estrictamente numérico, la estrategia
 técnico-estadística (V2) obtuvo métricas superiores. Mientras que en la
-estrategia clínico-estadística (V1) los mejores modelos, Random Forest y GBM,
-alcanzaron valores de AUC próximos a 0.931--0.933, en la V2 estos mismos modelos
-alcanzaron valores cercanos a 0.972.
+estrategia clínico-estadística (V1) los mejores modelos, principalmente
+XGBoost, Random Forest y Logistic Regression, alcanzaron AUC cercanos a
+0.917--0.920 durante validación y hasta 0.932 en evaluación externa, en la V2
+los modelos de mayor rendimiento alcanzaron valores cercanos a 0.970--0.974 en
+validación y hasta 0.979 en evaluación externa.
 
 Sin embargo, en medicina predictiva, el mayor rendimiento métrico no implica
 necesariamente una mayor validez clínica. La diferencia observada en AUC sugiere
 que la estrategia V2 podría beneficiarse de variables que la estrategia V1
-excluyó por riesgo de \textit{Data Leakage} o por menor coherencia biológica. En
+excluyó por riesgo de fuga de datos (\textit{Data Leakage}) o por menor coherencia biológica. En
 este sentido, la V2 ofrece mayor rendimiento estadístico, mientras que la V1
 representa una aproximación más prudente desde el punto de vista clínico y
 metodológico.
@@ -26,14 +28,20 @@ parcial:
   \item En términos de estabilidad, la estrategia V1 mantiene resultados muy
     consistentes entre la versión con CV y sin CV para los modelos de ensamble.
   \item En términos de rendimiento bruto, la V2 supera a la V1.
+  \item En términos de evaluación final, el conjunto de prueba confirma la misma
+    tendencia observada durante la validación, sin alterar la selección del mejor
+    modelo.
 \end{itemize}
 
 Esta diferencia refuerza la necesidad de interpretar el rendimiento predictivo
 junto con la procedencia y disponibilidad real de las variables. La V2
 probablemente retuvo información que facilita la predicción estadística, pero
 que en un entorno hospitalario real al momento del ingreso podría no estar
-disponible o presentar riesgo de contaminación temporal. La V1, aunque no
-maximiza el AUC, mantiene un rendimiento elevado (AUC > 0.91) bajo un criterio
+disponible o presentar riesgo de contaminación temporal. Este argumento se
+refuerza con el experimento V2 con eliminación de columnas de riesgo: al retirar
+variables como sfdm2, avtisst, slos y charges, el AUC externo descendió hasta
+aproximadamente 0.929, muy próximo al comportamiento observado en V1. La V1,
+aunque no maximiza el AUC, mantiene un rendimiento competitivo bajo un criterio
 de mayor fidelidad clínica.
 
 \subsection{Impacto del conocimiento clínico}
@@ -44,41 +52,44 @@ datos:
 \begin{enumerate}
   \item Imputación estratificada: Aunque la V1 utiliza un conjunto más restringido
     de variables predictoras, la combinación de imputaciones contextualizadas y
-    eliminaciones estratégicas permitió que modelos como Random Forest
-    alcanzaran un AUC de 0.933. Esto sugiere que los predictores conservados
-    mantienen una alta capacidad informativa.
-  \item Sensibilidad y especificidad: En V1, la especificidad se mantiene en
-    valores elevados (aprox. 0.93--0.95). Este comportamiento indica una buena
-    capacidad para identificar correctamente a los pacientes supervivientes, un
-    aspecto relevante para reducir falsas alarmas en contextos de asignación de
-    recursos críticos.
-  \item Rendimiento de KNN: Las Tablas~\ref{tab:v1-cv-scaled},
-    \ref{tab:v1-nocv-scaled}, \ref{tab:v2-cv-scaled} y
-    \ref{tab:v2-nocv-scaled} muestran que el modelo solo se evaluó en
-    escenarios con datos escalados y, aun así, fue superado por los métodos
-    basados en árboles. Esto valida que la relación entre las variables clínicas
-    y la mortalidad no es necesariamente lineal ni depende solo de distancias
-    simples.
+    eliminaciones estratégicas permitió que modelos como XGBoost, Random Forest
+    y Logistic Regression conservaran AUC superiores a 0.91 en validación. Esto sugiere que los
+    predictores conservados mantienen una alta capacidad informativa.
+  \item Sensibilidad y especificidad: En V1 sin remuestreo, la especificidad se
+    mantiene elevada, pero algunos modelos reducen notablemente la sensibilidad.
+    El experimento con downsampling modifica este equilibrio, elevando la
+    sensibilidad de XGBoost y Random Forest hasta 0.863 en evaluación externa,
+    aunque con una reducción de especificidad.
+  \item Rendimiento de KNN: Las Tablas~\ref{tab:v1-cv-base},
+    \ref{tab:v1-nocv-base}, \ref{tab:v2-cv-base} y
+    \ref{tab:v2-nocv-base} muestran que KNN fue superado por los métodos
+    basados en árboles, aun cuando la normalización fue integrada dentro del
+    flujo de tidymodels. Esto valida que la relación entre las variables
+    clínicas y la mortalidad no es necesariamente lineal ni depende solo de
+    distancias simples.
 \end{enumerate}
 
 \subsection{Comportamiento de los modelos}
 
 \begin{itemize}
-  \item Modelos de ensamble: Random Forest (RF) y Stochastic Gradient Boosting
-    (GBM) mostraron el mejor rendimiento global. En todos los escenarios, RF
-    lideró con el AUC más alto (0.933 en V1 y 0.972 en V2), lo que refleja su
-    capacidad para capturar interacciones no lineales entre variables clínicas.
-  \item Regresión logística: Este modelo alcanzó un AUC de 0.918 en Bio Data,
+  \item Modelos de ensamble: Random Forest y XGBoost mostraron el mejor
+    rendimiento global. XGBoost lideró varios escenarios de validación, mientras
+    que Random Forest fue especialmente competitivo en la evaluación externa.
+    Este patrón refleja su capacidad para capturar interacciones no lineales
+    entre variables clínicas.
+  \item Regresión logística: Este modelo alcanzó AUC superiores a 0.91 en V1 (Bio Data),
     lo que sugiere que varias de las variables clínicas seleccionadas mantienen
     una relación discriminativa estable con la mortalidad. Además, su mayor
     interpretabilidad la convierte en una referencia útil frente a modelos más
-    complejos.
-  \item Inestabilidad de Decision Tree (rpart): Es el hallazgo más relevante del
-    comportamiento algorítmico. En los escenarios hold-out
-    (Tablas~\ref{tab:v1-nocv-base}, \ref{tab:v1-nocv-scaled},
-    \ref{tab:v2-nocv-base} y \ref{tab:v2-nocv-scaled}), su AUC cae a 0.500
-    y su sensibilidad a 0.000. Este resultado evidencia la sensibilidad de un
-    árbol de decisión simple al ruido y a la partición de la muestra,
-    subrayando la importancia de emplear métodos de ensamble o esquemas de
-    validación robustos en problemas biomédicos.
+    complejos. En el experimento con downsampling, incluso fue el mejor modelo
+    durante validación cruzada.
+  \item Naive Bayes: Aunque mostró un rendimiento aceptable en AUC, en algunos
+    escenarios sin remuestreo presentó sensibilidades bajas, lo que evidencia la
+    importancia de no interpretar el AUC de forma aislada cuando existe
+    desbalance de clases.
+  \item Decision Tree (rpart): A diferencia de experimentos previos, el árbol de
+    decisión simple mantuvo un rendimiento discriminativo razonable en los
+    escenarios actualizados. Sin embargo, continuó por debajo de Random Forest y
+    XGBoost, lo que subraya la ventaja de los métodos de ensamble en problemas
+    biomédicos con relaciones no lineales y variables heterogéneas.
 \end{itemize}

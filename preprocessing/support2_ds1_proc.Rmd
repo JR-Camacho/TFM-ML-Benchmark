@@ -34,13 +34,26 @@ head(support2_raw)
 ```
 
 ```{r}
+set.seed(123)
+
 index_train <- createDataPartition(support2_raw$hospdead, p = 0.8, list = FALSE)
 
 train_bio <- support2_raw[index_train, ]
-test_bio  <- support2_raw[-index_train, ]
+resto_bio <- support2_raw[-index_train, ]
+
+index_valid <- createDataPartition(resto_bio$hospdead, p = 0.5, list = FALSE)
+
+valid_bio <- resto_bio[index_valid, ]
+test_bio  <- resto_bio[-index_valid, ]
 
 head(train_bio)
+head(valid_bio)
 head(test_bio)
+```
+```{r}
+dim(train_bio)
+dim(valid_bio)
+dim(test_bio)
 ```
 
 ```{r}
@@ -59,15 +72,18 @@ delete_vars <- function(df, vars_to_remove) {
 }
 ```
 
+
+
 ```{r}
 # Eliminar variables
 vars_to_remove <- c(
   "urine", "dnrday", "prg2m", "prg6m", "surv2m", "surv6m", 
   "totmcst", "totcst", "income", "sfdm2", "adlp", 
-  "death", "d.time", "dzclass", "adlsc", "sps", "avtisst", "glucose", "bun"
+  "death", "d.time", "dzclass", "adlsc", "sps", "avtisst", "glucose", "bun", "slos", "charges"
 )
 
 train_bio <- delete_vars(train_bio, vars_to_remove)
+valid_bio <- delete_vars(valid_bio, vars_to_remove)
 test_bio  <- delete_vars(test_bio, vars_to_remove)
 
 head(train_bio)
@@ -79,6 +95,7 @@ names(train_bio)
 # 4. Eliminar filas con nulos en variables clave
 clinical_key_vars <- c("meanbp", "hrt", "resp", "temp", "sod", "scoma", "aps", "crea")
 train_bio <- train_bio %>% drop_na(all_of(clinical_key_vars))
+valid_bio <- valid_bio %>% drop_na(all_of(clinical_key_vars))
 test_bio  <- test_bio %>% drop_na(all_of(clinical_key_vars))
 
 head(train_bio)
@@ -119,19 +136,8 @@ apply_imputation <- function(df, medians) {
 
 # Aplicar a ambos datasets
 train_bio <- apply_imputation(train_bio, imputation_medians)
+valid_bio <- apply_imputation(valid_bio, imputation_medians)
 test_bio  <- apply_imputation(test_bio, imputation_medians)
-
-# --- 6. Imputación global y limpieza de categóricas ---
-# Imputar glucosa con la mediana global del train
-# global_glucose <- median(train_bio$glucose, na.rm = TRUE)
-# train_bio <- train_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
-# test_bio  <- test_bio %>% mutate(glucose = replace_na(glucose, global_glucose))
-
-# Imputar charges con la mediana global del train
-global_charges <- median(train_bio$charges, na.rm = TRUE)
-train_bio <- train_bio %>% mutate(charges = replace_na(charges, global_charges))
-test_bio  <- test_bio %>% mutate(charges = replace_na(charges, global_charges))
-
 
 # Aplicar la misma lógica de transformación que en tus gráficos
 transform_edu <- function(df) {
@@ -153,15 +159,18 @@ transform_edu <- function(df) {
 
 # Aplicar a tus datasets ya limpios
 train_bio <- transform_edu(train_bio)
+valid_bio  <- transform_edu(valid_bio)
 test_bio  <- transform_edu(test_bio)
 
 # Convertir categóricas a caracteres, asignar "Unknown" y luego a factor
 cat_vars <- c("race", "dnr")
 train_bio <- train_bio %>% mutate(across(all_of(cat_vars), ~replace_na(as.character(.), "Unknown")))
+valid_bio <- valid_bio %>% mutate(across(all_of(cat_vars), ~replace_na(as.character(.), "Unknown")))
 test_bio  <- test_bio %>% mutate(across(all_of(cat_vars), ~replace_na(as.character(.), "Unknown")))
 
 # Imputar adls (8 como categoría)
 train_bio <- train_bio %>% mutate(adls = replace_na(adls, 8))
+valid_bio <- valid_bio %>% mutate(adls = replace_na(adls, 8))
 test_bio  <- test_bio %>% mutate(adls = replace_na(adls, 8))
 
 colSums(is.na(train_bio))
@@ -180,6 +189,9 @@ str(train_bio)
 train_bio$hospdead <- factor(train_bio$hospdead, 
                                  levels = c(0, 1), 
                                  labels = c("No", "Yes"))
+valid_bio$hospdead <- factor(valid_bio$hospdead,
+                                 levels = c(0, 1),
+                                 labels = c("No", "Yes"))
 test_bio$hospdead  <- factor(test_bio$hospdead, 
                                  levels = c(0, 1), 
                                  labels = c("No", "Yes"))
@@ -189,6 +201,7 @@ cols_to_factor <- c("diabetes", "dementia", "race", "dnr")
 
 for(col in cols_to_factor) {
   train_bio[[col]] <- as.factor(train_bio[[col]])
+  valid_bio[[col]] <- factor(valid_bio[[col]], levels = levels(train_bio[[col]]))
   test_bio[[col]]  <- factor(test_bio[[col]], levels = levels(train_bio[[col]]))
 }
 
@@ -200,6 +213,7 @@ str(train_bio)
 ```{r}
 # 2. Creamos los datasets escalados
 train_bio_scaled <- train_bio
+valid_bio_scaled <- valid_bio
 test_bio_scaled  <- test_bio
 
 # Identificar columnas numéricas (excluyendo factores)
@@ -212,19 +226,33 @@ for (col in num_cols) {
   
   # Aplicamos la fórmula: (valor - media) / desviación_estándar
   train_bio_scaled[[col]] <- (train_bio[[col]] - mu) / sigma
+  valid_bio_scaled[[col]]  <- (valid_bio[[col]] - mu) / sigma
   test_bio_scaled[[col]]  <- (test_bio_scaled[[col]] - mu) / sigma
 }
 
 head(train_bio_scaled)
 head(test_bio_scaled)
+head(valid_bio_scaled)
 ```
 ```{r}
-saveRDS(train_bio, "../data/processed/support2/df1/train_base.rds")
-saveRDS(test_bio,  "../data/processed/support2/df1/test_base.rds")
-
-saveRDS(train_bio_scaled, "../data/processed/support2/df1/train_scaled.rds")
-saveRDS(test_bio_scaled,  "../data/processed/support2/df1/test_scaled.rds")
+dim(train_bio)
+dim(valid_bio)
+dim(test_bio)
 ```
 
+```{r}
+dim(train_bio_scaled)
+dim(test_bio_scaled)
+dim(valid_bio_scaled)
+```
 
+```{r}
+saveRDS(train_bio, "../data/processed/support2/df1/train_base.rds")
+saveRDS(valid_bio, "../data/processed/support2/df1/valid_base.rds")
+saveRDS(test_bio,  "../data/processed/support2/df1/test_base.rds")
 
+# No se utiliza la version scalada debido a que se eolica la normalizacion directamente desde el recipe en tidymodels
+# saveRDS(train_bio_scaled, "../data/processed/support2/df1/train_scaled.rds")
+# saveRDS(valid_bio_scaled, "../data/processed/support2/df1/valid_scaled.rds")
+# saveRDS(test_bio_scaled,  "../data/processed/support2/df1/test_scaled.rds")
+```

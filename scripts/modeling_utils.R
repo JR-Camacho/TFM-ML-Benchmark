@@ -131,7 +131,7 @@ evaluar_benchmark <- function(modelos_lista, test_data, nombre_dataset, clase_po
 generar_graficos_automaticos <- function(resultados) {
   # 1. Detectamos automáticamente los datasets y definimos las métricas a evaluar
   datasets_unicos <- unique(resultados$Dataset)
-  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy")
+  metricas <- c("AUC", "Sensibilidad", "Especificidad", "Accuracy", "F1-score")
   
   # Lista para almacenar todos los gráficos generados
   lista_graficos <- list()
